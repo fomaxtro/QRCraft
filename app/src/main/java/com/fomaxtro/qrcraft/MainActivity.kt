@@ -1,6 +1,7 @@
 package com.fomaxtro.qrcraft
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -18,7 +19,27 @@ class MainActivity : ComponentActivity() {
         setContent {
             QRCraftTheme {
                 ScanRoot(
-                    onCameraPermissionDenied = {}
+                    onCloseApp = {
+                        finish()
+                    },
+                    onCameraPermissionDenied = {
+                        Toast.makeText(
+                            this,
+                            getString(R.string.camera_permission_denied),
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        finish()
+                    },
+                    onAlwaysDeniedCameraPermission = {
+                        Toast.makeText(
+                            this,
+                            getString(R.string.camera_permission_always_denied),
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        finish()
+                    }
                 )
             }
         }

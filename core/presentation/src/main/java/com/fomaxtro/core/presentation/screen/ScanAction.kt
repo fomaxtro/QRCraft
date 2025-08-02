@@ -1,5 +1,7 @@
 package com.fomaxtro.core.presentation.screen
 
 sealed interface ScanAction {
-    data class OnCameraPermissionGranted(val isGranted: Boolean) : ScanAction
+    data object OnCameraPermissionGranted : ScanAction
+    data object OnCloseAppClick : ScanAction
+    data object OnGrantAccessClick : ScanAction
 }

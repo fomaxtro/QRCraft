@@ -2,6 +2,7 @@ package com.fomaxtro.qrcraft
 
 import android.app.Application
 import com.fomaxtro.core.data.di.dataModule
+import com.fomaxtro.core.presentation.di.presentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -20,7 +21,8 @@ class QRCraftApp : Application() {
             androidLogger()
 
             modules(
-                dataModule
+                dataModule,
+                presentationModule
             )
         }
     }

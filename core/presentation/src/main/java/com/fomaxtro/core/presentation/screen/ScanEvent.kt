@@ -1,5 +1,9 @@
 package com.fomaxtro.core.presentation.screen
 
+import com.fomaxtro.core.presentation.ui.UiText
+
 sealed interface ScanEvent {
-    data object CameraPermissionDenied : ScanEvent
+    data object CloseApp : ScanEvent
+    data object RequestCameraPermission : ScanEvent
+    data class ShowMessage(val message: UiText) : ScanEvent
 }

@@ -4,4 +4,5 @@
     <string name="camera_permission_description">This app cannot function without camera access. To scan QR codes, please grant permission.</string>
     <string name="grant_access">Grant Access</string>
     <string name="close_app">Close App</string>
+    <string name="camera_permission_granted">Camera permission granted</string>
 </resources>

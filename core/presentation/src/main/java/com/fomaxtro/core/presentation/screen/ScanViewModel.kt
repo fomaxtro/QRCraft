@@ -4,6 +4,8 @@ import android.Manifest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.PermissionChecker
+import com.fomaxtro.core.presentation.R
+import com.fomaxtro.core.presentation.ui.UiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,21 +29,37 @@ class ScanViewModel(
 
     fun onAction(action: ScanAction) {
         when (action) {
-            is ScanAction.OnCameraPermissionGranted -> onCameraPermissionGranted(action.isGranted)
+            is ScanAction.OnCameraPermissionGranted -> onCameraPermissionGranted()
+            ScanAction.OnCloseAppClick -> onCloseAppClick()
+            ScanAction.OnGrantAccessClick -> onGrantAccessClick()
         }
     }
 
-    private fun onCameraPermissionGranted(granted: Boolean) {
+    private fun onGrantAccessClick() {
+        viewModelScope.launch {
+            eventChannel.send(ScanEvent.RequestCameraPermission)
+        }
+    }
+
+    private fun onCloseAppClick() {
+        viewModelScope.launch {
+            eventChannel.send(ScanEvent.CloseApp)
+        }
+    }
+
+    private fun onCameraPermissionGranted() {
         _state.update {
             it.copy(
-                hasCameraPermission = granted
+                hasCameraPermission = true
             )
         }
 
-        if (!granted) {
-            viewModelScope.launch {
-                eventChannel.send(ScanEvent.CameraPermissionDenied)
-            }
+        viewModelScope.launch {
+            eventChannel.send(
+                ScanEvent.ShowMessage(
+                    message = UiText.StringResource(R.string.camera_permission_granted)
+                )
+            )
         }
     }
 }
