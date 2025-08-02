@@ -18,7 +18,10 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-rootProject.name = "QR Craft"
+rootProject.name = "QRCraft"
 include(":app")
 include(":core:presentation")
+include(":core:domain")
+include(":core:data")
