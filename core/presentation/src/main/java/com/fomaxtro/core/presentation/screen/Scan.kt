@@ -1,9 +1,17 @@
 package com.fomaxtro.core.presentation.screen
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.util.Size
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.resolutionselector.ResolutionSelector
+import androidx.camera.core.resolutionselector.ResolutionStrategy
+import androidx.camera.view.LifecycleCameraController
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -22,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,6 +38,8 @@ import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.SurfaceHigher
+import com.fomaxtro.core.presentation.screen.components.CameraPreview
+import com.fomaxtro.core.presentation.screen.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
 
@@ -42,6 +53,21 @@ fun ScanRoot(
     val context = LocalContext.current
     val snackbarHostState = remember {
         SnackbarHostState()
+    }
+
+    val cameraController = remember {
+        LifecycleCameraController(context).apply {
+            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+            imageAnalysisResolutionSelector = ResolutionSelector.Builder()
+                .setResolutionStrategy(
+                    ResolutionStrategy(
+                        Size(1280, 720),
+                        ResolutionStrategy.FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER
+                    )
+                )
+                .build()
+        }
     }
 
     val launcher = rememberLauncherForActivityResult(
@@ -85,15 +111,24 @@ fun ScanRoot(
     ScanScreen(
         state = state,
         snackbarHostState = snackbarHostState,
-        onAction = viewModel::onAction
+        onAction = viewModel::onAction,
+        cameraPreview = {
+            CameraPreview(
+                controller = cameraController,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+        }
     )
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun ScanScreen(
+    state: ScanState,
+    cameraPreview: @Composable () -> Unit = {},
     onAction: (ScanAction) -> Unit = {},
-    snackbarHostState: SnackbarHostState = SnackbarHostState(),
-    state: ScanState
+    snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
     if (!state.hasCameraPermission) {
         AlertDialog(
@@ -158,8 +193,21 @@ private fun ScanScreen(
                 QRCraftSnackbar(it)
             }
         }
-    ) { innerPadding ->
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            cameraPreview()
 
+            QRScanOverlay(
+                frameSize = 324.dp,
+                cornerRadius = 18.dp,
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 4.dp,
+                borderSize = 16.dp
+            )
+        }
     }
 }
 
