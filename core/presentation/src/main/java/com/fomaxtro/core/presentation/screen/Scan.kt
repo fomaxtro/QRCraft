@@ -13,6 +13,7 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -36,6 +38,7 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
+import com.fomaxtro.core.presentation.designsystem.theme.OnOverlay
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.SurfaceHigher
 import com.fomaxtro.core.presentation.screen.components.CameraPreview
@@ -130,6 +133,9 @@ private fun ScanScreen(
     onAction: (ScanAction) -> Unit = {},
     snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
+    val frameSize = 324.dp
+    val padding = 48.dp
+
     if (!state.hasCameraPermission) {
         AlertDialog(
             onDismissRequest = {},
@@ -196,16 +202,27 @@ private fun ScanScreen(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
             cameraPreview()
 
             QRScanOverlay(
-                frameSize = 324.dp,
+                frameSize = frameSize,
                 cornerRadius = 18.dp,
                 color = MaterialTheme.colorScheme.primary,
                 strokeWidth = 4.dp,
                 borderSize = 16.dp
+            )
+
+            Text(
+                text = stringResource(R.string.qr_scan_placeholder),
+                modifier = Modifier
+                    .offset(
+                        y = -frameSize / 2 - padding
+                    ),
+                style = MaterialTheme.typography.titleSmall,
+                color = OnOverlay
             )
         }
     }

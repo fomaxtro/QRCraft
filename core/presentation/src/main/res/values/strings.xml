@@ -5,4 +5,5 @@
     <string name="grant_access">Grant Access</string>
     <string name="close_app">Close App</string>
     <string name="camera_permission_granted">Camera permission granted</string>
+    <string name="qr_scan_placeholder">Point your camera at a QR code</string>
 </resources>
