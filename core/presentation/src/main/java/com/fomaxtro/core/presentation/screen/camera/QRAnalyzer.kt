@@ -5,6 +5,8 @@ import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.fomaxtro.core.presentation.mapper.toQR
+import com.fomaxtro.core.presentation.model.QR
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -15,7 +17,8 @@ import kotlin.math.roundToInt
 class QRAnalyzer(
     private val frameSize: Int,
     private val windowWidth: Int,
-    private val windowHeight: Int
+    private val windowHeight: Int,
+    private val onResult: (QR) -> Unit
 ) : ImageAnalysis.Analyzer {
     private var lastAnalysisTime = 0L
     private val analysisInterval = 100L
@@ -26,6 +29,7 @@ class QRAnalyzer(
             )
             .build()
     )
+    private var lastScannedResult: String? = null
 
     @OptIn(ExperimentalGetImage::class)
     override fun analyze(image: ImageProxy) {
@@ -54,7 +58,17 @@ class QRAnalyzer(
                 val barcode = it.firstOrNull()
 
                 if (barcode != null) {
-                    Timber.tag("QRAnalyzer").d("QR code scanned: ${barcode.displayValue}")
+                    if (lastScannedResult != barcode.rawValue) {
+                        lastScannedResult = barcode.rawValue
+
+                        try {
+                            onResult(barcode.toQR())
+                        } catch (e: IllegalArgumentException) {
+                            Timber.e(e)
+                        }
+                    }
+                } else {
+                    lastScannedResult = null
                 }
 
                 image.close()

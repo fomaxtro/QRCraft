@@ -47,6 +47,7 @@ import com.fomaxtro.core.presentation.screen.components.CameraPreview
 import com.fomaxtro.core.presentation.screen.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 @Composable
@@ -82,7 +83,10 @@ fun ScanRoot(
                 QRAnalyzer(
                     frameSize = frameSizePx.roundToInt(),
                     windowWidth = windowWidth,
-                    windowHeight = windowHeight
+                    windowHeight = windowHeight,
+                    onResult = { qr ->
+                        Timber.tag("QRAnalyzer").d(qr.toString())
+                    }
                 )
             )
         }
