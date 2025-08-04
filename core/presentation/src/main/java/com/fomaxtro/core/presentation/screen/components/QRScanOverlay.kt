@@ -3,8 +3,10 @@ package com.fomaxtro.core.presentation.screen.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +25,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.fomaxtro.core.presentation.designsystem.theme.OnOverlay
 import com.fomaxtro.core.presentation.designsystem.theme.Overlay
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 
@@ -33,8 +36,11 @@ fun QRScanOverlay(
     color: Color,
     strokeWidth: Dp,
     borderSize: Dp,
+    placeHolder: String,
     modifier: Modifier = Modifier
 ) {
+    val padding = 48.dp
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -53,6 +59,16 @@ fun QRScanOverlay(
             cornerRadius = cornerRadius,
             borderSize = borderSize,
             modifier = Modifier.size(frameSize)
+        )
+
+        Text(
+            text = placeHolder,
+            modifier = Modifier
+                .offset(
+                    y = -frameSize / 2 - padding
+                ),
+            style = MaterialTheme.typography.titleSmall,
+            color = OnOverlay
         )
     }
 }
@@ -112,7 +128,8 @@ private fun QRScanOverlayPreview() {
             strokeWidth = 4.dp,
             cornerRadius = 18.dp,
             borderSize = 16.dp,
-            frameSize = 324.dp
+            frameSize = 324.dp,
+            placeHolder = "Scan QR code"
         )
     }
 }

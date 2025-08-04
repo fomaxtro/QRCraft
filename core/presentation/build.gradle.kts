@@ -57,6 +57,8 @@ dependencies {
 
     implementation(libs.bundles.koin.android.compose)
     implementation(libs.bundles.cameraX)
+    implementation(libs.gms.play.services.mlkit.barcode.scanning)
+    implementation(libs.timber)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

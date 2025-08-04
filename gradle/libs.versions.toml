@@ -19,6 +19,7 @@ splashScreen = "1.0.1"
 cameraX = "1.4.2"
 koin = "4.1.0"
 timber = "5.0.1"
+barcodeScanner = "18.3.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -48,6 +49,7 @@ koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", versi
 koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation", version.ref = "koin" }
 
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+gms-play-services-mlkit-barcode-scanning = { module = "com.google.android.gms:play-services-mlkit-barcode-scanning", version.ref = "barcodeScanner" }
 
 [bundles]
 koin-android-compose = [
