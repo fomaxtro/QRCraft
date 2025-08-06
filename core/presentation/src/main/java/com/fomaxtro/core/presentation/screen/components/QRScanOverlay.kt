@@ -1,5 +1,6 @@
 package com.fomaxtro.core.presentation.screen.components
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,8 +9,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.fomaxtro.core.presentation.designsystem.theme.OnOverlay
 import com.fomaxtro.core.presentation.designsystem.theme.Overlay
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
+import com.fomaxtro.core.presentation.ui.rememberScreenOrientationState
 
 @Composable
 fun QRScanOverlay(
@@ -39,7 +43,11 @@ fun QRScanOverlay(
     placeHolder: String,
     modifier: Modifier = Modifier
 ) {
-    val padding = 48.dp
+    val padding = 32.dp
+    val screenOrientation = rememberScreenOrientationState()
+    val frameRotation by animateFloatAsState(
+        targetValue = screenOrientation.rotationDegrees.toFloat()
+    )
 
     Box(
         modifier = modifier
@@ -53,23 +61,31 @@ fun QRScanOverlay(
             ),
         contentAlignment = Alignment.Center
     ) {
-        QRScanFrame(
-            color = color,
-            strokeWidth = strokeWidth,
-            cornerRadius = cornerRadius,
-            borderSize = borderSize,
-            modifier = Modifier.size(frameSize)
-        )
-
-        Text(
-            text = placeHolder,
+        Box(
             modifier = Modifier
-                .offset(
-                    y = -frameSize / 2 - padding
-                ),
-            style = MaterialTheme.typography.titleSmall,
-            color = OnOverlay
-        )
+                .align(Alignment.Center)
+                .rotate(-frameRotation),
+            contentAlignment = Alignment.Center
+        ) {
+            QRScanFrame(
+                color = color,
+                strokeWidth = strokeWidth,
+                cornerRadius = cornerRadius,
+                borderSize = borderSize,
+                modifier = Modifier
+                    .size(frameSize)
+            )
+
+            Text(
+                text = placeHolder,
+                modifier = Modifier
+                    .offset(
+                        y = -frameSize / 2 - padding
+                    ),
+                style = MaterialTheme.typography.titleSmall,
+                color = OnOverlay
+            )
+        }
     }
 }
 
