@@ -12,6 +12,7 @@ import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 
 interface ScreenOrientationState {
     val currentOrientation: ScreenOrientation
@@ -115,6 +116,7 @@ enum class ScreenOrientation {
 @Composable
 fun rememberScreenOrientationState(): ScreenOrientationState {
     val context = LocalContext.current
+    val isInPreviewMode = LocalInspectionMode.current
 
     val screenOrientationState = rememberSaveable(
         saver = ScreenOrientationStateImpl.Saver
@@ -122,22 +124,24 @@ fun rememberScreenOrientationState(): ScreenOrientationState {
         ScreenOrientationStateImpl()
     }
 
-    DisposableEffect(context) {
-        val orientationListener = object : OrientationEventListener(
-            context,
-            SensorManager.SENSOR_DELAY_NORMAL
-        ) {
-            override fun onOrientationChanged(degrees: Int) {
-                if (degrees == ORIENTATION_UNKNOWN) return
+    if (!isInPreviewMode) {
+        DisposableEffect(context) {
+            val orientationListener = object : OrientationEventListener(
+                context,
+                SensorManager.SENSOR_DELAY_NORMAL
+            ) {
+                override fun onOrientationChanged(degrees: Int) {
+                    if (degrees == ORIENTATION_UNKNOWN) return
 
-                screenOrientationState.updateOrientation(degrees)
+                    screenOrientationState.updateOrientation(degrees)
+                }
             }
-        }
 
-        orientationListener.enable()
+            orientationListener.enable()
 
-        onDispose {
-            orientationListener.disable()
+            onDispose {
+                orientationListener.disable()
+            }
         }
     }
 

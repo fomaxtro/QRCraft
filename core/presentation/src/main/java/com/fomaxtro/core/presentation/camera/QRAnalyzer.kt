@@ -1,4 +1,4 @@
-package com.fomaxtro.core.presentation.screen.camera
+package com.fomaxtro.core.presentation.camera
 
 import android.graphics.Bitmap
 import android.graphics.Matrix
