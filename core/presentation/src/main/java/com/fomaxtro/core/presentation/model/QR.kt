@@ -12,9 +12,9 @@ sealed interface QR {
     data class PhoneNumber(val phoneNumber: String) : QR
     data class Geolocation(val latitude: Double, val longitude: Double) : QR
     data class Wifi(
-        val ssid: String?,
+        val ssid: String,
         val password: String?,
-        val encryptionType: WifiEncryptionType
+        val encryptionType: WifiEncryptionType?
     ) : QR
 }
 

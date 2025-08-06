@@ -1,6 +1,7 @@
 package com.fomaxtro.core.presentation.screen.camera
 
 import android.graphics.Bitmap
+import android.graphics.Matrix
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
@@ -11,14 +12,13 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 class QRAnalyzer(
     private val frameSize: Int,
     private val windowWidth: Int,
     private val windowHeight: Int,
-    private val onResult: (QR) -> Unit
+    private val onResult: (QR?) -> Unit
 ) : ImageAnalysis.Analyzer {
     private var lastAnalysisTime = 0L
     private val analysisInterval = 100L
@@ -48,7 +48,8 @@ class QRAnalyzer(
             .centerCrop(
                 size = frameSize,
                 windowWidth = windowWidth,
-                windowHeight = windowHeight
+                windowHeight = windowHeight,
+                rotationDegrees = image.imageInfo.rotationDegrees
             )
 
         val inputImage = InputImage.fromBitmap(cropImage, image.imageInfo.rotationDegrees)
@@ -61,11 +62,7 @@ class QRAnalyzer(
                     if (lastScannedResult != barcode.rawValue) {
                         lastScannedResult = barcode.rawValue
 
-                        try {
-                            onResult(barcode.toQR())
-                        } catch (e: IllegalArgumentException) {
-                            Timber.e(e)
-                        }
+                        onResult(barcode.toQR())
                     }
                 } else {
                     lastScannedResult = null
@@ -82,23 +79,45 @@ class QRAnalyzer(
 private fun Bitmap.centerCrop(
     size: Int,
     windowWidth: Int,
-    windowHeight: Int
+    windowHeight: Int,
+    rotationDegrees: Int
 ): Bitmap {
-    val scaleX = height.toFloat() / windowWidth.toFloat()
-    val scaleY = width.toFloat() / windowHeight.toFloat()
+    val rotatedBitmap = if (rotationDegrees != 0) {
+        val matrix = Matrix().apply {
+            postRotate(rotationDegrees.toFloat())
+        }
 
-    val scaledSizeWidth = (size * scaleY).roundToInt()
-    val scaledSizeHeight = (size * scaleX).roundToInt()
-    val scaledSize = minOf(scaledSizeWidth, scaledSizeHeight)
+        Bitmap.createBitmap(this, 0, 0, width, height, matrix, true)
+    } else {
+        this
+    }
 
-    val startX = (width - scaledSize) / 2
-    val startY = (height - scaledSize) / 2
+    val imageWidth = rotatedBitmap.width
+    val imageHeight = rotatedBitmap.height
+
+    val fixedWindowWidth = when (rotationDegrees) {
+        90, 270 -> windowWidth
+        else -> windowHeight
+    }
+    val fixedWindowHeight = when (rotationDegrees) {
+        90, 270 -> windowHeight
+        else -> windowWidth
+    }
+
+    val scaleX = imageWidth.toFloat() / fixedWindowWidth.toFloat()
+    val scaleY = imageHeight.toFloat() / fixedWindowHeight.toFloat()
+    val scale = minOf(scaleX, scaleY)
+
+    val cropSize = (size * scale).roundToInt()
+
+    val startX = (imageWidth - cropSize) / 2
+    val startY = (imageHeight - cropSize) / 2
 
     return Bitmap.createBitmap(
-        this,
+        rotatedBitmap,
         startX,
         startY,
-        scaledSize,
-        scaledSize
+        cropSize,
+        cropSize
     )
 }

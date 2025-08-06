@@ -3,6 +3,7 @@ package com.fomaxtro.core.presentation.screen
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.pm.ActivityInfo
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -50,6 +51,7 @@ import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 import kotlin.math.roundToInt
 
+@SuppressLint("SourceLockedOrientationActivity")
 @Composable
 fun ScanRoot(
     onCloseApp: () -> Unit,
@@ -64,18 +66,21 @@ fun ScanRoot(
     val snackbarHostState = remember {
         SnackbarHostState()
     }
-    val frameSize = 324.dp
+    val frameSize = 256.dp
     val frameSizePx = with(density) { frameSize.toPx() }
 
     val windowWidth = windowInfo.containerSize.width
     val windowHeight = windowInfo.containerSize.height
 
+    LaunchedEffect(Unit) {
+        (context as Activity).requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
     val cameraController = remember {
         LifecycleCameraController(context).apply {
-            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
             setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
 
+            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             imageAnalysisBackpressureStrategy = ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
 
             setImageAnalysisAnalyzer(
