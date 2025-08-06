@@ -1,9 +1,7 @@
 package com.fomaxtro.core.presentation.ui
 
-import android.content.res.Configuration
 import android.hardware.SensorManager
 import android.view.OrientationEventListener
-import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Stable
@@ -13,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 
 interface ScreenOrientationState {
@@ -23,7 +20,7 @@ interface ScreenOrientationState {
 
 @Stable
 private class ScreenOrientationStateImpl(
-    currentOrientation: ScreenOrientation,
+    currentOrientation: ScreenOrientation = ScreenOrientation.PORTRAIT,
     previousOrientation: ScreenOrientation = currentOrientation,
     rotationDegrees: Int = 0
 ) : ScreenOrientationState {
@@ -117,22 +114,12 @@ enum class ScreenOrientation {
 
 @Composable
 fun rememberScreenOrientationState(): ScreenOrientationState {
-    val configuration = LocalConfiguration.current
     val context = LocalContext.current
-
-    TextFieldState.Saver
 
     val screenOrientationState = rememberSaveable(
         saver = ScreenOrientationStateImpl.Saver
     ) {
-        val screenOrientation =
-            if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                ScreenOrientation.PORTRAIT
-            } else {
-                ScreenOrientation.LANDSCAPE_RIGHT
-            }
-
-        ScreenOrientationStateImpl(screenOrientation)
+        ScreenOrientationStateImpl()
     }
 
     DisposableEffect(context) {
