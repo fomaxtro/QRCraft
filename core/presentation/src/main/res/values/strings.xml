@@ -9,4 +9,13 @@
     <string name="loading">Loading…</string>
     <string name="qr_not_found">No QR-codes found</string>
     <string name="alert">Alert</string>
+    <string name="scan_result">Scan Result</string>
+    <string name="contact">Contact</string>
+    <string name="geolocation">Geolocation</string>
+    <string name="link">Link</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="text">Text</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="show_more">Show more</string>
+    <string name="show_less">Show less</string>
 </resources>
