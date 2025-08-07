@@ -1,4 +1,4 @@
-package com.fomaxtro.core.presentation.screen
+package com.fomaxtro.core.presentation.screen.scan
 
 data class ScanState(
     val hasCameraPermission: Boolean = false,

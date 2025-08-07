@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
-import com.fomaxtro.core.presentation.screen.ScanRoot
+import com.fomaxtro.core.presentation.screen.scan.ScanRoot
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

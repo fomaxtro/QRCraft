@@ -1,4 +1,4 @@
-package com.fomaxtro.core.presentation.screen
+package com.fomaxtro.core.presentation.screen.scan
 
 import android.Manifest
 import androidx.lifecycle.ViewModel

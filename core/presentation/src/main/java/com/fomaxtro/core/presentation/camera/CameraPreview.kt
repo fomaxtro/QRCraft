@@ -1,4 +1,4 @@
-package com.fomaxtro.core.presentation.screen.components
+package com.fomaxtro.core.presentation.camera
 
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView

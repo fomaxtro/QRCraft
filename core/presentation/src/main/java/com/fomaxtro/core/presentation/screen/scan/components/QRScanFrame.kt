@@ -1,4 +1,4 @@
-package com.fomaxtro.core.presentation.screen.components
+package com.fomaxtro.core.presentation.screen.scan.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding

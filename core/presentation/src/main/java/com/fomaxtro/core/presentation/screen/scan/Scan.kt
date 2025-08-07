@@ -1,4 +1,4 @@
-package com.fomaxtro.core.presentation.screen
+package com.fomaxtro.core.presentation.screen.scan
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -40,13 +40,13 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fomaxtro.core.presentation.R
+import com.fomaxtro.core.presentation.camera.CameraPreview
 import com.fomaxtro.core.presentation.camera.QRAnalyzer
 import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.SurfaceHigher
-import com.fomaxtro.core.presentation.screen.components.CameraPreview
-import com.fomaxtro.core.presentation.screen.components.OverlayLoading
-import com.fomaxtro.core.presentation.screen.components.QRScanOverlay
+import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
+import com.fomaxtro.core.presentation.screen.scan.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt

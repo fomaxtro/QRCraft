@@ -1,4 +1,4 @@
-package com.fomaxtro.core.presentation.screen.components
+package com.fomaxtro.core.presentation.screen.scan.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
