@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -28,12 +27,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -48,12 +45,10 @@ import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.SurfaceHigher
 import com.fomaxtro.core.presentation.screen.components.CameraPreview
-import com.fomaxtro.core.presentation.screen.components.DisplayDialog
 import com.fomaxtro.core.presentation.screen.components.OverlayLoading
 import com.fomaxtro.core.presentation.screen.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 @SuppressLint("SourceLockedOrientationActivity")
@@ -64,6 +59,8 @@ fun ScanRoot(
     onAlwaysDeniedCameraPermission: () -> Unit,
     viewModel: ScanViewModel = koinViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
     val context = LocalContext.current
     val density = LocalDensity.current
     val windowInfo = LocalWindowInfo.current
@@ -95,10 +92,18 @@ fun ScanRoot(
                     windowWidth = windowWidth,
                     windowHeight = windowHeight,
                     onResult = { qr ->
-                        Timber.tag("QRAnalyzer").d(qr.toString())
+                        viewModel.onAction(ScanAction.OnQrScanned(qr))
                     }
                 )
             )
+        }
+    }
+
+    LaunchedEffect(state.isProcessingQr) {
+        if (state.isProcessingQr) {
+            cameraController.setEnabledUseCases(0)
+        } else {
+            cameraController.setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
         }
     }
 
@@ -123,8 +128,6 @@ fun ScanRoot(
         }
     }
 
-    val state by viewModel.state.collectAsStateWithLifecycle()
-
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             ScanEvent.CloseApp -> onCloseApp()
@@ -132,7 +135,7 @@ fun ScanRoot(
                 launcher.launch(Manifest.permission.CAMERA)
             }
 
-            is ScanEvent.ShowMessage -> {
+            is ScanEvent.ShowSnackbar -> {
                 snackbarHostState.showSnackbar(
                     message = event.message.asString(context)
                 )
@@ -221,19 +224,6 @@ private fun ScanScreen(
         )
     }
 
-    if (state.showQrNotFoundDialog) {
-        DisplayDialog(
-            onDismissRequest = {},
-            icon = {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.alert_triangle),
-                    contentDescription = stringResource(R.string.alert)
-                )
-            },
-            text = stringResource(R.string.qr_not_found),
-        )
-    }
-
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackbarHostState) {
@@ -257,7 +247,7 @@ private fun ScanScreen(
                 placeHolder = stringResource(R.string.qr_scan_placeholder)
             )
 
-            if (state.isScanning) {
+            if (state.isProcessingQr) {
                 OverlayLoading()
             }
         }
@@ -281,8 +271,7 @@ private fun ScanScreenPreview() {
         ScanScreen(
             state = ScanState(
                 hasCameraPermission = true,
-                isScanning = false,
-                showQrNotFoundDialog = true
+                isProcessingQr = false
             ),
             snackbarHostState = snackbarHostState,
             frameSize = 324.dp

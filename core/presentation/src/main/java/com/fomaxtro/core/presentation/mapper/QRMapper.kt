@@ -4,25 +4,25 @@ import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.model.WifiEncryptionType
 import com.google.mlkit.vision.barcode.common.Barcode
 
-fun Barcode.toQR(): QR? {
+fun Barcode.toQR(): QR {
     return when (valueType) {
         Barcode.TYPE_WIFI -> {
-            val wifi = wifi ?: return null
+            val wifi = requireNotNull(wifi)
 
             QR.Wifi(
-                ssid = wifi.ssid ?: return null,
+                ssid = wifi.ssid!!,
                 password = wifi.password,
                 encryptionType = when (wifi.encryptionType) {
                     Barcode.WiFi.TYPE_WEP -> WifiEncryptionType.WEP
                     Barcode.WiFi.TYPE_WPA -> WifiEncryptionType.WPA
                     Barcode.WiFi.TYPE_OPEN -> WifiEncryptionType.OPEN
-                    else -> null
+                    else -> throw IllegalArgumentException("Unknown wifi encryption type")
                 }
             )
         }
 
         Barcode.TYPE_GEO -> {
-            val geolocation = geoPoint ?: return null
+            val geolocation = requireNotNull(geoPoint)
 
             QR.Geolocation(
                 latitude = geolocation.lat,
@@ -31,36 +31,28 @@ fun Barcode.toQR(): QR? {
         }
 
         Barcode.TYPE_PHONE -> {
-            val phoneNumber = phone?.number ?: return null
-
             QR.PhoneNumber(
-                phoneNumber = phoneNumber
+                phoneNumber = requireNotNull(phone?.number)
             )
         }
 
         Barcode.TYPE_CONTACT_INFO -> {
-            val contact = contactInfo ?: return null
+            val contact = requireNotNull(contactInfo)
 
             val name = contact.name
             val phoneNumber = contact.phones.firstOrNull()
             val email = contact.emails.firstOrNull()
 
-            if (name == null && phoneNumber == null && email == null) {
-                return null
-            }
-
             QR.Contact(
-                name = name!!.formattedName,
-                phoneNumber = phoneNumber!!.number,
-                email = email!!.address
+                name = name?.formattedName,
+                phoneNumber = phoneNumber?.number,
+                email = email?.address
             )
         }
 
         Barcode.TYPE_URL -> {
-            val url = url?.url ?: return null
-
             QR.Link(
-                link = url
+                link = requireNotNull(url?.url)
             )
         }
 

@@ -18,7 +18,7 @@ class QRAnalyzer(
     private val frameSize: Int,
     private val windowWidth: Int,
     private val windowHeight: Int,
-    private val onResult: (QR?) -> Unit
+    private val onResult: (QR) -> Unit
 ) : ImageAnalysis.Analyzer {
     private var lastAnalysisTime = 0L
     private val analysisInterval = 100L

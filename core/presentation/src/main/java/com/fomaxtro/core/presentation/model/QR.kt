@@ -14,7 +14,7 @@ sealed interface QR {
     data class Wifi(
         val ssid: String,
         val password: String?,
-        val encryptionType: WifiEncryptionType?
+        val encryptionType: WifiEncryptionType
     ) : QR
 }
 
