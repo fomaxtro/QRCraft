@@ -240,10 +240,7 @@ private fun ScanScreen(
 
             QRScanOverlay(
                 frameSize = frameSize,
-                cornerRadius = 18.dp,
                 color = MaterialTheme.colorScheme.primary,
-                strokeWidth = 4.dp,
-                borderSize = 16.dp,
                 placeHolder = stringResource(R.string.qr_scan_placeholder)
             )
 

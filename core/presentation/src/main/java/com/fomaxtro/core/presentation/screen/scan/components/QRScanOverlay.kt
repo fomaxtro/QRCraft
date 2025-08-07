@@ -28,22 +28,20 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import com.fomaxtro.core.presentation.designsystem.theme.OnOverlay
-import com.fomaxtro.core.presentation.designsystem.theme.Overlay
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
+import com.fomaxtro.core.presentation.designsystem.theme.onOverlay
+import com.fomaxtro.core.presentation.designsystem.theme.overlay
 import com.fomaxtro.core.presentation.ui.rememberScreenOrientationState
 
 @Composable
 fun QRScanOverlay(
     frameSize: Dp,
-    cornerRadius: Dp,
     color: Color,
-    strokeWidth: Dp,
-    borderSize: Dp,
     placeHolder: String,
     modifier: Modifier = Modifier
 ) {
     val padding = 32.dp
+    val cornerRadius = 18.dp
     val screenOrientation = rememberScreenOrientationState()
     val frameRotation by animateFloatAsState(
         targetValue = screenOrientation.rotationDegrees.toFloat()
@@ -53,7 +51,7 @@ fun QRScanOverlay(
         modifier = modifier
             .fillMaxSize()
             .background(
-                color = Overlay,
+                color = MaterialTheme.colorScheme.overlay,
                 shape = QRFrameShape(
                     frameSize = frameSize,
                     cornerRadius = cornerRadius
@@ -69,9 +67,9 @@ fun QRScanOverlay(
         ) {
             QRScanFrame(
                 color = color,
-                strokeWidth = strokeWidth,
+                strokeWidth = 4.dp,
                 cornerRadius = cornerRadius,
-                borderSize = borderSize,
+                borderSize = 16.dp,
                 modifier = Modifier
                     .size(frameSize)
             )
@@ -83,7 +81,7 @@ fun QRScanOverlay(
                         y = -frameSize / 2 - padding
                     ),
                 style = MaterialTheme.typography.titleSmall,
-                color = OnOverlay
+                color = MaterialTheme.colorScheme.onOverlay
             )
         }
     }
@@ -141,9 +139,6 @@ private fun QRScanOverlayPreview() {
     QRCraftTheme {
         QRScanOverlay(
             color = MaterialTheme.colorScheme.primary,
-            strokeWidth = 4.dp,
-            cornerRadius = 18.dp,
-            borderSize = 16.dp,
             frameSize = 324.dp,
             placeHolder = "Scan QR code"
         )
