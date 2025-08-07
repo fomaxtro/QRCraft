@@ -17,6 +17,8 @@ val ColorScheme.overlay: Color
     get() = Overlay
 val ColorScheme.onOverlay: Color
     get() = OnOverlay
+val ColorScheme.onSurfaceDisabled: Color
+    get() = OnSurfaceDisabled
 
 @Composable
 fun QRCraftTheme(
