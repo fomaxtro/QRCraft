@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -29,7 +30,7 @@ fun ExpandableText(
     modifier: Modifier = Modifier,
     textAlign: TextAlign? = null
 ) {
-    var isClickable by rememberSaveable {
+    var isClickable by remember {
         mutableStateOf(false)
     }
     var isExpanded by rememberSaveable {
@@ -47,9 +48,7 @@ fun ExpandableText(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.fillMaxWidth(),
             onTextLayout = { result ->
-                if (result.hasVisualOverflow) {
-                    isClickable = true
-                }
+                isClickable = result.lineCount > 6 || result.hasVisualOverflow
             }
         )
 
