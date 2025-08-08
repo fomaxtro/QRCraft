@@ -21,13 +21,11 @@ class AndroidFileManager(
         return file.absolutePath
     }
 
-    override suspend fun readImageAndDelete(path: String): ByteArray {
+    override suspend fun readImage(path: String): ByteArray {
         val file = File(path)
 
         return withContext(Dispatchers.IO) {
-            file.readBytes().also {
-                file.delete()
-            }
+            file.readBytes()
         }
     }
 }

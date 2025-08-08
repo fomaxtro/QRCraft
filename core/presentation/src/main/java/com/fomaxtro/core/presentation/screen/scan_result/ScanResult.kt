@@ -1,6 +1,7 @@
 package com.fomaxtro.core.presentation.screen.scan_result
 
 import android.content.ClipData
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -75,10 +77,12 @@ fun ScanResultRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val clipboard = LocalClipboard.current
+    val context = LocalContext.current
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             ScanResultEvent.NavigateBack -> navigateBack()
+
             is ScanResultEvent.CopyToClipboard -> {
                 clipboard.setClipEntry(
                     ClipEntry(
@@ -88,6 +92,19 @@ fun ScanResultRoot(
                         )
                     )
                 )
+            }
+
+            is ScanResultEvent.ShareText -> {
+                val sendIntent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    type = "text/plain"
+
+                    putExtra(Intent.EXTRA_TEXT, event.text)
+                }
+
+                Intent.createChooser(sendIntent, null).also {
+                    context.startActivity(it)
+                }
             }
         }
     }
@@ -226,7 +243,9 @@ private fun ScanResultScreen(
                             .fillMaxWidth()
                     ) {
                         QRCraftButton(
-                            onClick = {},
+                            onClick = {
+                                onAction(ScanResultAction.OnShareClick)
+                            },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.surfaceHigher,
                                 contentColor = MaterialTheme.colorScheme.onSurface

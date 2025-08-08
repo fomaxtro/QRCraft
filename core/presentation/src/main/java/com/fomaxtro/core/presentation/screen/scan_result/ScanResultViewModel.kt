@@ -52,7 +52,7 @@ class ScanResultViewModel(
     val events = eventChannel.receiveAsFlow()
 
     private suspend fun loadImage(imagePath: String) {
-        val imageBytes = fileManager.readImageAndDelete(imagePath)
+        val imageBytes = fileManager.readImage(imagePath)
         val qrImage = BitmapFactory
             .decodeByteArray(imageBytes, 0, imageBytes.size)
             .asImageBitmap()
@@ -67,6 +67,7 @@ class ScanResultViewModel(
     fun onAction(action: ScanResultAction) {
         when (action) {
             ScanResultAction.OnNavigateBackClick -> onNavigateBackClick()
+            ScanResultAction.OnShareClick -> onShareClick()
             ScanResultAction.OnCopyClick -> onCopyClick()
         }
     }
@@ -75,6 +76,16 @@ class ScanResultViewModel(
         viewModelScope.launch {
             eventChannel.send(
                 ScanResultEvent.CopyToClipboard(
+                    text = state.value.qr.toFormattedText()
+                )
+            )
+        }
+    }
+
+    private fun onShareClick() {
+        viewModelScope.launch {
+            eventChannel.send(
+                ScanResultEvent.ShareText(
                     text = state.value.qr.toFormattedText()
                 )
             )
