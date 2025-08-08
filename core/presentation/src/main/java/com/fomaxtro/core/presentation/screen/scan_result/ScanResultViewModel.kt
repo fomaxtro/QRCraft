@@ -5,6 +5,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.FileManager
+import com.fomaxtro.core.presentation.mapper.toFormattedText
 import com.fomaxtro.core.presentation.model.QR
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,6 +67,17 @@ class ScanResultViewModel(
     fun onAction(action: ScanResultAction) {
         when (action) {
             ScanResultAction.OnNavigateBackClick -> onNavigateBackClick()
+            ScanResultAction.OnCopyClick -> onCopyClick()
+        }
+    }
+
+    private fun onCopyClick() {
+        viewModelScope.launch {
+            eventChannel.send(
+                ScanResultEvent.CopyToClipboard(
+                    text = state.value.qr.toFormattedText()
+                )
+            )
         }
     }
 

@@ -1,5 +1,6 @@
 package com.fomaxtro.core.presentation.screen.scan_result
 
+import android.content.ClipData
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
@@ -71,10 +74,21 @@ fun ScanResultRoot(
     }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val clipboard = LocalClipboard.current
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             ScanResultEvent.NavigateBack -> navigateBack()
+            is ScanResultEvent.CopyToClipboard -> {
+                clipboard.setClipEntry(
+                    ClipEntry(
+                        clipData = ClipData.newPlainText(
+                            "QR",
+                            event.text
+                        )
+                    )
+                )
+            }
         }
     }
 
@@ -233,7 +247,9 @@ private fun ScanResultScreen(
                         Spacer(modifier = Modifier.width(8.dp))
 
                         QRCraftButton(
-                            onClick = {},
+                            onClick = {
+                                onAction(ScanResultAction.OnCopyClick)
+                            },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.surfaceHigher,
                                 contentColor = MaterialTheme.colorScheme.onSurface
