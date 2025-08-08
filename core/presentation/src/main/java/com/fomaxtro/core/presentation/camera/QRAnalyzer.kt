@@ -7,7 +7,7 @@ import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.fomaxtro.core.presentation.mapper.toQR
-import com.fomaxtro.core.presentation.model.QR
+import com.fomaxtro.core.presentation.model.QRScanResult
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -18,7 +18,7 @@ class QRAnalyzer(
     private val frameSize: Int,
     private val windowWidth: Int,
     private val windowHeight: Int,
-    private val onResult: (QR) -> Unit
+    private val onResult: (QRScanResult) -> Unit
 ) : ImageAnalysis.Analyzer {
     private var lastAnalysisTime = 0L
     private val analysisInterval = 100L
@@ -62,7 +62,12 @@ class QRAnalyzer(
                     if (lastScannedResult != barcode.rawValue) {
                         lastScannedResult = barcode.rawValue
 
-                        onResult(barcode.toQR())
+                        onResult(
+                            QRScanResult(
+                                qr = barcode.toQR(),
+                                image = cropImage
+                            )
+                        )
                     }
                 } else {
                     lastScannedResult = null

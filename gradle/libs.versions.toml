@@ -21,6 +21,7 @@ koin = "4.1.0"
 timber = "5.0.1"
 barcodeScanner = "18.3.1"
 materialAdaptive = "1.2.0-alpha10"
+kotlinxSerialization = "1.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -53,6 +54,8 @@ koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-comp
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 gms-play-services-mlkit-barcode-scanning = { module = "com.google.android.gms:play-services-mlkit-barcode-scanning", version.ref = "barcodeScanner" }
 
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
+
 [bundles]
 koin-android-compose = [
     "koin-androidx-compose",
@@ -72,4 +75,5 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 

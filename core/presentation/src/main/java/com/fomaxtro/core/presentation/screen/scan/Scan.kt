@@ -49,6 +49,7 @@ import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
 import com.fomaxtro.core.presentation.screen.scan.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
+import timber.log.Timber
 import kotlin.math.roundToInt
 
 @SuppressLint("SourceLockedOrientationActivity")
@@ -91,8 +92,8 @@ fun ScanRoot(
                     frameSize = frameSizePx.roundToInt(),
                     windowWidth = windowWidth,
                     windowHeight = windowHeight,
-                    onResult = { qr ->
-                        viewModel.onAction(ScanAction.OnQrScanned(qr))
+                    onResult = { qrScanResult ->
+                        viewModel.onAction(ScanAction.OnQrScanned(qrScanResult))
                     }
                 )
             )
@@ -138,6 +139,15 @@ fun ScanRoot(
             is ScanEvent.ShowSnackbar -> {
                 snackbarHostState.showSnackbar(
                     message = event.message.asString(context)
+                )
+            }
+
+            is ScanEvent.NavigateToScanResult -> {
+                Timber.tag("NavigateToScanResult").d(
+                    """
+                    imagePath: ${event.imagePath}
+                    qr: ${event.qr}
+                """.trimIndent()
                 )
             }
         }

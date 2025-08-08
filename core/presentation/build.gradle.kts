@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {
@@ -60,6 +61,8 @@ dependencies {
     implementation(libs.bundles.cameraX)
     implementation(libs.gms.play.services.mlkit.barcode.scanning)
     implementation(libs.timber)
+
+    implementation(libs.kotlinx.serialization.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
