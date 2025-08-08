@@ -15,6 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +26,8 @@ import com.fomaxtro.core.presentation.designsystem.theme.onSurfaceDisabled
 @Composable
 fun ExpandableText(
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    textAlign: TextAlign? = null
 ) {
     var isClickable by rememberSaveable {
         mutableStateOf(false)
@@ -67,7 +69,8 @@ fun ExpandableText(
                         },
                         indication = null,
                         interactionSource = null
-                    )
+                    ),
+                textAlign = textAlign
             )
         }
     }

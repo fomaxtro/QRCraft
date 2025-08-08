@@ -41,13 +41,13 @@ class ScanViewModel(
     }
 
     private fun onQrScanned(qrScanResult: QRScanResult) {
-        _state.update {
-            it.copy(
-                isProcessingQr = true
-            )
-        }
-
         viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isProcessingQr = true
+                )
+            }
+
             val imagePath = fileManager.saveImage(qrScanResult.image.toByteArray(90))
 
             eventChannel.send(
@@ -56,6 +56,12 @@ class ScanViewModel(
                     imagePath = imagePath
                 )
             )
+
+            _state.update {
+                it.copy(
+                    isProcessingQr = false
+                )
+            }
         }
     }
 

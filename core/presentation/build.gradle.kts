@@ -57,7 +57,7 @@ dependencies {
 
     implementation(projects.core.domain)
 
-    implementation(libs.bundles.koin.android.compose)
+    implementation(libs.koin.androidx.compose)
     implementation(libs.bundles.cameraX)
     implementation(libs.gms.play.services.mlkit.barcode.scanning)
     implementation(libs.timber)

@@ -23,6 +23,9 @@ barcodeScanner = "18.3.1"
 materialAdaptive = "1.2.0-alpha10"
 kotlinxSerialization = "1.9.0"
 
+nav3Core = "1.0.0-alpha06"
+lifecycleViewmodelNav3 = "1.0.0-alpha04"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -49,24 +52,28 @@ androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
-koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation", version.ref = "koin" }
 
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 gms-play-services-mlkit-barcode-scanning = { module = "com.google.android.gms:play-services-mlkit-barcode-scanning", version.ref = "barcodeScanner" }
 
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
 
-[bundles]
-koin-android-compose = [
-    "koin-androidx-compose",
-    "koin-androidx-compose-navigation"
-]
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 
+[bundles]
 cameraX = [
     "androidx-camera-core",
     "androidx-camera-camera2",
     "androidx-camera-lifecycle",
     "androidx-camera-view"
+]
+
+navigation3 = [
+    "androidx-navigation3-runtime",
+    "androidx-navigation3-ui",
+    "androidx-lifecycle-viewmodel-navigation3"
 ]
 
 [plugins]

@@ -2,8 +2,8 @@ package com.fomaxtro.core.presentation.screen.scan
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.pm.ActivityInfo
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -45,11 +45,11 @@ import com.fomaxtro.core.presentation.camera.QRAnalyzer
 import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.SurfaceHigher
+import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
 import com.fomaxtro.core.presentation.screen.scan.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
-import timber.log.Timber
 import kotlin.math.roundToInt
 
 @SuppressLint("SourceLockedOrientationActivity")
@@ -58,11 +58,13 @@ fun ScanRoot(
     onCloseApp: () -> Unit,
     onCameraPermissionDenied: () -> Unit,
     onAlwaysDeniedCameraPermission: () -> Unit,
+    navigateToScanResult: (qr: QR, imagePath: String) -> Unit,
     viewModel: ScanViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val context = LocalContext.current
+    val activity = LocalActivity.current
     val density = LocalDensity.current
     val windowInfo = LocalWindowInfo.current
 
@@ -76,7 +78,7 @@ fun ScanRoot(
     val windowHeight = windowInfo.containerSize.height
 
     LaunchedEffect(Unit) {
-        (context as Activity).requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
     val cameraController = remember {
@@ -116,8 +118,8 @@ fun ScanRoot(
                 viewModel.onAction(ScanAction.OnCameraPermissionGranted)
             }
 
-            ActivityCompat.shouldShowRequestPermissionRationale(
-                context as Activity,
+            activity != null && ActivityCompat.shouldShowRequestPermissionRationale(
+                activity,
                 Manifest.permission.CAMERA
             ) -> {
                 onCameraPermissionDenied()
@@ -143,12 +145,9 @@ fun ScanRoot(
             }
 
             is ScanEvent.NavigateToScanResult -> {
-                Timber.tag("NavigateToScanResult").d(
-                    """
-                    imagePath: ${event.imagePath}
-                    qr: ${event.qr}
-                """.trimIndent()
-                )
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+
+                navigateToScanResult(event.qr, event.imagePath)
             }
         }
     }

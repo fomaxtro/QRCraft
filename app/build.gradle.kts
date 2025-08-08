@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 kotlin {
@@ -61,11 +62,14 @@ dependencies {
     implementation(libs.timber)
 
     implementation(libs.koin.android)
-    implementation(libs.bundles.koin.android.compose)
+    implementation(libs.koin.androidx.compose)
 
     implementation(projects.core.domain)
     implementation(projects.core.data)
     implementation(projects.core.presentation)
+
+    implementation(libs.bundles.navigation3)
+    implementation(libs.kotlinx.serialization.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

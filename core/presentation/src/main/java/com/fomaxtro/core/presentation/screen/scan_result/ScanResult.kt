@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
@@ -55,13 +57,26 @@ import com.fomaxtro.core.presentation.mapper.toFormattedText
 import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.preview.PreviewQr
 import com.fomaxtro.core.presentation.screen.scan_result.components.ExpandableText
+import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ScanResultRoot(
-    viewModel: ScanResultViewModel = koinViewModel()
+    qr: QR,
+    imagePath: String,
+    navigateBack: () -> Unit,
+    viewModel: ScanResultViewModel = koinViewModel {
+        parametersOf(qr, imagePath)
+    }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            ScanResultEvent.NavigateBack -> navigateBack()
+        }
+    }
 
     ScanResultScreen(
         onAction = viewModel::onAction,
@@ -91,7 +106,7 @@ private fun ScanResultScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-
+                            onAction(ScanResultAction.OnNavigateBackClick)
                         },
                         colors = IconButtonDefaults.iconButtonColors(
                             contentColor = MaterialTheme.colorScheme.onOverlay
@@ -115,16 +130,16 @@ private fun ScanResultScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(innerPadding)
-                .padding(
-                    top = 32.dp
-                )
-                .padding(16.dp),
+                .padding(top = 32.dp)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             contentAlignment = Alignment.TopCenter
         ) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = qrSize / 2),
+                    .offset(y = qrSize / 2)
+                    .padding(bottom = qrSize / 2),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
@@ -184,7 +199,10 @@ private fun ScanResultScreen(
 
                         is QR.Text -> {
                             ExpandableText(
-                                text = state.qr.text
+                                text = state.qr.text,
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier
+                                    .fillMaxWidth()
                             )
                         }
                     }
@@ -244,6 +262,12 @@ private fun ScanResultScreen(
                 if (isInPreviewMode) {
                     Image(
                         imageVector = Icons.Default.Email,
+                        contentDescription = null,
+                        modifier = Modifier.size(qrSize)
+                    )
+                } else if (state.qrImage != null) {
+                    Image(
+                        bitmap = state.qrImage,
                         contentDescription = null,
                         modifier = Modifier.size(qrSize)
                     )
