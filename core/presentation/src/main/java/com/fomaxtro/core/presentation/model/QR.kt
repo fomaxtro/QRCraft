@@ -2,7 +2,7 @@ package com.fomaxtro.core.presentation.model
 
 sealed interface QR {
     data class Text(val text: String) : QR
-    data class Link(val link: String) : QR
+    data class Link(val url: String) : QR
     data class Contact(
         val name: String?,
         val phoneNumber: String?,

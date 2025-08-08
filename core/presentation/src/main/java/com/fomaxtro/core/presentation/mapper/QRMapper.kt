@@ -52,10 +52,50 @@ fun Barcode.toQR(): QR {
 
         Barcode.TYPE_URL -> {
             QR.Link(
-                link = requireNotNull(url?.url)
+                url = requireNotNull(url?.url)
             )
         }
 
         else -> QR.Text(rawValue ?: "")
+    }
+}
+
+fun QR.toFormattedText(): String {
+    return when (this) {
+        is QR.Contact -> {
+            buildString {
+                if (name != null) {
+                    appendLine(name)
+                }
+
+                if (phoneNumber != null) {
+                    appendLine(phoneNumber)
+                }
+
+                if (email != null) {
+                    append(email)
+                }
+            }
+        }
+
+        is QR.Geolocation -> {
+            "$latitude, $longitude"
+        }
+
+        is QR.Link -> url
+        is QR.PhoneNumber -> phoneNumber
+        is QR.Text -> text
+
+        is QR.Wifi -> {
+            buildString {
+                appendLine("SSID: $ssid")
+
+                if (!password.isNullOrEmpty()) {
+                    appendLine("Password: $password")
+                }
+
+                append("Encryption type: $encryptionType")
+            }
+        }
     }
 }
