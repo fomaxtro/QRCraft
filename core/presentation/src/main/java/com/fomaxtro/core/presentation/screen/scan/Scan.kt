@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.camera.CameraPreview
@@ -76,6 +77,7 @@ fun ScanRoot(
 
     val windowWidth = windowInfo.containerSize.width
     val windowHeight = windowInfo.containerSize.height
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(Unit) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -83,8 +85,6 @@ fun ScanRoot(
 
     val cameraController = remember {
         LifecycleCameraController(context).apply {
-            setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
-
             cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
             imageAnalysisBackpressureStrategy = ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
 
@@ -102,11 +102,14 @@ fun ScanRoot(
         }
     }
 
+    LaunchedEffect(cameraController) {
+        cameraController.setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
+        cameraController.bindToLifecycle(lifecycleOwner)
+    }
+
     LaunchedEffect(state.isProcessingQr) {
         if (state.isProcessingQr) {
             cameraController.setEnabledUseCases(0)
-        } else {
-            cameraController.setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
         }
     }
 
@@ -145,8 +148,8 @@ fun ScanRoot(
             }
 
             is ScanEvent.NavigateToScanResult -> {
+                cameraController.unbind()
                 activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-
                 navigateToScanResult(event.qr, event.imagePath)
             }
         }
