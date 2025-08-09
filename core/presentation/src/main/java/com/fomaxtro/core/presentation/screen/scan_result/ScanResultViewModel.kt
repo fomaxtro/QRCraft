@@ -15,13 +15,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class ScanResultViewModel(
     qr: QR,
     imagePath: String,
     private val fileManager: FileManager
 ) : ViewModel() {
+    private var firstLaunch = false
+
     private val _state = MutableStateFlow(
         ScanResultState(
             qr = qr
@@ -29,7 +30,11 @@ class ScanResultViewModel(
     )
     val state = _state
         .onStart {
-            loadImage(imagePath)
+            if (!firstLaunch) {
+                loadImage(imagePath)
+
+                firstLaunch = true
+            }
         }
         .stateIn(
             viewModelScope,
@@ -39,20 +44,11 @@ class ScanResultViewModel(
             )
         )
 
-    init {
-        Timber.tag("NavigationRoot").d(
-            """
-                            qr: $qr
-                            imagePath: $imagePath
-                        """.trimIndent()
-        )
-    }
-
     private val eventChannel = Channel<ScanResultEvent>()
     val events = eventChannel.receiveAsFlow()
 
     private suspend fun loadImage(imagePath: String) {
-        val imageBytes = fileManager.readImage(imagePath)
+        val imageBytes = fileManager.consumeImage(imagePath)
         val qrImage = BitmapFactory
             .decodeByteArray(imageBytes, 0, imageBytes.size)
             .asImageBitmap()

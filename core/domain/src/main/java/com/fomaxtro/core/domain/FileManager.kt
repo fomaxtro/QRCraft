@@ -2,5 +2,5 @@ package com.fomaxtro.core.domain
 
 interface FileManager {
     suspend fun saveImage(image: ByteArray): String
-    suspend fun readImage(path: String): ByteArray
+    suspend fun consumeImage(path: String): ByteArray
 }
