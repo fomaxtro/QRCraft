@@ -45,7 +45,7 @@ import com.fomaxtro.core.presentation.camera.CameraPreview
 import com.fomaxtro.core.presentation.camera.QRAnalyzer
 import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
-import com.fomaxtro.core.presentation.designsystem.theme.SurfaceHigher
+import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
 import com.fomaxtro.core.presentation.screen.scan.components.QRScanOverlay
@@ -207,7 +207,7 @@ private fun ScanScreen(
                         onAction(ScanAction.OnCloseAppClick)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = SurfaceHigher,
+                        containerColor = MaterialTheme.colorScheme.surfaceHigher,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     ),
                 ) {
@@ -223,7 +223,7 @@ private fun ScanScreen(
                         onAction(ScanAction.OnGrantAccessClick)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = SurfaceHigher,
+                        containerColor = MaterialTheme.colorScheme.surfaceHigher,
                         contentColor = MaterialTheme.colorScheme.onSurface
                     )
                 ) {

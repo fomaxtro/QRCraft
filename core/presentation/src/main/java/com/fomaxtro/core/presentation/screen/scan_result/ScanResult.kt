@@ -55,9 +55,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButton
-import com.fomaxtro.core.presentation.designsystem.theme.Link
-import com.fomaxtro.core.presentation.designsystem.theme.LinkBg
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
+import com.fomaxtro.core.presentation.designsystem.theme.link
+import com.fomaxtro.core.presentation.designsystem.theme.linkBg
 import com.fomaxtro.core.presentation.designsystem.theme.onOverlay
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.mapper.toFormattedText
@@ -231,8 +231,8 @@ private fun ScanResultScreen(
                                         url = state.qr.url,
                                         styles = TextLinkStyles(
                                             style = SpanStyle(
-                                                background = LinkBg,
-                                                color = Link
+                                                background = MaterialTheme.colorScheme.linkBg,
+                                                color = MaterialTheme.colorScheme.link
                                             )
                                         )
                                     )

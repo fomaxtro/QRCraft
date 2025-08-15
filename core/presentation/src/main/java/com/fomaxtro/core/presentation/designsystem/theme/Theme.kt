@@ -21,6 +21,14 @@ val ColorScheme.onSurfaceDisabled: Color
     get() = OnSurfaceDisabled
 val ColorScheme.surfaceHigher: Color
     get() = SurfaceHigher
+val ColorScheme.link: Color
+    get() = Link
+val ColorScheme.linkBg: Color
+    get() = LinkBg
+val ColorScheme.text: Color
+    get() = Text
+val ColorScheme.success: Color
+    get() = Success
 
 @Composable
 fun QRCraftTheme(

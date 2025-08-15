@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
-import com.fomaxtro.core.presentation.designsystem.theme.Success
+import com.fomaxtro.core.presentation.designsystem.theme.success
 
 @Composable
 private fun QRCraftSnackbar(
@@ -26,7 +26,7 @@ private fun QRCraftSnackbar(
 ) {
     Surface(
         shape = MaterialTheme.shapes.extraSmall,
-        color = Success,
+        color = MaterialTheme.colorScheme.success,
         contentColor = MaterialTheme.colorScheme.onSurface,
         modifier = modifier
     ) {
