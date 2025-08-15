@@ -57,12 +57,14 @@ fun NavigationRoot() {
                         activity?.finish()
                     },
                     navigateToScanResult = { qr, imagePath ->
-                        backStack.add(
-                            Route.ScanResult(
-                                qr = qr,
-                                imagePath = imagePath
+                        if (backStack.lastOrNull() !is Route.ScanResult) {
+                            backStack.add(
+                                Route.ScanResult(
+                                    qr = qr,
+                                    imagePath = imagePath
+                                )
                             )
-                        )
+                        }
                     }
                 )
             }
@@ -72,7 +74,9 @@ fun NavigationRoot() {
                     qr = scanResult.qr,
                     imagePath = scanResult.imagePath,
                     navigateBack = {
-                        backStack.removeLastOrNull()
+                        if (backStack.lastOrNull() is Route.ScanResult) {
+                            backStack.removeLastOrNull()
+                        }
                     }
                 )
             }
