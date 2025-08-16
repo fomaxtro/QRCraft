@@ -11,6 +11,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import com.fomaxtro.core.presentation.designsystem.appbars.NavDestination
 import com.fomaxtro.core.presentation.screen.scan.ScanRoot
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultRoot
 import com.fomaxtro.qrcraft.R
@@ -29,8 +30,24 @@ fun NavigationRoot() {
         onBack = {
             backStack.removeLastOrNull()
         },
+        sceneStrategy = SinglePaneNavigationSceneStrategy(
+            onNavigate = { navDestination ->
+                when (navDestination) {
+                    NavDestination.HISTORY -> {}
+                    NavDestination.SCAN -> {
+                        if (backStack.lastOrNull() !is Route.Scan) {
+                            backStack.add(Route.Scan)
+                        }
+                    }
+
+                    NavDestination.CREATE_QR -> {}
+                }
+            }
+        ),
         entryProvider = entryProvider {
-            entry<Route.Scan> {
+            entry<Route.Scan>(
+                metadata = SinglePaneNavigationScene.withNavigation()
+            ) {
                 val activity = LocalActivity.current
                 val context = LocalContext.current
 
@@ -54,7 +71,7 @@ fun NavigationRoot() {
                             Toast.LENGTH_LONG
                         ).show()
 
-                        activity?.finish()
+                        activity!!.finish()
                     },
                     navigateToScanResult = { qr, imagePath ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
