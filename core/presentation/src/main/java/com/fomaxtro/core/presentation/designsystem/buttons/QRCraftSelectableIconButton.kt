@@ -11,12 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fomaxtro.core.presentation.R
+import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.linkBg
 
@@ -62,7 +61,7 @@ private fun QRCraftSelectableIconButtonPreview() {
             onClick = {}
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.clock_refresh),
+                imageVector = QRCraftIcons.History,
                 contentDescription = stringResource(R.string.history)
             )
         }

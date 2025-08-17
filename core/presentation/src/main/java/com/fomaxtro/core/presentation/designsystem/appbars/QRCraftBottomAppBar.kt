@@ -14,14 +14,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftFilledIconButton
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftSelectableIconButton
+import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 
@@ -59,7 +58,7 @@ fun QRCraftBottomAppBar(
                     }
                 ) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.clock_refresh),
+                        imageVector = QRCraftIcons.History,
                         contentDescription = stringResource(R.string.history),
                         modifier = Modifier
                             .size(16.dp)
@@ -75,7 +74,7 @@ fun QRCraftBottomAppBar(
                     }
                 ) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.plus_circle),
+                        imageVector = QRCraftIcons.Create,
                         contentDescription = stringResource(R.string.create_qr),
                         modifier = Modifier
                             .size(16.dp)
@@ -92,7 +91,7 @@ fun QRCraftBottomAppBar(
                 .size(64.dp),
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.scan),
+                imageVector = QRCraftIcons.Scan,
                 contentDescription = stringResource(R.string.scan_qr),
                 modifier = Modifier
                     .size(28.dp)

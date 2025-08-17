@@ -18,13 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.fomaxtro.core.presentation.R
+import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +76,7 @@ private fun DisplayDialogPreview() {
             onDismissRequest = {},
             icon = {
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.alert_triangle),
+                    imageVector = QRCraftIcons.Alert,
                     contentDescription = null
                 )
             },

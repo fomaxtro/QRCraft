@@ -36,13 +36,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -55,6 +53,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButton
+import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.link
 import com.fomaxtro.core.presentation.designsystem.theme.linkBg
@@ -270,7 +269,7 @@ private fun ScanResultScreen(
                                 .weight(1f)
                         ) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.share),
+                                imageVector = QRCraftIcons.Share,
                                 contentDescription = stringResource(R.string.share)
                             )
 
@@ -293,7 +292,7 @@ private fun ScanResultScreen(
                                 .weight(1f)
                         ) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.copy),
+                                imageVector = QRCraftIcons.Copy,
                                 contentDescription = stringResource(R.string.copy)
                             )
 
