@@ -11,4 +11,7 @@ sealed interface Route : NavKey {
 
     @Serializable
     data class ScanResult(val qr: QR, val imagePath: String) : Route
+
+    @Serializable
+    data object CreateQR : Route
 }

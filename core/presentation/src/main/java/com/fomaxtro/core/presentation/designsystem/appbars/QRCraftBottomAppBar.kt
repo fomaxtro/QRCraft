@@ -9,12 +9,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -26,6 +23,7 @@ import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftFilledIconButton
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftSelectableIconButton
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
+import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 
 enum class NavDestination {
     HISTORY,
@@ -35,13 +33,10 @@ enum class NavDestination {
 
 @Composable
 fun QRCraftBottomAppBar(
+    currentDestination: NavDestination,
     onClick: (NavDestination) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var navDestination by rememberSaveable {
-        mutableStateOf(NavDestination.SCAN)
-    }
-
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -49,7 +44,8 @@ fun QRCraftBottomAppBar(
         Surface(
             modifier = Modifier
                 .padding(vertical = 6.dp),
-            shape = RoundedCornerShape(100.dp)
+            shape = RoundedCornerShape(100.dp),
+            color = MaterialTheme.colorScheme.surfaceHigher
         ) {
             Row(
                 modifier = Modifier
@@ -57,9 +53,8 @@ fun QRCraftBottomAppBar(
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 QRCraftSelectableIconButton(
-                    selected = navDestination == NavDestination.HISTORY,
+                    selected = currentDestination == NavDestination.HISTORY,
                     onClick = {
-                        navDestination = NavDestination.HISTORY
                         onClick(NavDestination.HISTORY)
                     }
                 ) {
@@ -74,9 +69,8 @@ fun QRCraftBottomAppBar(
                 Spacer(modifier = Modifier.width(72.dp))
 
                 QRCraftSelectableIconButton(
-                    selected = navDestination == NavDestination.CREATE_QR,
+                    selected = currentDestination == NavDestination.CREATE_QR,
                     onClick = {
-                        navDestination = NavDestination.CREATE_QR
                         onClick(NavDestination.CREATE_QR)
                     }
                 ) {
@@ -92,7 +86,6 @@ fun QRCraftBottomAppBar(
 
         QRCraftFilledIconButton(
             onClick = {
-                navDestination = NavDestination.SCAN
                 onClick(NavDestination.SCAN)
             },
             modifier = Modifier
@@ -113,7 +106,8 @@ fun QRCraftBottomAppBar(
 private fun QRCraftBottomAppBarPreview() {
     QRCraftTheme {
         QRCraftBottomAppBar(
-            onClick = {}
+            onClick = {},
+            currentDestination = NavDestination.CREATE_QR
         )
     }
 }

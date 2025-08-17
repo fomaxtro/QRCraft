@@ -12,6 +12,8 @@ import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.fomaxtro.core.presentation.designsystem.appbars.NavDestination
+import com.fomaxtro.core.presentation.designsystem.appbars.QRCraftBottomAppBar
+import com.fomaxtro.core.presentation.screen.create_qr.CreateQRRoot
 import com.fomaxtro.core.presentation.screen.scan.ScanRoot
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultRoot
 import com.fomaxtro.qrcraft.R
@@ -31,17 +33,32 @@ fun NavigationRoot() {
             backStack.removeLastOrNull()
         },
         sceneStrategy = SinglePaneNavigationSceneStrategy(
-            onNavigate = { navDestination ->
-                when (navDestination) {
-                    NavDestination.HISTORY -> {}
-                    NavDestination.SCAN -> {
-                        if (backStack.lastOrNull() !is Route.Scan) {
-                            backStack.add(Route.Scan)
-                        }
-                    }
-
-                    NavDestination.CREATE_QR -> {}
+            bottomAppBar = {
+                val currentDestination = when (backStack.lastOrNull()) {
+                    Route.Scan -> NavDestination.SCAN
+                    Route.CreateQR -> NavDestination.CREATE_QR
+                    else -> NavDestination.SCAN
                 }
+
+                QRCraftBottomAppBar(
+                    onClick = { navDestination ->
+                        when (navDestination) {
+                            NavDestination.HISTORY -> {}
+                            NavDestination.SCAN -> {
+                                if (backStack.lastOrNull() !is Route.Scan) {
+                                    backStack.add(Route.Scan)
+                                }
+                            }
+
+                            NavDestination.CREATE_QR -> {
+                                if (backStack.lastOrNull() !is Route.CreateQR) {
+                                    backStack.add(Route.CreateQR)
+                                }
+                            }
+                        }
+                    },
+                    currentDestination = currentDestination
+                )
             }
         ),
         entryProvider = entryProvider {
@@ -96,6 +113,12 @@ fun NavigationRoot() {
                         }
                     }
                 )
+            }
+
+            entry<Route.CreateQR>(
+                metadata = SinglePaneNavigationScene.withNavigation()
+            ) {
+                CreateQRRoot()
             }
         }
     )

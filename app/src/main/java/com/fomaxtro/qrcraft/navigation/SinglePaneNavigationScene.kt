@@ -9,13 +9,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.Scene
 import androidx.navigation3.ui.SceneStrategy
-import com.fomaxtro.core.presentation.designsystem.appbars.NavDestination
-import com.fomaxtro.core.presentation.designsystem.appbars.QRCraftBottomAppBar
 
 class SinglePaneNavigationScene<T : Any>(
     override val key: Any,
     override val previousEntries: List<NavEntry<T>>,
-    val onNavigate: (NavDestination) -> Unit,
+    private val bottomAppBar: @Composable () -> Unit,
     val entry: NavEntry<T>
 ) : Scene<T> {
     override val entries: List<NavEntry<T>> = listOf(entry)
@@ -26,12 +24,13 @@ class SinglePaneNavigationScene<T : Any>(
         ) {
             entry.Content()
 
-            QRCraftBottomAppBar(
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .navigationBarsPadding(),
-                onClick = onNavigate
-            )
+                    .navigationBarsPadding()
+            ) {
+                bottomAppBar()
+            }
         }
     }
 
@@ -43,7 +42,7 @@ class SinglePaneNavigationScene<T : Any>(
 }
 
 class SinglePaneNavigationSceneStrategy<T : Any>(
-    private val onNavigate: (NavDestination) -> Unit
+    private val bottomAppBar: @Composable () -> Unit
 ) : SceneStrategy<T> {
     @Composable
     override fun calculateScene(entries: List<NavEntry<T>>, onBack: (Int) -> Unit): Scene<T>? {
@@ -54,7 +53,7 @@ class SinglePaneNavigationSceneStrategy<T : Any>(
                 key = entries.last().contentKey,
                 entry = entry,
                 previousEntries = entries.dropLast(1),
-                onNavigate = onNavigate
+                bottomAppBar = bottomAppBar
             )
         } else null
     }
