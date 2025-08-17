@@ -22,6 +22,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -79,10 +80,6 @@ fun ScanRoot(
     val windowHeight = windowInfo.containerSize.height
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(Unit) {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-    }
-
     val cameraController = remember {
         LifecycleCameraController(context).apply {
             cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -102,9 +99,15 @@ fun ScanRoot(
         }
     }
 
-    LaunchedEffect(cameraController) {
+    DisposableEffect(Unit) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         cameraController.setEnabledUseCases(CameraController.IMAGE_ANALYSIS)
         cameraController.bindToLifecycle(lifecycleOwner)
+
+        onDispose {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            cameraController.unbind()
+        }
     }
 
     LaunchedEffect(state.isProcessingQr) {
@@ -148,8 +151,6 @@ fun ScanRoot(
             }
 
             is ScanEvent.NavigateToScanResult -> {
-                cameraController.unbind()
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                 navigateToScanResult(event.qr, event.imagePath)
             }
         }

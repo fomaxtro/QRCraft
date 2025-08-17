@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.window.core.layout.WindowSizeClass
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
@@ -55,6 +57,24 @@ private fun CreateQRScreen(
     onAction: (CreateQRAction) -> Unit = {},
     state: CreateQRState
 ) {
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val paddingAmount = if (
+        windowSizeClass
+            .isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
+    ) {
+        24.dp
+    } else {
+        16.dp
+    }
+    val columnCount = if (
+        windowSizeClass
+            .isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
+    ) {
+        3
+    } else {
+        2
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -69,12 +89,12 @@ private fun CreateQRScreen(
         containerColor = MaterialTheme.colorScheme.surface
     ) { innerPadding ->
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+            columns = GridCells.Fixed(columnCount),
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             contentPadding = PaddingValues(
-                horizontal = 16.dp
+                horizontal = paddingAmount
             ),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
