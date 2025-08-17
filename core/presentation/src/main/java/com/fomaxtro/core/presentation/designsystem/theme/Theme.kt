@@ -27,8 +27,26 @@ val ColorScheme.linkBg: Color
     get() = LinkBg
 val ColorScheme.text: Color
     get() = Text
+val ColorScheme.textBg: Color
+    get() = TextBg
 val ColorScheme.success: Color
     get() = Success
+val ColorScheme.contact: Color
+    get() = Contact
+val ColorScheme.contactBg: Color
+    get() = ContactBg
+val ColorScheme.geo: Color
+    get() = Geo
+val ColorScheme.geoBg: Color
+    get() = GeoBg
+val ColorScheme.phone: Color
+    get() = Phone
+val ColorScheme.phoneBg: Color
+    get() = PhoneBg
+val ColorScheme.wifi: Color
+    get() = Wifi
+val ColorScheme.wifiBg: Color
+    get() = WifiBg
 
 @Composable
 fun QRCraftTheme(
