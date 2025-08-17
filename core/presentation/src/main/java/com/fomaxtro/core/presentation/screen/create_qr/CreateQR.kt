@@ -14,13 +14,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowSizeClass
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
@@ -38,24 +35,39 @@ import com.fomaxtro.core.presentation.designsystem.theme.textBg
 import com.fomaxtro.core.presentation.designsystem.theme.wifi
 import com.fomaxtro.core.presentation.designsystem.theme.wifiBg
 import com.fomaxtro.core.presentation.screen.create_qr.components.ClickableCard
+import com.fomaxtro.core.presentation.ui.ObserveAsEvents
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CreateQRRoot(
-    viewModel: CreateQRViewModel = viewModel<CreateQRViewModel>()
+    navigateToCreateContactQR: () -> Unit,
+    navigateToCreateGeolocationQR: () -> Unit,
+    navigateToCreateLinkQR: () -> Unit,
+    navigateToCreatePhoneQR: () -> Unit,
+    navigateToCreateTextQR: () -> Unit,
+    navigateToCreateWifiQR: () -> Unit,
+    viewModel: CreateQRViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            CreateQREvent.NavigateToCreateContactQR -> navigateToCreateContactQR()
+            CreateQREvent.NavigateToCreateGeolocationQR -> navigateToCreateGeolocationQR()
+            CreateQREvent.NavigateToCreateLinkQR -> navigateToCreateLinkQR()
+            CreateQREvent.NavigateToCreatePhoneQR -> navigateToCreatePhoneQR()
+            CreateQREvent.NavigateToCreateTextQR -> navigateToCreateTextQR()
+            CreateQREvent.NavigateToCreateWifiQR -> navigateToCreateWifiQR()
+        }
+    }
 
     CreateQRScreen(
-        onAction = viewModel::onAction,
-        state = state
+        onAction = viewModel::onAction
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CreateQRScreen(
-    onAction: (CreateQRAction) -> Unit = {},
-    state: CreateQRState
+    onAction: (CreateQRAction) -> Unit = {}
 ) {
     val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
     val paddingAmount = if (
@@ -101,7 +113,9 @@ private fun CreateQRScreen(
         ) {
             item {
                 ClickableCard(
-                    onClick = {},
+                    onClick = {
+                        onAction(CreateQRAction.OnTextClick)
+                    },
                     icon = {
                         Icon(
                             imageVector = QRCraftIcons.Text,
@@ -116,7 +130,9 @@ private fun CreateQRScreen(
 
             item {
                 ClickableCard(
-                    onClick = {},
+                    onClick = {
+                        onAction(CreateQRAction.OnLinkClick)
+                    },
                     icon = {
                         Icon(
                             imageVector = QRCraftIcons.Link,
@@ -131,7 +147,9 @@ private fun CreateQRScreen(
 
             item {
                 ClickableCard(
-                    onClick = {},
+                    onClick = {
+                        onAction(CreateQRAction.OnContactClick)
+                    },
                     icon = {
                         Icon(
                             imageVector = QRCraftIcons.Contact,
@@ -146,7 +164,9 @@ private fun CreateQRScreen(
 
             item {
                 ClickableCard(
-                    onClick = {},
+                    onClick = {
+                        onAction(CreateQRAction.OnPhoneClick)
+                    },
                     icon = {
                         Icon(
                             imageVector = QRCraftIcons.Phone,
@@ -161,7 +181,9 @@ private fun CreateQRScreen(
 
             item {
                 ClickableCard(
-                    onClick = {},
+                    onClick = {
+                        onAction(CreateQRAction.OnGeolocationClick)
+                    },
                     icon = {
                         Icon(
                             imageVector = QRCraftIcons.Geolocation,
@@ -176,7 +198,9 @@ private fun CreateQRScreen(
 
             item {
                 ClickableCard(
-                    onClick = {},
+                    onClick = {
+                        onAction(CreateQRAction.OnWifiClick)
+                    },
                     icon = {
                         Icon(
                             imageVector = QRCraftIcons.Wifi,
@@ -196,8 +220,6 @@ private fun CreateQRScreen(
 @Composable
 private fun CreateQRScreenPreview() {
     QRCraftTheme {
-        CreateQRScreen(
-            state = CreateQRState()
-        )
+        CreateQRScreen()
     }
 }

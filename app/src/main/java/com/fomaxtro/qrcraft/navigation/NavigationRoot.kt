@@ -118,7 +118,14 @@ fun NavigationRoot() {
             entry<Route.CreateQR>(
                 metadata = SinglePaneNavigationScene.withNavigation()
             ) {
-                CreateQRRoot()
+                CreateQRRoot(
+                    navigateToCreateContactQR = {},
+                    navigateToCreateGeolocationQR = {},
+                    navigateToCreateLinkQR = {},
+                    navigateToCreatePhoneQR = {},
+                    navigateToCreateTextQR = {},
+                    navigateToCreateWifiQR = {}
+                )
             }
         }
     )
