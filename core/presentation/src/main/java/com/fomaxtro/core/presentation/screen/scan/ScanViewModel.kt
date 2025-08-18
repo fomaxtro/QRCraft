@@ -8,7 +8,7 @@ import com.fomaxtro.core.domain.PermissionChecker
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.model.QRScanResult
 import com.fomaxtro.core.presentation.ui.UiText
-import com.fomaxtro.core.presentation.util.toByteArray
+import com.fomaxtro.core.presentation.util.compressToByteArray
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,7 +48,7 @@ class ScanViewModel(
                 )
             }
 
-            val imagePath = fileManager.saveImage(qrScanResult.image.toByteArray(90))
+            val imagePath = fileManager.saveImage(qrScanResult.image.compressToByteArray(90))
 
             eventChannel.send(
                 ScanEvent.NavigateToScanResult(

@@ -1,5 +1,6 @@
 package com.fomaxtro.core.presentation.screen.create_qr_text
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -17,21 +18,37 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.cards.QRCraftQRForm
 import com.fomaxtro.core.presentation.designsystem.text_fields.QRCraftOutlinedTextField
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
+import com.fomaxtro.core.presentation.model.QR
+import com.fomaxtro.core.presentation.ui.ObserveAsEvents
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CreateQRTextRoot(
-    viewModel: CreateQRTextViewModel = viewModel<CreateQRTextViewModel>()
+    navigateToScanResult: (qr: QR, imagePath: String) -> Unit,
+    navigateBack: () -> Unit,
+    viewModel: CreateQRTextViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is CreateQRTextEvent.NavigateToScanResult -> {
+                navigateToScanResult(event.qr, event.imagePath)
+            }
+
+            CreateQRTextEvent.NavigateBack -> navigateBack()
+        }
+    }
 
     CreateQRTextScreen(
         onAction = viewModel::onAction,
@@ -45,6 +62,8 @@ private fun CreateQRTextScreen(
     onAction: (CreateQRTextAction) -> Unit = {},
     state: CreateQRTextState
 ) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -66,13 +85,20 @@ private fun CreateQRTextScreen(
                 },
             )
         },
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = MaterialTheme.colorScheme.surface,
+        modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    focusManager.clearFocus()
+                }
+            }
     ) { innerPadding ->
         QRCraftQRForm(
             onSubmit = {
                 onAction(CreateQRTextAction.OnSubmitClick)
             },
             canSubmit = state.canSubmit,
+            loading = state.isLoading,
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxWidth()

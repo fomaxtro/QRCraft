@@ -14,6 +14,7 @@ import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.fomaxtro.core.presentation.designsystem.appbars.NavDestination
 import com.fomaxtro.core.presentation.designsystem.appbars.QRCraftBottomAppBar
 import com.fomaxtro.core.presentation.screen.create_qr.CreateQRRoot
+import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextRoot
 import com.fomaxtro.core.presentation.screen.scan.ScanRoot
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultRoot
 import com.fomaxtro.qrcraft.R
@@ -123,8 +124,32 @@ fun NavigationRoot() {
                     navigateToCreateGeolocationQR = {},
                     navigateToCreateLinkQR = {},
                     navigateToCreatePhoneQR = {},
-                    navigateToCreateTextQR = {},
+                    navigateToCreateTextQR = {
+                        if (backStack.lastOrNull() !is Route.CreateQRText) {
+                            backStack.add(Route.CreateQRText)
+                        }
+                    },
                     navigateToCreateWifiQR = {}
+                )
+            }
+
+            entry<Route.CreateQRText> {
+                CreateQRTextRoot(
+                    navigateToScanResult = { qr, imagePath ->
+                        if (backStack.lastOrNull() !is Route.ScanResult) {
+                            backStack.add(
+                                Route.ScanResult(
+                                    qr = qr,
+                                    imagePath = imagePath
+                                )
+                            )
+                        }
+                    },
+                    navigateBack = {
+                        if (backStack.lastOrNull() is Route.CreateQRText) {
+                            backStack.removeLastOrNull()
+                        }
+                    }
                 )
             }
         }
