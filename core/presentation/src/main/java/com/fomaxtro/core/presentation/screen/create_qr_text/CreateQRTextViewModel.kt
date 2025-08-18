@@ -2,11 +2,10 @@ package com.fomaxtro.core.presentation.screen.create_qr_text
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.FileManager
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRTextValidator
 import com.fomaxtro.core.presentation.model.QR
-import com.fomaxtro.core.presentation.util.QRGenerator
+import com.fomaxtro.core.presentation.service.QRImageService
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +21,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRTextViewModel(
     private val validator: CreateQRTextValidator,
-    private val fileManager: FileManager
+    private val qrImageService: QRImageService
 ) : ViewModel() {
     private val _state = MutableStateFlow(CreateQRTextState())
     val state = _state
@@ -39,7 +38,7 @@ class CreateQRTextViewModel(
     val events = eventChannel.receiveAsFlow()
 
     private fun observeText() {
-        _state
+        state
             .map { it.text }
             .distinctUntilChanged()
             .onEach { text ->
@@ -75,8 +74,7 @@ class CreateQRTextViewModel(
             }
 
             val qr = QR.Text(state.value.text)
-            val qrImage = QRGenerator.generate(qr)
-            val imagePath = fileManager.saveImage(qrImage)
+            val imagePath = qrImageService.generateAndSaveQR(qr)
 
             _state.update {
                 it.copy(

@@ -2,6 +2,7 @@ package com.fomaxtro.core.presentation.designsystem.text_fields
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -17,7 +18,8 @@ fun QRCraftOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeholder: @Composable (() -> Unit)? = null
+    placeholder: @Composable (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     OutlinedTextField(
         value = value,
@@ -30,7 +32,8 @@ fun QRCraftOutlinedTextField(
             unfocusedContainerColor = MaterialTheme.colorScheme.surface,
             focusedContainerColor = MaterialTheme.colorScheme.surface
         ),
-        placeholder = placeholder
+        placeholder = placeholder,
+        keyboardOptions = keyboardOptions
     )
 }
 

@@ -3,13 +3,13 @@ package com.fomaxtro.core.presentation.designsystem.cards
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
@@ -37,8 +37,10 @@ fun QRCraftQRForm(
 ) {
     Card(
         modifier = modifier
-            .width(IntrinsicSize.Max)
-            .height(IntrinsicSize.Max)
+            .fillMaxWidth()
+            .wrapContentWidth()
+            .width(480.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState()),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceHigher

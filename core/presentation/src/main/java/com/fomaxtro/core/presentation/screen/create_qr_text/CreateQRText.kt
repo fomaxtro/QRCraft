@@ -4,8 +4,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -22,19 +20,18 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.cards.QRCraftQRForm
 import com.fomaxtro.core.presentation.designsystem.text_fields.QRCraftOutlinedTextField
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
-import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
+import com.fomaxtro.core.presentation.util.ScanResultNavigation
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CreateQRTextRoot(
-    navigateToScanResult: (qr: QR, imagePath: String) -> Unit,
+    navigateToScanResult: ScanResultNavigation,
     navigateBack: () -> Unit,
     viewModel: CreateQRTextViewModel = koinViewModel()
 ) {
@@ -43,7 +40,7 @@ fun CreateQRTextRoot(
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             is CreateQRTextEvent.NavigateToScanResult -> {
-                navigateToScanResult(event.qr, event.imagePath)
+                navigateToScanResult.navigate(event.qr, event.imagePath)
             }
 
             CreateQRTextEvent.NavigateBack -> navigateBack()
@@ -103,10 +100,6 @@ private fun CreateQRTextScreen(
             loading = state.isLoading,
             modifier = Modifier
                 .padding(innerPadding)
-                .fillMaxWidth()
-                .wrapContentWidth()
-                .width(480.dp)
-                .padding(horizontal = 16.dp)
                 .imePadding()
         ) {
             QRCraftOutlinedTextField(
