@@ -34,7 +34,7 @@ sealed interface QR {
         return when (this) {
             is Contact -> TODO()
             is Geolocation -> TODO()
-            is Link -> TODO()
+            is Link -> url
             is PhoneNumber -> TODO()
             is Text -> text
             is Wifi -> TODO()
