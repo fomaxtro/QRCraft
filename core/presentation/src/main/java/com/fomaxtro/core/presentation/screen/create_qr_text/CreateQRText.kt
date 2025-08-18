@@ -75,7 +75,9 @@ private fun CreateQRTextScreen(
                 },
                 navigationIcon = {
                     IconButton(
-                        onClick = {}
+                        onClick = {
+                            onAction(CreateQRTextAction.OnNavigateBackClick)
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,

@@ -56,6 +56,13 @@ class CreateQRTextViewModel(
         when (action) {
             CreateQRTextAction.OnSubmitClick -> onSubmitClick()
             is CreateQRTextAction.OnTextChange -> onTextChange(action.text)
+            CreateQRTextAction.OnNavigateBackClick -> onNavigateBackClick()
+        }
+    }
+
+    private fun onNavigateBackClick() {
+        viewModelScope.launch {
+            eventChannel.send(CreateQRTextEvent.NavigateBack)
         }
     }
 

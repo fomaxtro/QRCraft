@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -31,7 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -50,7 +50,6 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.window.core.layout.WindowSizeClass
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButton
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
@@ -123,7 +122,6 @@ private fun ScanResultScreen(
     state: ScanResultState
 ) {
     val isInPreviewMode = LocalInspectionMode.current
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.onSurface,
@@ -159,25 +157,14 @@ private fun ScanResultScreen(
     ) { innerPadding ->
         val qrSize = 160.dp
 
-        val horizontalPadding =
-            if (
-                windowSizeClass.isWidthAtLeastBreakpoint(
-                    WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND
-                )
-            ) {
-                60.dp
-            } else {
-                16.dp
-            }
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .wrapContentWidth()
+                .width(480.dp)
                 .padding(innerPadding)
                 .padding(top = 48.dp)
-                .padding(
-                    horizontal = horizontalPadding
-                )
+                .padding(horizontal = 16.dp)
                 .verticalScroll(rememberScrollState()),
             contentAlignment = Alignment.TopCenter
         ) {
