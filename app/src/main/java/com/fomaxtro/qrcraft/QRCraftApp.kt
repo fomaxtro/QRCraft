@@ -2,6 +2,7 @@ package com.fomaxtro.qrcraft
 
 import android.app.Application
 import com.fomaxtro.core.data.di.dataModule
+import com.fomaxtro.core.domain.di.domainModule
 import com.fomaxtro.core.presentation.di.presentationModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -22,6 +23,7 @@ class QRCraftApp : Application() {
 
             modules(
                 dataModule,
+                domainModule,
                 presentationModule
             )
         }
