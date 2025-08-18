@@ -13,6 +13,8 @@ private val LightColorScheme = lightColorScheme(
     error = Error
 )
 
+val ColorScheme.onSurfaceAlt: Color
+    get() = OnSurfaceAlt
 val ColorScheme.overlay: Color
     get() = Overlay
 val ColorScheme.onOverlay: Color
