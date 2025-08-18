@@ -25,4 +25,5 @@
     <string name="create_qr">Create QR</string>
     <string name="generate_qr_code">Generate QR-Code</string>
     <string name="navigate_back">Navigate back</string>
+    <string name="url">URL</string>
 </resources>

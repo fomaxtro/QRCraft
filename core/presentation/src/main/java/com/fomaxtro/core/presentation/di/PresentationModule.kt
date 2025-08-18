@@ -2,9 +2,12 @@ package com.fomaxtro.core.presentation.di
 
 import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.screen.create_qr.CreateQRViewModel
+import com.fomaxtro.core.presentation.screen.create_qr_link.CreateQRLinkViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextViewModel
 import com.fomaxtro.core.presentation.screen.scan.ScanViewModel
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultViewModel
+import com.fomaxtro.core.presentation.service.QRImageService
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -20,4 +23,6 @@ val presentationModule = module {
     }
     viewModelOf(::CreateQRViewModel)
     viewModelOf(::CreateQRTextViewModel)
+    viewModelOf(::CreateQRLinkViewModel)
+    singleOf(::QRImageService)
 }
