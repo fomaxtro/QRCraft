@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.timber)
 
     implementation(libs.kotlinx.serialization.core)
+    implementation(libs.qrcode)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

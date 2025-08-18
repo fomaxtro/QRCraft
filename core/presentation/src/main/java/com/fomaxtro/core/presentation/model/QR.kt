@@ -29,6 +29,17 @@ sealed interface QR {
         val password: String?,
         val encryptionType: WifiEncryptionType
     ) : QR
+
+    fun asString(): String {
+        return when (this) {
+            is Contact -> TODO()
+            is Geolocation -> TODO()
+            is Link -> TODO()
+            is PhoneNumber -> TODO()
+            is Text -> text
+            is Wifi -> TODO()
+        }
+    }
 }
 
 enum class WifiEncryptionType {
