@@ -14,6 +14,7 @@ import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
 import com.fomaxtro.core.presentation.designsystem.appbars.NavDestination
 import com.fomaxtro.core.presentation.designsystem.appbars.QRCraftBottomAppBar
 import com.fomaxtro.core.presentation.screen.create_qr.CreateQRRoot
+import com.fomaxtro.core.presentation.screen.create_qr_link.CreateQRLinkRoot
 import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextRoot
 import com.fomaxtro.core.presentation.screen.scan.ScanRoot
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultRoot
@@ -122,7 +123,11 @@ fun NavigationRoot() {
                 CreateQRRoot(
                     navigateToCreateContactQR = {},
                     navigateToCreateGeolocationQR = {},
-                    navigateToCreateLinkQR = {},
+                    navigateToCreateLinkQR = {
+                        if (backStack.lastOrNull() !is Route.CreateQRLink) {
+                            backStack.add(Route.CreateQRLink)
+                        }
+                    },
                     navigateToCreatePhoneQR = {},
                     navigateToCreateTextQR = {
                         if (backStack.lastOrNull() !is Route.CreateQRText) {
@@ -147,6 +152,26 @@ fun NavigationRoot() {
                     },
                     navigateBack = {
                         if (backStack.lastOrNull() is Route.CreateQRText) {
+                            backStack.removeLastOrNull()
+                        }
+                    }
+                )
+            }
+
+            entry<Route.CreateQRLink> {
+                CreateQRLinkRoot(
+                    navigateToScanResult = { qr, imagePath ->
+                        if (backStack.lastOrNull() !is Route.ScanResult) {
+                            backStack.add(
+                                Route.ScanResult(
+                                    qr = qr,
+                                    imagePath = imagePath
+                                )
+                            )
+                        }
+                    },
+                    navigateBack = {
+                        if (backStack.lastOrNull() is Route.CreateQRLink) {
                             backStack.removeLastOrNull()
                         }
                     }
