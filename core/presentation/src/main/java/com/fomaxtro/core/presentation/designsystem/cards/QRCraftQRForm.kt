@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,8 +23,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fomaxtro.core.presentation.R
+import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButton
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
-import com.fomaxtro.core.presentation.designsystem.theme.onSurfaceDisabled
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 
 @Composable
@@ -34,6 +32,7 @@ fun QRCraftQRForm(
     onSubmit: () -> Unit,
     modifier: Modifier = Modifier,
     canSubmit: Boolean = true,
+    loading: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Card(
@@ -55,16 +54,12 @@ fun QRCraftQRForm(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Button(
+            QRCraftButton(
                 onClick = onSubmit,
                 modifier = Modifier
                     .fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = MaterialTheme.colorScheme.onSurface,
-                    disabledContainerColor = MaterialTheme.colorScheme.surface,
-                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceDisabled
-                ),
-                enabled = canSubmit
+                enabled = canSubmit,
+                loading = loading
             ) {
                 Text(stringResource(R.string.generate_qr_code))
             }

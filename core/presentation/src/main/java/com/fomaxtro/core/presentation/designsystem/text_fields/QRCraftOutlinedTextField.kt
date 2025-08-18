@@ -27,7 +27,8 @@ fun QRCraftOutlinedTextField(
         colors = OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = MaterialTheme.colorScheme.surface,
             unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceAlt,
-            unfocusedContainerColor = MaterialTheme.colorScheme.surface
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = MaterialTheme.colorScheme.surface
         ),
         placeholder = placeholder
     )
