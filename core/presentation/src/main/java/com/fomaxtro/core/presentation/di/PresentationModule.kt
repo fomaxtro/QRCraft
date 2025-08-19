@@ -4,6 +4,7 @@ import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.screen.create_qr.CreateQRViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_contact.CreateQRContactViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_link.CreateQRLinkViewModel
+import com.fomaxtro.core.presentation.screen.create_qr_phone_number.CreateQRPhoneNumberViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextViewModel
 import com.fomaxtro.core.presentation.screen.scan.ScanViewModel
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultViewModel
@@ -28,4 +29,5 @@ val presentationModule = module {
     viewModelOf(::CreateQRTextViewModel)
     viewModelOf(::CreateQRLinkViewModel)
     viewModelOf(::CreateQRContactViewModel)
+    viewModelOf(::CreateQRPhoneNumberViewModel)
 }
