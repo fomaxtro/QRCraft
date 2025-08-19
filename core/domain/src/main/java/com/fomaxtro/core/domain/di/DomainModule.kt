@@ -1,6 +1,7 @@
 package com.fomaxtro.core.domain.di
 
 import com.fomaxtro.core.domain.validator.CreateQRContactValidator
+import com.fomaxtro.core.domain.validator.CreateQRGeolocationValidator
 import com.fomaxtro.core.domain.validator.CreateQRLinkValidator
 import com.fomaxtro.core.domain.validator.CreateQRPhoneNumberValidator
 import com.fomaxtro.core.domain.validator.CreateQRTextValidator
@@ -12,4 +13,5 @@ val domainModule = module {
     singleOf(::CreateQRLinkValidator)
     singleOf(::CreateQRContactValidator)
     singleOf(::CreateQRPhoneNumberValidator)
+    singleOf(::CreateQRGeolocationValidator)
 }

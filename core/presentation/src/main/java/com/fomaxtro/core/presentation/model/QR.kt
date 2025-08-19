@@ -52,7 +52,7 @@ sealed interface QR {
                 }
             }
 
-            is Geolocation -> TODO()
+            is Geolocation -> "geo:$latitude,$longitude"
             is Link -> url
             is PhoneNumber -> phoneNumber
             is Text -> text
