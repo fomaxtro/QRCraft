@@ -7,4 +7,12 @@ class AndroidPatternMatching : PatternMatching {
     override fun isUrl(url: String): Boolean {
         return Patterns.WEB_URL.matcher(url).matches()
     }
+
+    override fun isEmail(email: String): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    override fun isValidPhone(phone: String): Boolean {
+        return Patterns.PHONE.matcher(phone).matches()
+    }
 }

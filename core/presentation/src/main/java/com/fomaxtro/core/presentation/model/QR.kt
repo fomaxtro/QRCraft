@@ -32,7 +32,25 @@ sealed interface QR {
 
     fun asString(): String {
         return when (this) {
-            is Contact -> TODO()
+            is Contact -> {
+                buildString {
+                    appendLine("BEGIN:VCARD")
+
+                    if (name != null) {
+                        appendLine("N:$name")
+                    }
+
+                    if (email != null) {
+                        appendLine("EMAIL:$email")
+                    }
+
+                    if (phoneNumber != null) {
+                        appendLine("TEL:$phoneNumber")
+                    }
+
+                    append("END:VCARD")
+                }
+            }
             is Geolocation -> TODO()
             is Link -> url
             is PhoneNumber -> TODO()
