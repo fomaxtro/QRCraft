@@ -28,4 +28,6 @@
     <string name="url">URL</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
 </resources>

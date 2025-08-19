@@ -15,6 +15,7 @@ import com.fomaxtro.core.presentation.designsystem.appbars.NavDestination
 import com.fomaxtro.core.presentation.designsystem.appbars.QRCraftBottomAppBar
 import com.fomaxtro.core.presentation.screen.create_qr.CreateQRRoot
 import com.fomaxtro.core.presentation.screen.create_qr_contact.CreateQRContactRoot
+import com.fomaxtro.core.presentation.screen.create_qr_geolocation.CreateQRGeolocationRoot
 import com.fomaxtro.core.presentation.screen.create_qr_link.CreateQRLinkRoot
 import com.fomaxtro.core.presentation.screen.create_qr_phone_number.CreateQRPhoneNumberRoot
 import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextRoot
@@ -128,7 +129,11 @@ fun NavigationRoot() {
                             backStack.add(Route.CreateQRContact)
                         }
                     },
-                    navigateToCreateGeolocationQR = {},
+                    navigateToCreateGeolocationQR = {
+                        if (backStack.lastOrNull() !is Route.CreateQRGeolocation) {
+                            backStack.add(Route.CreateQRGeolocation)
+                        }
+                    },
                     navigateToCreateLinkQR = {
                         if (backStack.lastOrNull() !is Route.CreateQRLink) {
                             backStack.add(Route.CreateQRLink)
@@ -222,6 +227,26 @@ fun NavigationRoot() {
                     },
                     navigateBack = {
                         if (backStack.lastOrNull() is Route.CreateQRPhoneNumber) {
+                            backStack.removeLastOrNull()
+                        }
+                    }
+                )
+            }
+
+            entry<Route.CreateQRGeolocation> {
+                CreateQRGeolocationRoot(
+                    navigateToScanResult = { qr, imagePath ->
+                        if (backStack.lastOrNull() !is Route.ScanResult) {
+                            backStack.add(
+                                Route.ScanResult(
+                                    qr = qr,
+                                    imagePath = imagePath
+                                )
+                            )
+                        }
+                    },
+                    navigateBack = {
+                        if (backStack.lastOrNull() is Route.CreateQRGeolocation) {
                             backStack.removeLastOrNull()
                         }
                     }

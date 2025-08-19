@@ -26,4 +26,7 @@ sealed interface Route : NavKey {
 
     @Serializable
     data object CreateQRPhoneNumber : Route
+
+    @Serializable
+    data object CreateQRGeolocation : Route
 }

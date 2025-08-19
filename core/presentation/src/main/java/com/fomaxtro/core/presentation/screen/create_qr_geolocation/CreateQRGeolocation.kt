@@ -1,4 +1,4 @@
-package com.fomaxtro.core.presentation.screen.create_qr_phone_number
+package com.fomaxtro.core.presentation.screen.create_qr_geolocation
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,24 +32,24 @@ import com.fomaxtro.core.presentation.util.ScanResultNavigation
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun CreateQRPhoneNumberRoot(
+fun CreateQRGeolocationRoot(
     navigateToScanResult: ScanResultNavigation,
     navigateBack: () -> Unit,
-    viewModel: CreateQRPhoneNumberViewModel = koinViewModel()
+    viewModel: CreateQRGeolocationViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
-            CreateQRPhoneNumberEvent.NavigateBack -> navigateBack()
+            CreateQRGeolocationEvent.NavigateBack -> navigateBack()
 
-            is CreateQRPhoneNumberEvent.NavigateToScanResult -> {
+            is CreateQRGeolocationEvent.NavigateToScanResult -> {
                 navigateToScanResult.navigate(event.qr, event.imagePath)
             }
         }
     }
 
-    CreateQRPhoneNumberScreen(
+    CreateQRGeolocationScreen(
         onAction = viewModel::onAction,
         state = state
     )
@@ -57,9 +57,9 @@ fun CreateQRPhoneNumberRoot(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CreateQRPhoneNumberScreen(
-    onAction: (CreateQRPhoneNumberAction) -> Unit = {},
-    state: CreateQRPhoneNumberState
+private fun CreateQRGeolocationScreen(
+    onAction: (CreateQRGeolocationAction) -> Unit = {},
+    state: CreateQRGeolocationState
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -68,14 +68,14 @@ private fun CreateQRPhoneNumberScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.phone_number),
+                        text = stringResource(R.string.geolocation),
                         style = MaterialTheme.typography.titleMedium
                     )
                 },
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            onAction(CreateQRPhoneNumberAction.OnNavigateBackClick)
+                            onAction(CreateQRGeolocationAction.OnNavigateBackClick)
                         }
                     ) {
                         Icon(
@@ -83,7 +83,7 @@ private fun CreateQRPhoneNumberScreen(
                             contentDescription = stringResource(R.string.navigate_back)
                         )
                     }
-                },
+                }
             )
         },
         containerColor = MaterialTheme.colorScheme.surface,
@@ -96,8 +96,7 @@ private fun CreateQRPhoneNumberScreen(
     ) { innerPadding ->
         QRCraftQRForm(
             onSubmit = {
-                focusManager.clearFocus()
-                onAction(CreateQRPhoneNumberAction.OnSubmitClick)
+                onAction(CreateQRGeolocationAction.OnSubmitClick)
             },
             modifier = Modifier
                 .padding(innerPadding)
@@ -106,17 +105,32 @@ private fun CreateQRPhoneNumberScreen(
             loading = state.isLoading
         ) {
             QRCraftOutlinedTextField(
-                value = state.phoneNumber,
+                value = state.latitude,
                 onValueChange = {
-                    onAction(CreateQRPhoneNumberAction.OnPhoneNumberChange(it))
+                    onAction(CreateQRGeolocationAction.OnLatitudeChanged(it))
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
                 placeholder = {
-                    Text(stringResource(R.string.phone_number))
+                    Text(stringResource(R.string.latitude))
                 },
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Phone
+                    keyboardType = KeyboardType.Number
+                )
+            )
+
+            QRCraftOutlinedTextField(
+                value = state.longitude,
+                onValueChange = {
+                    onAction(CreateQRGeolocationAction.OnLongitudeChanged(it))
+                },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                placeholder = {
+                    Text(stringResource(R.string.longitude))
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
                 )
             )
         }
@@ -125,10 +139,10 @@ private fun CreateQRPhoneNumberScreen(
 
 @Preview
 @Composable
-private fun CreateQRPhoneNumberScreenPreview() {
+private fun CreateQRGeolocationScreenPreview() {
     QRCraftTheme {
-        CreateQRPhoneNumberScreen(
-            state = CreateQRPhoneNumberState()
+        CreateQRGeolocationScreen(
+            state = CreateQRGeolocationState()
         )
     }
 }
