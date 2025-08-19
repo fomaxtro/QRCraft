@@ -51,9 +51,10 @@ sealed interface QR {
                     append("END:VCARD")
                 }
             }
+
             is Geolocation -> TODO()
             is Link -> url
-            is PhoneNumber -> TODO()
+            is PhoneNumber -> phoneNumber
             is Text -> text
             is Wifi -> TODO()
         }
