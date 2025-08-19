@@ -94,6 +94,7 @@ private fun CreateQRTextScreen(
     ) { innerPadding ->
         QRCraftQRForm(
             onSubmit = {
+                focusManager.clearFocus()
                 onAction(CreateQRTextAction.OnSubmitClick)
             },
             canSubmit = state.canSubmit,

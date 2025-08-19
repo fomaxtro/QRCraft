@@ -95,6 +95,7 @@ private fun CreateQRLinkScreen(
     ) { innerPadding ->
         QRCraftQRForm(
             onSubmit = {
+                focusManager.clearFocus()
                 onAction(CreateQRLinkAction.OnSubmitClick)
             },
             modifier = Modifier

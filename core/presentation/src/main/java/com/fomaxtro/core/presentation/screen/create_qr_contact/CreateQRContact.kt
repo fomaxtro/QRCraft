@@ -1,5 +1,6 @@
 package com.fomaxtro.core.presentation.screen.create_qr_contact
 
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,6 +61,8 @@ private fun CreateQRContactScreen(
     onAction: (CreateQRContactAction) -> Unit = {},
     state: CreateQRContactState
 ) {
+    val focusManager = LocalFocusManager.current
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -82,9 +87,16 @@ private fun CreateQRContactScreen(
             )
         },
         containerColor = MaterialTheme.colorScheme.surface,
+        modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    focusManager.clearFocus()
+                }
+            }
     ) { innerPadding ->
         QRCraftQRForm(
             onSubmit = {
+                focusManager.clearFocus()
                 onAction(CreateQRContactAction.OnSubmitClick)
             },
             modifier = Modifier
