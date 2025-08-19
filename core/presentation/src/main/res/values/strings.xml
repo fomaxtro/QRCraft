@@ -26,4 +26,6 @@
     <string name="generate_qr_code">Generate QR-Code</string>
     <string name="navigate_back">Navigate back</string>
     <string name="url">URL</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
 </resources>

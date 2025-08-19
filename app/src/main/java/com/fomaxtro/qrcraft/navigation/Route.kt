@@ -20,4 +20,7 @@ sealed interface Route : NavKey {
 
     @Serializable
     data object CreateQRLink : Route
+
+    @Serializable
+    data object CreateQRContact : Route
 }
