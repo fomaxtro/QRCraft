@@ -3,9 +3,12 @@ package com.fomaxtro.core.presentation.designsystem.text_fields
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,22 +22,45 @@ fun QRCraftOutlinedTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     placeholder: @Composable (() -> Unit)? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    trailingIcon: @Composable (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    colors: TextFieldColors = QRCraftOutlinedTextFieldDefaults.colors(),
+    readOnly: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier,
         shape = MaterialTheme.shapes.large,
-        colors = OutlinedTextFieldDefaults.colors(
+        colors = colors,
+        placeholder = placeholder,
+        keyboardOptions = keyboardOptions,
+        trailingIcon = trailingIcon,
+        readOnly = readOnly
+    )
+}
+
+object QRCraftOutlinedTextFieldDefaults {
+    @Composable
+    fun colors(): TextFieldColors {
+        return OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = MaterialTheme.colorScheme.surface,
             unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceAlt,
             unfocusedContainerColor = MaterialTheme.colorScheme.surface,
             focusedContainerColor = MaterialTheme.colorScheme.surface
-        ),
-        placeholder = placeholder,
-        keyboardOptions = keyboardOptions
-    )
+        )
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun exposedDropdownMenuColors(): TextFieldColors {
+        return ExposedDropdownMenuDefaults.outlinedTextFieldColors(
+            unfocusedBorderColor = MaterialTheme.colorScheme.surface,
+            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceAlt,
+            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+            focusedContainerColor = MaterialTheme.colorScheme.surface
+        )
+    }
 }
 
 @Preview(showBackground = true)

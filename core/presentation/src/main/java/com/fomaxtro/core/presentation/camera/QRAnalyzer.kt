@@ -52,7 +52,7 @@ class QRAnalyzer(
                 rotationDegrees = image.imageInfo.rotationDegrees
             )
 
-        val inputImage = InputImage.fromBitmap(cropImage, image.imageInfo.rotationDegrees)
+        val inputImage = InputImage.fromBitmap(cropImage, 0)
 
         scanner.process(inputImage)
             .addOnSuccessListener {

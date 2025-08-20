@@ -6,7 +6,7 @@ android-targetSdk = "36"
 android-versionCode = "1"
 android-versionName = "1.0"
 
-agp = "8.12.0"
+agp = "8.12.1"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
