@@ -19,6 +19,7 @@ import com.fomaxtro.core.presentation.screen.create_qr_geolocation.CreateQRGeolo
 import com.fomaxtro.core.presentation.screen.create_qr_link.CreateQRLinkRoot
 import com.fomaxtro.core.presentation.screen.create_qr_phone_number.CreateQRPhoneNumberRoot
 import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextRoot
+import com.fomaxtro.core.presentation.screen.create_qr_wifi.CreateQRWifiRoot
 import com.fomaxtro.core.presentation.screen.scan.ScanRoot
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultRoot
 import com.fomaxtro.qrcraft.R
@@ -149,7 +150,11 @@ fun NavigationRoot() {
                             backStack.add(Route.CreateQRText)
                         }
                     },
-                    navigateToCreateWifiQR = {}
+                    navigateToCreateWifiQR = {
+                        if (backStack.lastOrNull() !is Route.CreateQRWifi) {
+                            backStack.add(Route.CreateQRWifi)
+                        }
+                    }
                 )
             }
 
@@ -247,6 +252,26 @@ fun NavigationRoot() {
                     },
                     navigateBack = {
                         if (backStack.lastOrNull() is Route.CreateQRGeolocation) {
+                            backStack.removeLastOrNull()
+                        }
+                    }
+                )
+            }
+
+            entry<Route.CreateQRWifi> {
+                CreateQRWifiRoot(
+                    navigateToScanResult = { qr, imagePath ->
+                        if (backStack.lastOrNull() !is Route.ScanResult) {
+                            backStack.add(
+                                Route.ScanResult(
+                                    qr = qr,
+                                    imagePath = imagePath
+                                )
+                            )
+                        }
+                    },
+                    navigateBack = {
+                        if (backStack.lastOrNull() is Route.CreateQRWifi) {
                             backStack.removeLastOrNull()
                         }
                     }

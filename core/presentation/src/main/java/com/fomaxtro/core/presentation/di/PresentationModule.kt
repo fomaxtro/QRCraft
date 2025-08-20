@@ -7,6 +7,7 @@ import com.fomaxtro.core.presentation.screen.create_qr_geolocation.CreateQRGeolo
 import com.fomaxtro.core.presentation.screen.create_qr_link.CreateQRLinkViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_phone_number.CreateQRPhoneNumberViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextViewModel
+import com.fomaxtro.core.presentation.screen.create_qr_wifi.CreateQRWifiViewModel
 import com.fomaxtro.core.presentation.screen.scan.ScanViewModel
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultViewModel
 import com.fomaxtro.core.presentation.service.QRImageService
@@ -32,4 +33,5 @@ val presentationModule = module {
     viewModelOf(::CreateQRContactViewModel)
     viewModelOf(::CreateQRPhoneNumberViewModel)
     viewModelOf(::CreateQRGeolocationViewModel)
+    viewModelOf(::CreateQRWifiViewModel)
 }
