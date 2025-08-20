@@ -56,7 +56,7 @@ sealed interface QR {
             is Link -> url
             is PhoneNumber -> phoneNumber
             is Text -> text
-            is Wifi -> TODO()
+            is Wifi -> "WIFI:T:$encryptionType;S:$ssid;P:$password;;"
         }
     }
 }

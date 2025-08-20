@@ -5,6 +5,7 @@ import com.fomaxtro.core.domain.validator.CreateQRGeolocationValidator
 import com.fomaxtro.core.domain.validator.CreateQRLinkValidator
 import com.fomaxtro.core.domain.validator.CreateQRPhoneNumberValidator
 import com.fomaxtro.core.domain.validator.CreateQRTextValidator
+import com.fomaxtro.core.domain.validator.CreateQRWifiValidator
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -14,4 +15,5 @@ val domainModule = module {
     singleOf(::CreateQRContactValidator)
     singleOf(::CreateQRPhoneNumberValidator)
     singleOf(::CreateQRGeolocationValidator)
+    singleOf(::CreateQRWifiValidator)
 }
