@@ -31,3 +31,11 @@ The app follows a multi-module architecture:
 - `core/data/` - Data layer with repositories and data sources
 - `core/domain/` - Business logic and use cases
 - `core/presentation/` - UI components and screens
+
+## Author
+
+[Fomaxtro](https://github.com/fomaxtro)
+
+## Licence
+
+Licence under the [MIT License](./LICENCE)
