@@ -58,17 +58,15 @@ class QRAnalyzer(
             .addOnSuccessListener {
                 val barcode = it.firstOrNull()
 
-                if (barcode != null) {
-                    if (lastScannedResult != barcode.rawValue) {
-                        lastScannedResult = barcode.rawValue
+                if (barcode != null && lastScannedResult != barcode.rawValue) {
+                    lastScannedResult = barcode.rawValue
 
-                        onResult(
-                            QRScanResult(
-                                qr = barcode.toQR(),
-                                image = cropImage
-                            )
+                    onResult(
+                        QRScanResult(
+                            qr = barcode.toQR(),
+                            image = cropImage
                         )
-                    }
+                    )
                 } else {
                     lastScannedResult = null
                 }
