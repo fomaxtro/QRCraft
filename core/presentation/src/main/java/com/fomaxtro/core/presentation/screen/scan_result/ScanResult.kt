@@ -50,6 +50,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.fomaxtro.core.domain.model.QR
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButton
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
@@ -59,7 +60,6 @@ import com.fomaxtro.core.presentation.designsystem.theme.linkBg
 import com.fomaxtro.core.presentation.designsystem.theme.onOverlay
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.mapper.toFormattedText
-import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.preview.PreviewQr
 import com.fomaxtro.core.presentation.screen.scan_result.components.ExpandableText
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
@@ -68,11 +68,10 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ScanResultRoot(
-    qr: QR,
-    imagePath: String,
+    qr: String,
     navigateBack: () -> Unit,
     viewModel: ScanResultViewModel = koinViewModel {
-        parametersOf(qr, imagePath)
+        parametersOf(qr)
     }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

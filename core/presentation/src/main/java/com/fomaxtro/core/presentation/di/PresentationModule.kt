@@ -1,6 +1,5 @@
 package com.fomaxtro.core.presentation.di
 
-import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.screen.create_qr.CreateQRViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_contact.CreateQRContactViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_geolocation.CreateQRGeolocationViewModel
@@ -20,11 +19,10 @@ val presentationModule = module {
     singleOf(::QRImageService)
 
     viewModelOf(::ScanViewModel)
-    viewModel<ScanResultViewModel> { (qr: QR, imagePath: String) ->
+    viewModel<ScanResultViewModel> { (qr: String) ->
         ScanResultViewModel(
             qr = qr,
-            imagePath = imagePath,
-            fileManager = get()
+            qrParser = get()
         )
     }
     viewModelOf(::CreateQRViewModel)

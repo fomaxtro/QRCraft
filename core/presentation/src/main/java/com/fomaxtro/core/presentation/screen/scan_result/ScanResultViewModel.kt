@@ -1,12 +1,11 @@
 package com.fomaxtro.core.presentation.screen.scan_result
 
-import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.FileManager
+import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.presentation.mapper.toFormattedText
-import com.fomaxtro.core.presentation.model.QR
+import com.fomaxtro.core.presentation.util.QRGenerator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,21 +16,16 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ScanResultViewModel(
-    qr: QR,
-    imagePath: String,
-    private val fileManager: FileManager
+    qr: String,
+    private val qrParser: QRParser
 ) : ViewModel() {
     private var firstLaunch = false
 
-    private val _state = MutableStateFlow(
-        ScanResultState(
-            qr = qr
-        )
-    )
+    private val _state = MutableStateFlow(initState(qr))
     val state = _state
         .onStart {
             if (!firstLaunch) {
-                loadImage(imagePath)
+                loadImage(qr)
 
                 firstLaunch = true
             }
@@ -39,23 +33,24 @@ class ScanResultViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000L),
-            ScanResultState(
-                qr = qr
-            )
+            initState(qr)
         )
 
     private val eventChannel = Channel<ScanResultEvent>()
     val events = eventChannel.receiveAsFlow()
 
-    private suspend fun loadImage(imagePath: String) {
-        val imageBytes = fileManager.consumeImage(imagePath)
-        val qrImage = BitmapFactory
-            .decodeByteArray(imageBytes, 0, imageBytes.size)
-            .asImageBitmap()
+    private fun initState(qr: String): ScanResultState {
+        return ScanResultState(
+            qr = qrParser.parseFromString(qr)
+        )
+    }
+
+    private suspend fun loadImage(qr: String) {
+        val qrImage = QRGenerator.generate(qr)
 
         _state.update {
             it.copy(
-                qrImage = qrImage
+                qrImage = qrImage.asImageBitmap()
             )
         }
     }
