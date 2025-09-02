@@ -1,7 +1,7 @@
 package com.fomaxtro.core.presentation.mapper
 
-import com.fomaxtro.core.presentation.model.QR
-import com.fomaxtro.core.presentation.model.WifiEncryptionType
+import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.WifiEncryptionType
 import com.google.mlkit.vision.barcode.common.Barcode
 
 fun Barcode.toQR(): QR {

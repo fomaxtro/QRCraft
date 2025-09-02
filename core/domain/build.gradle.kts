@@ -17,4 +17,5 @@ kotlin {
 
 dependencies {
     implementation(libs.koin.core)
+    testImplementation(libs.kotlin.test)
 }
