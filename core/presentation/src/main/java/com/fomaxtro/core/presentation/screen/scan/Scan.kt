@@ -48,7 +48,6 @@ import com.fomaxtro.core.presentation.camera.QRAnalyzer
 import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
-import com.fomaxtro.core.presentation.model.QR
 import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
 import com.fomaxtro.core.presentation.screen.scan.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
@@ -61,7 +60,7 @@ fun ScanRoot(
     onCloseApp: () -> Unit,
     onCameraPermissionDenied: () -> Unit,
     onAlwaysDeniedCameraPermission: () -> Unit,
-    navigateToScanResult: (qr: QR, imagePath: String) -> Unit,
+    navigateToScanResult: (qr: String) -> Unit,
     viewModel: ScanViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -155,7 +154,7 @@ fun ScanRoot(
             }
 
             is ScanEvent.NavigateToScanResult -> {
-                navigateToScanResult(event.qr, event.imagePath)
+                navigateToScanResult(event.qr)
             }
         }
     }

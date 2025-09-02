@@ -1,20 +1,23 @@
 package com.fomaxtro.core.presentation.util
 
-import com.fomaxtro.core.presentation.model.QR
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import qrcode.QRCode
 import qrcode.color.Colors
 
 object QRGenerator {
-    suspend fun generate(qr: QR): ByteArray {
-        val generator = QRCode.ofSquares()
-            .withColor(Colors.BLACK)
-            .withMargin(32)
-            .build(qr.asString())
-
+    suspend fun generate(qr: String): Bitmap {
         return withContext(Dispatchers.Default) {
-            generator.renderToBytes()
+            val generator = QRCode.ofSquares()
+                .withColor(Colors.BLACK)
+                .withMargin(64)
+                .build(qr)
+
+            val qrBytes = generator.renderToBytes()
+
+            BitmapFactory.decodeByteArray(qrBytes, 0, qrBytes.size)
         }
     }
 }

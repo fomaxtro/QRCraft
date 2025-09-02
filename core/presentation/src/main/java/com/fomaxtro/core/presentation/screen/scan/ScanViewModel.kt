@@ -3,12 +3,12 @@ package com.fomaxtro.core.presentation.screen.scan
 import android.Manifest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.FileManager
 import com.fomaxtro.core.domain.PermissionChecker
+import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.presentation.R
-import com.fomaxtro.core.presentation.model.QRScanResult
+import com.fomaxtro.core.presentation.mapper.toQR
 import com.fomaxtro.core.presentation.ui.UiText
-import com.fomaxtro.core.presentation.util.compressToByteArray
+import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class ScanViewModel(
     permissionChecker: PermissionChecker,
-    private val fileManager: FileManager
+    private val qrParser: QRParser
 ) : ViewModel() {
     private val _state = MutableStateFlow(
         ScanState(
@@ -36,11 +36,11 @@ class ScanViewModel(
             is ScanAction.OnCameraPermissionGranted -> onCameraPermissionGranted()
             ScanAction.OnCloseAppClick -> onCloseAppClick()
             ScanAction.OnGrantAccessClick -> onGrantAccessClick()
-            is ScanAction.OnQrScanned -> onQrScanned(action.qrScanResult)
+            is ScanAction.OnQrScanned -> onQrScanned(action.barcode)
         }
     }
 
-    private fun onQrScanned(qrScanResult: QRScanResult) {
+    private fun onQrScanned(barcode: Barcode) {
         viewModelScope.launch {
             _state.update {
                 it.copy(
@@ -48,12 +48,9 @@ class ScanViewModel(
                 )
             }
 
-            val imagePath = fileManager.saveImage(qrScanResult.image.compressToByteArray(90))
-
             eventChannel.send(
                 ScanEvent.NavigateToScanResult(
-                    qr = qrScanResult.qr,
-                    imagePath = imagePath
+                    qrParser.convertToString(barcode.toQR())
                 )
             )
 

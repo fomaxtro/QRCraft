@@ -1,6 +1,6 @@
 package com.fomaxtro.core.presentation.screen.create_qr_wifi
 
-import com.fomaxtro.core.presentation.model.WifiEncryptionType
+import com.fomaxtro.core.domain.model.WifiEncryptionType
 
 sealed interface CreateQRWifiAction {
     data class OnSSIDChange(val ssid: String) : CreateQRWifiAction

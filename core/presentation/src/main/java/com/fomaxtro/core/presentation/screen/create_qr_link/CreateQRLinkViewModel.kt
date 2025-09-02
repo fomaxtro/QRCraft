@@ -2,10 +2,10 @@ package com.fomaxtro.core.presentation.screen.create_qr_link
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRLinkValidator
-import com.fomaxtro.core.presentation.model.QR
-import com.fomaxtro.core.presentation.service.QRImageService
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,12 +21,18 @@ import kotlinx.coroutines.launch
 
 class CreateQRLinkViewModel(
     private val validator: CreateQRLinkValidator,
-    private val qrImageService: QRImageService
+    private val qrParser: QRParser
 ) : ViewModel() {
+    private var firstLaunch = false
+
     private val _state = MutableStateFlow(CreateQRLinkState())
     val state = _state
         .onStart {
-            observeUrl()
+            if (!firstLaunch) {
+                observeUrl()
+
+                firstLaunch = true
+            }
         }
         .stateIn(
             viewModelScope,
@@ -69,25 +75,11 @@ class CreateQRLinkViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isLoading = true
-                )
-            }
-
             val qr = QR.Link(state.value.url)
-            val imagePath = qrImageService.generateAndSaveQR(qr)
-
-            _state.update {
-                it.copy(
-                    isLoading = false
-                )
-            }
 
             eventChannel.send(
                 CreateQRLinkEvent.NavigateToScanResult(
-                    qr = qr,
-                    imagePath = imagePath
+                    qrParser.convertToString(qr)
                 )
             )
         }

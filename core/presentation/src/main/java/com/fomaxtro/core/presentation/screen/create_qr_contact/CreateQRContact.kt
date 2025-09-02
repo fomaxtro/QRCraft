@@ -44,7 +44,7 @@ fun CreateQRContactRoot(
             CreateQRContactEvent.NavigateBack -> navigateBack()
 
             is CreateQRContactEvent.NavigateToScanResult -> {
-                navigateToScanResult.navigate(event.qr, event.imagePath)
+                navigateToScanResult.navigate(event.qr)
             }
         }
     }
@@ -102,8 +102,7 @@ private fun CreateQRContactScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .imePadding(),
-            canSubmit = state.canSubmit,
-            loading = state.isLoading
+            canSubmit = state.canSubmit
         ) {
             QRCraftOutlinedTextField(
                 value = state.name,

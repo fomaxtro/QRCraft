@@ -1,7 +1,7 @@
 package com.fomaxtro.core.presentation.preview
 
-import com.fomaxtro.core.presentation.model.QR
-import com.fomaxtro.core.presentation.model.WifiEncryptionType
+import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.WifiEncryptionType
 
 object PreviewQr {
     val contact = QR.Contact(

@@ -43,7 +43,7 @@ fun CreateQRLinkRoot(
         when (event) {
             CreateQRLinkEvent.NavigateBack -> navigateBack()
             is CreateQRLinkEvent.NavigateToScanResult -> {
-                navigateToScanResult.navigate(event.qr, event.imagePath)
+                navigateToScanResult.navigate(event.qr)
             }
         }
     }
@@ -101,8 +101,7 @@ private fun CreateQRLinkScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .imePadding(),
-            canSubmit = state.canSubmit,
-            loading = state.isLoading
+            canSubmit = state.canSubmit
         ) {
             QRCraftOutlinedTextField(
                 value = state.url,

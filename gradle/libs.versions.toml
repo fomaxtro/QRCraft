@@ -66,6 +66,8 @@ androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecy
 
 qrcode = { module = "io.github.g0dkar:qrcode-kotlin", version.ref = "qrcode" }
 
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+
 [bundles]
 cameraX = [
     "androidx-camera-core",
