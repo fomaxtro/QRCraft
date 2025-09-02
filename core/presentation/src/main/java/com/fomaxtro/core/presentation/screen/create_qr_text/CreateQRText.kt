@@ -40,7 +40,7 @@ fun CreateQRTextRoot(
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             is CreateQRTextEvent.NavigateToScanResult -> {
-                navigateToScanResult.navigate(event.qr, event.imagePath)
+                navigateToScanResult.navigate(event.qr)
             }
 
             CreateQRTextEvent.NavigateBack -> navigateBack()
@@ -98,7 +98,6 @@ private fun CreateQRTextScreen(
                 onAction(CreateQRTextAction.OnSubmitClick)
             },
             canSubmit = state.canSubmit,
-            loading = state.isLoading,
             modifier = Modifier
                 .padding(innerPadding)
                 .imePadding()
