@@ -24,10 +24,16 @@ class CreateQRContactViewModel(
     private val validator: CreateQRContactValidator,
     private val qrParser: QRParser
 ) : ViewModel() {
+    private var firstLaunch = false
+
     private val _state = MutableStateFlow(CreateQRContactState())
     val state = _state
         .onStart {
-            observeCanSubmit()
+            if (!firstLaunch) {
+                observeCanSubmit()
+
+                firstLaunch = true
+            }
         }
         .stateIn(
             viewModelScope,

@@ -25,10 +25,16 @@ class CreateQRGeolocationViewModel(
     private val validator: CreateQRGeolocationValidator,
     private val qrParser: QRParser
 ) : ViewModel() {
+    private var firstLaunch = false
+
     private val _state = MutableStateFlow(CreateQRGeolocationState())
     val state = _state
         .onStart {
-            observeCanSubmit()
+            if (!firstLaunch) {
+                observeCanSubmit()
+
+                firstLaunch = true
+            }
         }
         .stateIn(
             viewModelScope,
