@@ -9,15 +9,11 @@ import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextViewMode
 import com.fomaxtro.core.presentation.screen.create_qr_wifi.CreateQRWifiViewModel
 import com.fomaxtro.core.presentation.screen.scan.ScanViewModel
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultViewModel
-import com.fomaxtro.core.presentation.service.QRImageService
-import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val presentationModule = module {
-    singleOf(::QRImageService)
-
     viewModelOf(::ScanViewModel)
     viewModel<ScanResultViewModel> { (qr: String) ->
         ScanResultViewModel(

@@ -12,7 +12,7 @@ object QRGenerator {
         return withContext(Dispatchers.Default) {
             val generator = QRCode.ofSquares()
                 .withColor(Colors.BLACK)
-                .withMargin(32)
+                .withMargin(64)
                 .build(qr)
 
             val qrBytes = generator.renderToBytes()

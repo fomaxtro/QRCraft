@@ -96,14 +96,9 @@ fun NavigationRoot() {
 
                         activity!!.finish()
                     },
-                    navigateToScanResult = { qr, imagePath ->
+                    navigateToScanResult = { qr ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(
-                                Route.ScanResult(
-                                    qr = qr,
-                                    imagePath = imagePath
-                                )
-                            )
+                            backStack.add(Route.ScanResult(qr))
                         }
                     }
                 )
@@ -112,7 +107,6 @@ fun NavigationRoot() {
             entry<Route.ScanResult> { scanResult ->
                 ScanResultRoot(
                     qr = scanResult.qr,
-                    imagePath = scanResult.imagePath,
                     navigateBack = {
                         if (backStack.lastOrNull() is Route.ScanResult) {
                             backStack.removeLastOrNull()
@@ -160,14 +154,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRText> {
                 CreateQRTextRoot(
-                    navigateToScanResult = { qr, imagePath ->
+                    navigateToScanResult = { qr ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(
-                                Route.ScanResult(
-                                    qr = qr,
-                                    imagePath = imagePath
-                                )
-                            )
+                            backStack.add(Route.ScanResult(qr))
                         }
                     },
                     navigateBack = {
@@ -180,14 +169,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRLink> {
                 CreateQRLinkRoot(
-                    navigateToScanResult = { qr, imagePath ->
+                    navigateToScanResult = { qr ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(
-                                Route.ScanResult(
-                                    qr = qr,
-                                    imagePath = imagePath
-                                )
-                            )
+                            backStack.add(Route.ScanResult(qr))
                         }
                     },
                     navigateBack = {
@@ -200,14 +184,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRContact> {
                 CreateQRContactRoot(
-                    navigateToScanResult = { qr, imagePath ->
+                    navigateToScanResult = { qr ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(
-                                Route.ScanResult(
-                                    qr = qr,
-                                    imagePath = imagePath
-                                )
-                            )
+                            backStack.add(Route.ScanResult(qr))
                         }
                     },
                     navigateBack = {
@@ -220,14 +199,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRPhoneNumber> {
                 CreateQRPhoneNumberRoot(
-                    navigateToScanResult = { qr, imagePath ->
+                    navigateToScanResult = { qr ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(
-                                Route.ScanResult(
-                                    qr = qr,
-                                    imagePath = imagePath
-                                )
-                            )
+                            backStack.add(Route.ScanResult(qr))
                         }
                     },
                     navigateBack = {
@@ -240,14 +214,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRGeolocation> {
                 CreateQRGeolocationRoot(
-                    navigateToScanResult = { qr, imagePath ->
+                    navigateToScanResult = { qr ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(
-                                Route.ScanResult(
-                                    qr = qr,
-                                    imagePath = imagePath
-                                )
-                            )
+                            backStack.add(Route.ScanResult(qr))
                         }
                     },
                     navigateBack = {
@@ -260,14 +229,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRWifi> {
                 CreateQRWifiRoot(
-                    navigateToScanResult = { qr, imagePath ->
+                    navigateToScanResult = { qr ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(
-                                Route.ScanResult(
-                                    qr = qr,
-                                    imagePath = imagePath
-                                )
-                            )
+                            backStack.add(Route.ScanResult(qr))
                         }
                     },
                     navigateBack = {
