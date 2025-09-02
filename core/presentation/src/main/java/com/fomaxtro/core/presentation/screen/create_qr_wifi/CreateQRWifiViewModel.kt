@@ -2,11 +2,11 @@ package com.fomaxtro.core.presentation.screen.create_qr_wifi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.WifiEncryptionType
+import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRWifiValidator
-import com.fomaxtro.core.presentation.model.QR
-import com.fomaxtro.core.presentation.model.WifiEncryptionType
-import com.fomaxtro.core.presentation.service.QRImageService
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,12 +24,18 @@ import kotlinx.coroutines.launch
 
 class CreateQRWifiViewModel(
     private val validator: CreateQRWifiValidator,
-    private val qrImageService: QRImageService
+    private val qrParser: QRParser
 ) : ViewModel() {
+    private var firstLaunch = false
+
     private val _state = MutableStateFlow(CreateQRWifiState())
     val state = _state
         .onStart {
-            observeCanSubmit()
+            if (!firstLaunch) {
+                observeCanSubmit()
+
+                firstLaunch = true
+            }
         }
         .stateIn(
             viewModelScope,
@@ -96,12 +102,6 @@ class CreateQRWifiViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isLoading = true
-                )
-            }
-
             val qr = with(state.value) {
                 QR.Wifi(
                     ssid = ssid,
@@ -109,18 +109,10 @@ class CreateQRWifiViewModel(
                     encryptionType = encryptionType!!
                 )
             }
-            val imagePath = qrImageService.generateAndSaveQR(qr)
-
-            _state.update {
-                it.copy(
-                    isLoading = false
-                )
-            }
 
             eventChannel.send(
                 CreateQRWifiEvent.NavigateToScanResult(
-                    qr = qr,
-                    imagePath = imagePath
+                    qrParser.convertToString(qr)
                 )
             )
         }

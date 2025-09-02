@@ -28,12 +28,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.fomaxtro.core.domain.model.WifiEncryptionType
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.cards.QRCraftQRForm
 import com.fomaxtro.core.presentation.designsystem.text_fields.QRCraftOutlinedTextField
 import com.fomaxtro.core.presentation.designsystem.text_fields.QRCraftOutlinedTextFieldDefaults
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
-import com.fomaxtro.core.presentation.model.WifiEncryptionType
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import com.fomaxtro.core.presentation.util.ScanResultNavigation
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,7 +51,7 @@ fun CreateQRWifiRoot(
             CreateQRWifiEvent.NavigateBack -> navigateBack()
 
             is CreateQRWifiEvent.NavigateToScanResult -> {
-                navigateToScanResult.navigate(event.qr, event.imagePath)
+                navigateToScanResult.navigate(event.qr)
             }
         }
     }
@@ -112,8 +112,7 @@ private fun CreateQRWifiScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .imePadding(),
-            canSubmit = state.canSubmit,
-            loading = state.isLoading
+            canSubmit = state.canSubmit
         ) {
             QRCraftOutlinedTextField(
                 value = state.ssid,
