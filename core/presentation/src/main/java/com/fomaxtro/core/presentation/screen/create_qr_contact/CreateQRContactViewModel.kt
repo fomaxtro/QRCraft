@@ -2,10 +2,10 @@ package com.fomaxtro.core.presentation.screen.create_qr_contact
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRContactValidator
-import com.fomaxtro.core.presentation.model.QR
-import com.fomaxtro.core.presentation.service.QRImageService
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRContactViewModel(
     private val validator: CreateQRContactValidator,
-    private val qrImageService: QRImageService
+    private val qrParser: QRParser
 ) : ViewModel() {
     private val _state = MutableStateFlow(CreateQRContactState())
     val state = _state
@@ -93,12 +93,6 @@ class CreateQRContactViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isLoading = true
-                )
-            }
-
             val qr = with(state.value) {
                 QR.Contact(
                     name = name,
@@ -106,18 +100,10 @@ class CreateQRContactViewModel(
                     phoneNumber = phoneNumber
                 )
             }
-            val imagePath = qrImageService.generateAndSaveQR(qr)
-
-            _state.update {
-                it.copy(
-                    isLoading = false
-                )
-            }
 
             eventChannel.send(
                 CreateQRContactEvent.NavigateToScanResult(
-                    qr = qr,
-                    imagePath = imagePath
+                    qrParser.convertToString(qr)
                 )
             )
         }
