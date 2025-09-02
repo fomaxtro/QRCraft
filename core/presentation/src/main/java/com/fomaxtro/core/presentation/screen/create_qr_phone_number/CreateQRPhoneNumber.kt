@@ -44,7 +44,7 @@ fun CreateQRPhoneNumberRoot(
             CreateQRPhoneNumberEvent.NavigateBack -> navigateBack()
 
             is CreateQRPhoneNumberEvent.NavigateToScanResult -> {
-                navigateToScanResult.navigate(event.qr, event.imagePath)
+                navigateToScanResult.navigate(event.qr)
             }
         }
     }
@@ -102,8 +102,7 @@ private fun CreateQRPhoneNumberScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .imePadding(),
-            canSubmit = state.canSubmit,
-            loading = state.isLoading
+            canSubmit = state.canSubmit
         ) {
             QRCraftOutlinedTextField(
                 value = state.phoneNumber,
