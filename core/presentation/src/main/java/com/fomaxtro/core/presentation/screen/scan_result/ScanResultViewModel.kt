@@ -19,16 +19,10 @@ class ScanResultViewModel(
     qr: String,
     private val qrParser: QRParser
 ) : ViewModel() {
-    private var firstLaunch = false
-
     private val _state = MutableStateFlow(initState(qr))
     val state = _state
         .onStart {
-            if (!firstLaunch) {
-                loadImage(qr)
-
-                firstLaunch = true
-            }
+            loadImage(qr)
         }
         .stateIn(
             viewModelScope,

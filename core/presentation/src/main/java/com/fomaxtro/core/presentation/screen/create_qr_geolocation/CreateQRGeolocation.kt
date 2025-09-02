@@ -44,7 +44,7 @@ fun CreateQRGeolocationRoot(
             CreateQRGeolocationEvent.NavigateBack -> navigateBack()
 
             is CreateQRGeolocationEvent.NavigateToScanResult -> {
-                navigateToScanResult.navigate(event.qr, event.imagePath)
+                navigateToScanResult.navigate(event.qr)
             }
         }
     }
@@ -101,8 +101,7 @@ private fun CreateQRGeolocationScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .imePadding(),
-            canSubmit = state.canSubmit,
-            loading = state.isLoading
+            canSubmit = state.canSubmit
         ) {
             QRCraftOutlinedTextField(
                 value = state.latitude,
