@@ -1,7 +1,7 @@
 package com.fomaxtro.core.domain.qr
 
 import com.fomaxtro.core.domain.fake.FakePatternMatching
-import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.QRCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertIs
@@ -28,7 +28,7 @@ class QRParserTest {
         """.trimIndent()
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QR.Contact>(qrResult)
+        assertIs<QRCode.Contact>(qrResult)
     }
 
     @Test
@@ -36,7 +36,7 @@ class QRParserTest {
         val content = "geo:50.4501,30.5234"
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QR.Geolocation>(qrResult)
+        assertIs<QRCode.Geolocation>(qrResult)
     }
 
     @Test
@@ -46,7 +46,7 @@ class QRParserTest {
         val content = "http://https://pl-coding.mymemberspot.io"
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QR.Link>(qrResult)
+        assertIs<QRCode.Link>(qrResult)
     }
 
     @Test
@@ -56,7 +56,7 @@ class QRParserTest {
         val content = "tel:+49 170 1234567"
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QR.PhoneNumber>(qrResult)
+        assertIs<QRCode.PhoneNumber>(qrResult)
     }
 
     @Test
@@ -64,7 +64,7 @@ class QRParserTest {
         val content = "WIFI:S:DevHub_WiFi;T:WPA;P:QrCraft2025;H:false;;"
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QR.Wifi>(qrResult)
+        assertIs<QRCode.Wifi>(qrResult)
     }
 
     @Test
@@ -77,6 +77,6 @@ class QRParserTest {
         """.trimIndent()
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QR.Text>(qrResult)
+        assertIs<QRCode.Text>(qrResult)
     }
 }

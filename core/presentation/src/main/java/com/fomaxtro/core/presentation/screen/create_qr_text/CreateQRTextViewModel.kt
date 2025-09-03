@@ -2,7 +2,7 @@ package com.fomaxtro.core.presentation.screen.create_qr_text
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.QRCode
 import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRTextValidator
@@ -73,7 +73,7 @@ class CreateQRTextViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qr = QR.Text(state.value.text)
+            val qr = QRCode.Text(state.value.text)
 
             eventChannel.send(
                 CreateQRTextEvent.NavigateToScanResult(

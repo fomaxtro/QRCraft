@@ -2,7 +2,7 @@ package com.fomaxtro.core.presentation.screen.create_qr_contact
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.QRCode
 import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRContactValidator
@@ -100,7 +100,7 @@ class CreateQRContactViewModel(
     private fun onSubmitClick() {
         viewModelScope.launch {
             val qr = with(state.value) {
-                QR.Contact(
+                QRCode.Contact(
                     name = name,
                     email = email,
                     phoneNumber = phoneNumber

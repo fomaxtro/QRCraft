@@ -2,7 +2,7 @@ package com.fomaxtro.core.presentation.screen.create_qr_phone_number
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.QRCode
 import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRPhoneNumberValidator
@@ -72,7 +72,7 @@ class CreateQRPhoneNumberViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qr = QR.PhoneNumber(state.value.phoneNumber)
+            val qr = QRCode.PhoneNumber(state.value.phoneNumber)
 
             eventChannel.send(
                 CreateQRPhoneNumberEvent.NavigateToScanResult(

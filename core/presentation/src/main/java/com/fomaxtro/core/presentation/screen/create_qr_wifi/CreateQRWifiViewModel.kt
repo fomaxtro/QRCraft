@@ -2,7 +2,7 @@ package com.fomaxtro.core.presentation.screen.create_qr_wifi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.QRCode
 import com.fomaxtro.core.domain.model.WifiEncryptionType
 import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.util.ValidationResult
@@ -103,7 +103,7 @@ class CreateQRWifiViewModel(
     private fun onSubmitClick() {
         viewModelScope.launch {
             val qr = with(state.value) {
-                QR.Wifi(
+                QRCode.Wifi(
                     ssid = ssid,
                     password = if (encryptionType == WifiEncryptionType.OPEN) "" else password,
                     encryptionType = encryptionType!!

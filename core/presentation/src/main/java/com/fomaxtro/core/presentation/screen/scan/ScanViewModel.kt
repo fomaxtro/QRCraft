@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.PermissionChecker
 import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.presentation.R
-import com.fomaxtro.core.presentation.mapper.toQR
+import com.fomaxtro.core.presentation.mapper.toQRCode
 import com.fomaxtro.core.presentation.ui.UiText
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.channels.Channel
@@ -50,7 +50,7 @@ class ScanViewModel(
 
             eventChannel.send(
                 ScanEvent.NavigateToScanResult(
-                    qrParser.convertToString(barcode.toQR())
+                    qrParser.convertToString(barcode.toQRCode())
                 )
             )
 

@@ -1,7 +1,7 @@
 package com.fomaxtro.core.domain.qr
 
 import com.fomaxtro.core.domain.PatternMatching
-import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.QRCode
 import com.fomaxtro.core.domain.model.WifiEncryptionType
 
 class QRParser(
@@ -9,18 +9,18 @@ class QRParser(
 ) {
     private val patterns = QRPatterns(patternMatching)
 
-    fun parseFromString(content: String): QR {
+    fun parseFromString(content: String): QRCode {
         return when {
             patterns.isContact(content) -> parseContact(content)
             patterns.isGeolocation(content) -> parseGeolocation(content)
             patterns.isLink(content) -> parseLink(content)
             patterns.isPhoneNumber(content) -> parsePhoneNumber(content)
             patterns.isWifi(content) -> parseWifi(content)
-            else -> QR.Text(content)
+            else -> QRCode.Text(content)
         }
     }
 
-    private fun parseWifi(content: String): QR.Wifi {
+    private fun parseWifi(content: String): QRCode.Wifi {
         val tokens = content
             .replace("WIFI:", "")
             .replace(";;", "")
@@ -41,34 +41,34 @@ class QRParser(
             .find { it.startsWith("P:") }
             ?.substringAfter("P:")
 
-        return QR.Wifi(
+        return QRCode.Wifi(
             encryptionType = encryptionType,
             ssid = ssid,
             password = password
         )
     }
 
-    private fun parsePhoneNumber(content: String): QR.PhoneNumber {
-        return QR.PhoneNumber(content)
+    private fun parsePhoneNumber(content: String): QRCode.PhoneNumber {
+        return QRCode.PhoneNumber(content)
     }
 
-    private fun parseLink(content: String): QR.Link {
-        return QR.Link(content)
+    private fun parseLink(content: String): QRCode.Link {
+        return QRCode.Link(content)
     }
 
-    private fun parseGeolocation(content: String): QR.Geolocation {
+    private fun parseGeolocation(content: String): QRCode.Geolocation {
         val (latitude, longitude) = content
             .replace("geo:", "")
             .replace(" ", "")
             .split(",")
 
-        return QR.Geolocation(
+        return QRCode.Geolocation(
             latitude = latitude.toDoubleOrNull() ?: 0.0,
             longitude = longitude.toDoubleOrNull() ?: 0.0
         )
     }
 
-    private fun parseContact(content: String): QR.Contact {
+    private fun parseContact(content: String): QRCode.Contact {
         val tokens = content.split("\n")
             .drop(1)
             .dropLast(1)
@@ -83,16 +83,16 @@ class QRParser(
             .find { it.startsWith("TEL:") }
             ?.substringAfter("TEL:")
 
-        return QR.Contact(
+        return QRCode.Contact(
             name = name,
             phoneNumber = phoneNumber,
             email = email
         )
     }
 
-    fun convertToString(qr: QR): String {
+    fun convertToString(qr: QRCode): String {
         return when (qr) {
-            is QR.Contact -> {
+            is QRCode.Contact -> {
                 buildString {
                     appendLine("BEGIN:VCARD")
 
@@ -112,11 +112,11 @@ class QRParser(
                 }
             }
 
-            is QR.Geolocation -> "geo:${qr.latitude},${qr.longitude}"
-            is QR.Link -> qr.url
-            is QR.PhoneNumber -> qr.phoneNumber
-            is QR.Text -> qr.text
-            is QR.Wifi -> "WIFI:T:${qr.encryptionType};S:${qr.ssid};P:${qr.password};;"
+            is QRCode.Geolocation -> "geo:${qr.latitude},${qr.longitude}"
+            is QRCode.Link -> qr.url
+            is QRCode.PhoneNumber -> qr.phoneNumber
+            is QRCode.Text -> qr.text
+            is QRCode.Wifi -> "WIFI:T:${qr.encryptionType};S:${qr.ssid};P:${qr.password};;"
         }
     }
 }

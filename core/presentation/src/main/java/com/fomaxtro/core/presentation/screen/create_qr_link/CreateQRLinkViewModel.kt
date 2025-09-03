@@ -2,7 +2,7 @@ package com.fomaxtro.core.presentation.screen.create_qr_link
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.QRCode
 import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRLinkValidator
@@ -75,7 +75,7 @@ class CreateQRLinkViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qr = QR.Link(state.value.url)
+            val qr = QRCode.Link(state.value.url)
 
             eventChannel.send(
                 CreateQRLinkEvent.NavigateToScanResult(

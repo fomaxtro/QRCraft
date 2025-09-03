@@ -1,15 +1,15 @@
 package com.fomaxtro.core.presentation.mapper
 
-import com.fomaxtro.core.domain.model.QR
+import com.fomaxtro.core.domain.model.QRCode
 import com.fomaxtro.core.domain.model.WifiEncryptionType
 import com.google.mlkit.vision.barcode.common.Barcode
 
-fun Barcode.toQR(): QR {
+fun Barcode.toQRCode(): QRCode {
     return when (valueType) {
         Barcode.TYPE_WIFI -> {
             val wifi = requireNotNull(wifi)
 
-            QR.Wifi(
+            QRCode.Wifi(
                 ssid = wifi.ssid!!,
                 password = wifi.password,
                 encryptionType = when (wifi.encryptionType) {
@@ -24,14 +24,14 @@ fun Barcode.toQR(): QR {
         Barcode.TYPE_GEO -> {
             val geolocation = requireNotNull(geoPoint)
 
-            QR.Geolocation(
+            QRCode.Geolocation(
                 latitude = geolocation.lat,
                 longitude = geolocation.lng
             )
         }
 
         Barcode.TYPE_PHONE -> {
-            QR.PhoneNumber(
+            QRCode.PhoneNumber(
                 phoneNumber = requireNotNull(phone?.number)
             )
         }
@@ -43,7 +43,7 @@ fun Barcode.toQR(): QR {
             val phoneNumber = contact.phones.firstOrNull()
             val email = contact.emails.firstOrNull()
 
-            QR.Contact(
+            QRCode.Contact(
                 name = name?.formattedName,
                 phoneNumber = phoneNumber?.number,
                 email = email?.address
@@ -51,18 +51,18 @@ fun Barcode.toQR(): QR {
         }
 
         Barcode.TYPE_URL -> {
-            QR.Link(
+            QRCode.Link(
                 url = requireNotNull(url?.url)
             )
         }
 
-        else -> QR.Text(rawValue ?: "")
+        else -> QRCode.Text(rawValue ?: "")
     }
 }
 
-fun QR.toFormattedText(): String {
+fun QRCode.toFormattedText(): String {
     return when (this) {
-        is QR.Contact -> {
+        is QRCode.Contact -> {
             buildString {
                 if (name != null) {
                     appendLine(name)
@@ -78,15 +78,15 @@ fun QR.toFormattedText(): String {
             }
         }
 
-        is QR.Geolocation -> {
+        is QRCode.Geolocation -> {
             "$latitude, $longitude"
         }
 
-        is QR.Link -> url
-        is QR.PhoneNumber -> phoneNumber
-        is QR.Text -> text
+        is QRCode.Link -> url
+        is QRCode.PhoneNumber -> phoneNumber
+        is QRCode.Text -> text
 
-        is QR.Wifi -> {
+        is QRCode.Wifi -> {
             buildString {
                 appendLine("SSID: $ssid")
 
