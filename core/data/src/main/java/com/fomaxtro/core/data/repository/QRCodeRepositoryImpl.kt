@@ -3,9 +3,11 @@ package com.fomaxtro.core.data.repository
 import com.fomaxtro.core.data.database.dao.QRCodeDao
 import com.fomaxtro.core.data.database.entity.QRCodeEntity
 import com.fomaxtro.core.data.mapper.toQRCodeEntitySource
+import com.fomaxtro.core.data.mapper.toQRCodeEntry
 import com.fomaxtro.core.data.util.safeDatabaseCall
 import com.fomaxtro.core.domain.error.DataError
 import com.fomaxtro.core.domain.model.CreateQRCodeRequest
+import com.fomaxtro.core.domain.model.QRCodeEntry
 import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.repository.QRCodeRepository
 import com.fomaxtro.core.domain.util.Result
@@ -23,6 +25,13 @@ class QRCodeRepositoryImpl(
                     source = request.source.toQRCodeEntitySource()
                 )
             )
+        }
+    }
+
+    override suspend fun findById(id: Long): Result<QRCodeEntry, DataError> {
+        return safeDatabaseCall {
+            qrCodeDao.findById(id)
+                .toQRCodeEntry(qrParser)
         }
     }
 }
