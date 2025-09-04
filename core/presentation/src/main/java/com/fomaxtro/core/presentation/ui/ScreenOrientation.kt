@@ -26,8 +26,8 @@ private class ScreenOrientationStateImpl(
     rotationDegrees: Int = 0
 ) : ScreenOrientationState {
     override var currentOrientation by mutableStateOf(currentOrientation)
-    var previousOrientation by mutableStateOf(previousOrientation)
     override var rotationDegrees by mutableIntStateOf(rotationDegrees)
+    var previousOrientation by mutableStateOf(previousOrientation)
 
     fun updateOrientation(degrees: Int) {
         val orientation = when (degrees) {
@@ -65,10 +65,10 @@ private class ScreenOrientationStateImpl(
             previousOrientation == ScreenOrientation.LANDSCAPE_LEFT
                     && orientation == ScreenOrientation.PORTRAIT_UPSIDE_DOWN -> -90
 
+            // Edge cases
             previousOrientation == ScreenOrientation.PORTRAIT
                     && orientation == ScreenOrientation.PORTRAIT_UPSIDE_DOWN -> +180
 
-            // Edge cases
             previousOrientation == ScreenOrientation.PORTRAIT_UPSIDE_DOWN
                     && orientation == ScreenOrientation.PORTRAIT -> -180
 

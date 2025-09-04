@@ -6,7 +6,7 @@ android-targetSdk = "36"
 android-versionCode = "1"
 android-versionName = "1.0"
 
-agp = "8.12.2"
+agp = "8.13.0"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -17,16 +17,17 @@ activityCompose = "1.10.1"
 composeBom = "2025.08.01"
 splashScreen = "1.0.1"
 cameraX = "1.4.2"
-koin = "4.1.0"
+koin = "4.1.1"
 timber = "5.0.1"
 barcodeScanner = "18.3.1"
 materialAdaptive = "1.2.0-beta01"
 kotlinxSerialization = "1.9.0"
+room = "2.7.2"
+qrcode = "4.5.0"
+ksp = "2.2.10-2.0.2"
 
 nav3Core = "1.0.0-alpha07"
 lifecycleViewmodelNav3 = "1.0.0-alpha04"
-
-qrcode = "4.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +46,10 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "splashScreen" }
 androidx-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "materialAdaptive" }
+
+androidx-room = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 
 androidx-camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraX" }
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraX" }
@@ -65,7 +70,6 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 
 qrcode = { module = "io.github.g0dkar:qrcode-kotlin", version.ref = "qrcode" }
-
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 
 [bundles]
@@ -81,6 +85,10 @@ navigation3 = [
     "androidx-navigation3-ui",
     "androidx-lifecycle-viewmodel-navigation3"
 ]
+room = [
+    "androidx-room",
+    "androidx-room-ktx"
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -89,4 +97,5 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
