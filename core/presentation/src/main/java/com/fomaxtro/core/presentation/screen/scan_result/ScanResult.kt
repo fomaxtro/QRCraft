@@ -59,7 +59,7 @@ import com.fomaxtro.core.presentation.designsystem.theme.link
 import com.fomaxtro.core.presentation.designsystem.theme.linkBg
 import com.fomaxtro.core.presentation.designsystem.theme.onOverlay
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
-import com.fomaxtro.core.presentation.mapper.toFormattedText
+import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.preview.PreviewQr
 import com.fomaxtro.core.presentation.screen.scan_result.components.ExpandableText
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
@@ -87,7 +87,7 @@ fun ScanResultRoot(
                     ClipEntry(
                         clipData = ClipData.newPlainText(
                             "QR",
-                            event.text
+                            event.text.asString(context)
                         )
                     )
                 )
@@ -98,7 +98,7 @@ fun ScanResultRoot(
                     action = Intent.ACTION_SEND
                     type = "text/plain"
 
-                    putExtra(Intent.EXTRA_TEXT, event.text)
+                    putExtra(Intent.EXTRA_TEXT, event.text.asString(context))
                 }
 
                 Intent.createChooser(sendIntent, null).also {
@@ -204,7 +204,7 @@ private fun ScanResultScreen(
                         is QRCode.PhoneNumber,
                         is QRCode.Wifi -> {
                             Text(
-                                text = state.qr.toFormattedText(),
+                                text = state.qr.toFormattedUiText().asString(),
                                 textAlign = TextAlign.Center
                             )
                         }

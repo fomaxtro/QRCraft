@@ -33,4 +33,6 @@
     <string name="ssid">SSID</string>
     <string name="password">Password</string>
     <string name="encryption_type">Encryption Type</string>
+    <string name="wifi_password">Password: %s</string>
+    <string name="wifi_encryption_type">Encryption type: %s</string>
 </resources>

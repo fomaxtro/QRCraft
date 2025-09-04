@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.qr.QRParser
-import com.fomaxtro.core.presentation.mapper.toFormattedText
+import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.util.QRGenerator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,7 +67,7 @@ class ScanResultViewModel(
         viewModelScope.launch {
             eventChannel.send(
                 ScanResultEvent.CopyToClipboard(
-                    text = state.value.qr.toFormattedText()
+                    text = state.value.qr.toFormattedUiText()
                 )
             )
         }
@@ -77,7 +77,7 @@ class ScanResultViewModel(
         viewModelScope.launch {
             eventChannel.send(
                 ScanResultEvent.ShareText(
-                    text = state.value.qr.toFormattedText()
+                    text = state.value.qr.toFormattedUiText()
                 )
             )
         }

@@ -2,6 +2,8 @@ package com.fomaxtro.core.presentation.mapper
 
 import com.fomaxtro.core.domain.model.QRCode
 import com.fomaxtro.core.domain.model.WifiEncryptionType
+import com.fomaxtro.core.presentation.R
+import com.fomaxtro.core.presentation.ui.UiText
 import com.google.mlkit.vision.barcode.common.Barcode
 
 fun Barcode.toQRCode(): QRCode {
@@ -60,10 +62,10 @@ fun Barcode.toQRCode(): QRCode {
     }
 }
 
-fun QRCode.toFormattedText(): String {
+fun QRCode.toFormattedUiText(): UiText {
     return when (this) {
         is QRCode.Contact -> {
-            buildString {
+            val contact = buildString {
                 if (name != null) {
                     appendLine(name)
                 }
@@ -76,26 +78,25 @@ fun QRCode.toFormattedText(): String {
                     append(email)
                 }
             }
+
+            UiText.DynamicString(contact)
         }
 
-        is QRCode.Geolocation -> {
-            "$latitude, $longitude"
-        }
+        is QRCode.Geolocation -> UiText.DynamicString("$latitude, $longitude")
 
-        is QRCode.Link -> url
-        is QRCode.PhoneNumber -> phoneNumber
-        is QRCode.Text -> text
+        is QRCode.Link -> UiText.DynamicString(url)
+        is QRCode.PhoneNumber -> UiText.DynamicString(phoneNumber)
+        is QRCode.Text -> UiText.DynamicString(text)
 
         is QRCode.Wifi -> {
-            buildString {
-                appendLine("SSID: $ssid")
-
-                if (!password.isNullOrEmpty()) {
-                    appendLine("Password: $password")
-                }
-
-                append("Encryption type: $encryptionType")
-            }
+            UiText.Chained(
+                listOf(
+                    UiText.DynamicString("SSID: $ssid"),
+                    UiText.StringResource(R.string.wifi_password, arrayOf(password ?: "")),
+                    UiText.StringResource(R.string.wifi_encryption_type, arrayOf(encryptionType))
+                )
+            )
         }
     }
 }
+

@@ -4,7 +4,11 @@ import android.Manifest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.PermissionChecker
+import com.fomaxtro.core.domain.model.CreateQRCodeRequest
+import com.fomaxtro.core.domain.model.QRCode
+import com.fomaxtro.core.domain.model.QRCodeSource
 import com.fomaxtro.core.domain.qr.QRParser
+import com.fomaxtro.core.domain.repository.QRCodeRepository
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.mapper.toQRCode
 import com.fomaxtro.core.presentation.ui.UiText
@@ -15,10 +19,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
 
 class ScanViewModel(
     permissionChecker: PermissionChecker,
-    private val qrParser: QRParser
+    private val qrParser: QRParser,
+    private val qrCodeRepository: QRCodeRepository,
+    private val defaultTitles: Map<KClass<out QRCode>, String>
 ) : ViewModel() {
     private val _state = MutableStateFlow(
         ScanState(
@@ -48,9 +55,19 @@ class ScanViewModel(
                 )
             }
 
+            val qrCode = barcode.toQRCode()
+
+            qrCodeRepository.save(
+                CreateQRCodeRequest(
+                    title = defaultTitles[qrCode::class] ?: "",
+                    qrCode = qrCode,
+                    source = QRCodeSource.SCANNED
+                )
+            )
+
             eventChannel.send(
                 ScanEvent.NavigateToScanResult(
-                    qrParser.convertToString(barcode.toQRCode())
+                    qrParser.convertToString(qrCode)
                 )
             )
 
