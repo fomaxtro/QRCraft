@@ -3,9 +3,13 @@ package com.fomaxtro.core.presentation.screen.create_qr_text
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.model.QRCode
-import com.fomaxtro.core.domain.qr.QRParser
+import com.fomaxtro.core.domain.model.QRCodeEntry
+import com.fomaxtro.core.domain.model.QRCodeSource
+import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRTextValidator
+import com.fomaxtro.core.presentation.mapper.toUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRTextViewModel(
     private val validator: CreateQRTextValidator,
-    private val qrParser: QRParser
+    private val qrCodeRepository: QRCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
 
@@ -73,13 +77,39 @@ class CreateQRTextViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qr = QRCode.Text(state.value.text)
-
-            eventChannel.send(
-                CreateQRTextEvent.NavigateToScanResult(
-                    qrParser.convertToString(qr)
+            _state.update {
+                it.copy(
+                    isSubmitting = true
                 )
+            }
+
+            val qrCode = QRCodeEntry(
+                title = null,
+                qrCode = QRCode.Text(state.value.text),
+                source = QRCodeSource.GENERATED
             )
+
+            val result = qrCodeRepository.save(qrCode)
+
+            _state.update {
+                it.copy(
+                    isSubmitting = false
+                )
+            }
+
+            when (result) {
+                is Result.Error -> {
+                    eventChannel.send(
+                        CreateQRTextEvent.ShowSystemMessage(result.error.toUiText())
+                    )
+                }
+
+                is Result.Success -> {
+                    eventChannel.send(
+                        CreateQRTextEvent.NavigateToScanResult(result.data)
+                    )
+                }
+            }
         }
     }
 
