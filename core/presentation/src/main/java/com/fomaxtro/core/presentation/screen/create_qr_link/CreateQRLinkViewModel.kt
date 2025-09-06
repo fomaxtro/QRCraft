@@ -3,9 +3,13 @@ package com.fomaxtro.core.presentation.screen.create_qr_link
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.model.QRCode
-import com.fomaxtro.core.domain.qr.QRParser
+import com.fomaxtro.core.domain.model.QRCodeEntry
+import com.fomaxtro.core.domain.model.QRCodeSource
+import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRLinkValidator
+import com.fomaxtro.core.presentation.mapper.toUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRLinkViewModel(
     private val validator: CreateQRLinkValidator,
-    private val qrParser: QRParser
+    private val qrCodeRepository: QRCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
 
@@ -75,13 +79,42 @@ class CreateQRLinkViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qr = QRCode.Link(state.value.url)
+            _state.update {
+                it.copy(
+                    isSubmitting = true
+                )
+            }
 
-            eventChannel.send(
-                CreateQRLinkEvent.NavigateToScanResult(
-                    qrParser.convertToString(qr)
+            val qrCode = QRCode.Link(state.value.url)
+            val result = qrCodeRepository.save(
+                QRCodeEntry(
+                    title = null,
+                    qrCode = qrCode,
+                    source = QRCodeSource.GENERATED
                 )
             )
+
+            _state.update {
+                it.copy(
+                    isSubmitting = false
+                )
+            }
+
+            when (result) {
+                is Result.Error -> {
+                    eventChannel.send(
+                        CreateQRLinkEvent.ShowSystemMessage(
+                            result.error.toUiText()
+                        )
+                    )
+                }
+
+                is Result.Success -> {
+                    eventChannel.send(
+                        CreateQRLinkEvent.NavigateToScanResult(result.data)
+                    )
+                }
+            }
         }
     }
 
