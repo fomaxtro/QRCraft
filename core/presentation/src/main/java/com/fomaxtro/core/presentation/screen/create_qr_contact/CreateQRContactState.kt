@@ -4,5 +4,6 @@ data class CreateQRContactState(
     val name: String = "",
     val email: String = "",
     val phoneNumber: String = "",
-    val canSubmit: Boolean = false
+    val canSubmit: Boolean = false,
+    val isSubmitting: Boolean = false
 )
