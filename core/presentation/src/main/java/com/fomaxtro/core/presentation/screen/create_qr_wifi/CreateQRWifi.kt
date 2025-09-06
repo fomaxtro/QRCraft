@@ -1,5 +1,6 @@
 package com.fomaxtro.core.presentation.screen.create_qr_wifi
 
+import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,6 +46,7 @@ fun CreateQRWifiRoot(
     navigateBack: () -> Unit,
     viewModel: CreateQRWifiViewModel = koinViewModel()
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserveAsEvents(viewModel.events) { event ->
@@ -51,7 +54,15 @@ fun CreateQRWifiRoot(
             CreateQRWifiEvent.NavigateBack -> navigateBack()
 
             is CreateQRWifiEvent.NavigateToScanResult -> {
-                navigateToScanResult.navigate(event.qr)
+                navigateToScanResult.navigate(event.id)
+            }
+
+            is CreateQRWifiEvent.ShowSystemMessage -> {
+                Toast.makeText(
+                    context,
+                    event.message.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -112,7 +123,8 @@ private fun CreateQRWifiScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .imePadding(),
-            canSubmit = state.canSubmit
+            canSubmit = state.canSubmit,
+            loading = state.isSubmitting
         ) {
             QRCraftOutlinedTextField(
                 value = state.ssid,
