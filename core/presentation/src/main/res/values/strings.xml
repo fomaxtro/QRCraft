@@ -35,4 +35,6 @@
     <string name="encryption_type">Encryption Type</string>
     <string name="wifi_password">Password: %s</string>
     <string name="wifi_encryption_type">Encryption type: %s</string>
+    <string name="disk_full">Storage space is full. Please free up some space and try again.</string>
+    <string name="error_unknown">Something went wrong. Please try again.</string>
 </resources>
