@@ -14,11 +14,19 @@ fun QRCodeSource.toQRCodeEntitySource(): QRCodeEntitySource {
     }
 }
 
+fun QRCodeEntitySource.toQRCodeSource(): QRCodeSource {
+    return when (this) {
+        QRCodeEntitySource.GENERATED -> QRCodeSource.GENERATED
+        QRCodeEntitySource.SCANNED -> QRCodeSource.SCANNED
+    }
+}
+
 fun QRCodeEntity.toQRCodeEntry(
     qrParser: QRParser
 ) = QRCodeEntry(
     id = id,
     title = title,
     qrCode = qrParser.parseFromString(data),
+    source = source.toQRCodeSource(),
     createdAt = Instant.ofEpochMilli(createdAt)
 )
