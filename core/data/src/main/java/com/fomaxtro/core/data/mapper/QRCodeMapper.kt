@@ -30,3 +30,13 @@ fun QRCodeEntity.toQRCodeEntry(
     source = source.toQRCodeSource(),
     createdAt = Instant.ofEpochMilli(createdAt)
 )
+
+fun QRCodeEntry.toQRCodeEntity(
+    qrParser: QRParser
+) = QRCodeEntity(
+    id = id,
+    title = title,
+    data = qrParser.convertToString(qrCode),
+    source = source.toQRCodeEntitySource(),
+    createdAt = createdAt.toEpochMilli()
+)

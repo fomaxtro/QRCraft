@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -40,9 +42,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
@@ -65,6 +69,7 @@ import com.fomaxtro.core.presentation.designsystem.theme.onOverlay
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.preview.PreviewQr
+import com.fomaxtro.core.presentation.screen.scan_result.components.EditableTitle
 import com.fomaxtro.core.presentation.screen.scan_result.components.ExpandableText
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import org.koin.androidx.compose.koinViewModel
@@ -122,7 +127,8 @@ fun ScanResultRoot(
 
     ScanResultScreen(
         onAction = viewModel::onAction,
-        state = state
+        state = state,
+        titleState = viewModel.titleState
     )
 }
 
@@ -130,9 +136,11 @@ fun ScanResultRoot(
 @Composable
 private fun ScanResultScreen(
     onAction: (ScanResultAction) -> Unit = {},
-    state: ScanResultState
+    state: ScanResultState,
+    titleState: TextFieldState = TextFieldState()
 ) {
     val isInPreviewMode = LocalInspectionMode.current
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.onSurface,
@@ -164,7 +172,13 @@ private fun ScanResultScreen(
                     containerColor = MaterialTheme.colorScheme.onSurface
                 )
             )
-        }
+        },
+        modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures {
+                    focusManager.clearFocus()
+                }
+            }
     ) { innerPadding ->
         if (state.isLoading) {
             CircularProgressIndicator(
@@ -206,16 +220,20 @@ private fun ScanResultScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        Text(
-                            text = when (state.qr) {
-                                is QRCode.Contact -> stringResource(R.string.contact)
-                                is QRCode.Geolocation -> stringResource(R.string.geolocation)
-                                is QRCode.Link -> stringResource(R.string.link)
-                                is QRCode.PhoneNumber -> stringResource(R.string.phone_number)
-                                is QRCode.Text -> stringResource(R.string.text)
-                                is QRCode.Wifi -> stringResource(R.string.wifi)
-                            },
-                            style = MaterialTheme.typography.titleMedium
+                        EditableTitle(
+                            state = titleState,
+                            placeholder = {
+                                Text(
+                                    text = when (state.qr) {
+                                        is QRCode.Contact -> stringResource(R.string.contact)
+                                        is QRCode.Geolocation -> stringResource(R.string.geolocation)
+                                        is QRCode.Link -> stringResource(R.string.link)
+                                        is QRCode.PhoneNumber -> stringResource(R.string.phone_number)
+                                        is QRCode.Text -> stringResource(R.string.text)
+                                        is QRCode.Wifi -> stringResource(R.string.wifi)
+                                    }
+                                )
+                            }
                         )
 
                         when (state.qr) {
@@ -341,7 +359,7 @@ private fun ScanResultScreenPreview() {
         ScanResultScreen(
             state = ScanResultState(
                 qr = PreviewQr.link,
-                isLoading = true
+                isLoading = false
             )
         )
     }
