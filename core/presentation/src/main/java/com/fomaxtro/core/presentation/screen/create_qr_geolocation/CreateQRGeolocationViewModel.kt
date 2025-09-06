@@ -3,9 +3,13 @@ package com.fomaxtro.core.presentation.screen.create_qr_geolocation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.model.QRCode
-import com.fomaxtro.core.domain.qr.QRParser
+import com.fomaxtro.core.domain.model.QRCodeEntry
+import com.fomaxtro.core.domain.model.QRCodeSource
+import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRGeolocationValidator
+import com.fomaxtro.core.presentation.mapper.toUiText
 import com.fomaxtro.core.presentation.util.InputValidator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +27,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRGeolocationViewModel(
     private val validator: CreateQRGeolocationValidator,
-    private val qrParser: QRParser
+    private val qrCodeRepository: QRCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
 
@@ -83,15 +87,44 @@ class CreateQRGeolocationViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qr = with(state.value) {
-                QRCode.Geolocation(latitude.toDouble(), longitude.toDouble())
+            _state.update {
+                it.copy(
+                    isSubmitting = true
+                )
             }
 
-            eventChannel.send(
-                CreateQRGeolocationEvent.NavigateToScanResult(
-                    qrParser.convertToString(qr)
+            val qrCode = with(state.value) {
+                QRCode.Geolocation(latitude.toDouble(), longitude.toDouble())
+            }
+            val result = qrCodeRepository.save(
+                QRCodeEntry(
+                    title = null,
+                    qrCode = qrCode,
+                    source = QRCodeSource.GENERATED
                 )
             )
+
+            _state.update {
+                it.copy(
+                    isSubmitting = false
+                )
+            }
+
+            when (result) {
+                is Result.Error -> {
+                    eventChannel.send(
+                        CreateQRGeolocationEvent.ShowSystemMessage(
+                            result.error.toUiText()
+                        )
+                    )
+                }
+
+                is Result.Success -> {
+                    eventChannel.send(
+                        CreateQRGeolocationEvent.NavigateToScanResult(result.data)
+                    )
+                }
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.fomaxtro.core.presentation.screen.create_qr_geolocation
 
+import android.widget.Toast
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -37,6 +39,7 @@ fun CreateQRGeolocationRoot(
     navigateBack: () -> Unit,
     viewModel: CreateQRGeolocationViewModel = koinViewModel()
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ObserveAsEvents(viewModel.events) { event ->
@@ -44,7 +47,15 @@ fun CreateQRGeolocationRoot(
             CreateQRGeolocationEvent.NavigateBack -> navigateBack()
 
             is CreateQRGeolocationEvent.NavigateToScanResult -> {
-                navigateToScanResult.navigate(event.qr)
+                navigateToScanResult.navigate(event.id)
+            }
+
+            is CreateQRGeolocationEvent.ShowSystemMessage -> {
+                Toast.makeText(
+                    context,
+                    event.message.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -101,7 +112,8 @@ private fun CreateQRGeolocationScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .imePadding(),
-            canSubmit = state.canSubmit
+            canSubmit = state.canSubmit,
+            loading = state.isSubmitting
         ) {
             QRCraftOutlinedTextField(
                 value = state.latitude,
