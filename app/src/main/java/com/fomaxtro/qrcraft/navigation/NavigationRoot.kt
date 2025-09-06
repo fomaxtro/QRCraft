@@ -96,9 +96,9 @@ fun NavigationRoot() {
 
                         activity!!.finish()
                     },
-                    navigateToScanResult = { qr ->
+                    navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(qr))
+                            backStack.add(Route.ScanResult(id))
                         }
                     }
                 )

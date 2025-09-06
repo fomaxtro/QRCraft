@@ -5,6 +5,7 @@ import com.fomaxtro.core.presentation.ui.UiText
 sealed interface ScanEvent {
     data object CloseApp : ScanEvent
     data object RequestCameraPermission : ScanEvent
-    data class ShowSnackbar(val message: UiText) : ScanEvent
-    data class NavigateToScanResult(val qr: String) : ScanEvent
+    data class ShowMessage(val message: UiText) : ScanEvent
+    data class NavigateToScanResult(val id: Long) : ScanEvent
+    data class ShowSystemMessage(val message: UiText) : ScanEvent
 }

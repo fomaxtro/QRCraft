@@ -2,17 +2,20 @@ package com.fomaxtro.core.presentation.screen.scan_result
 
 import android.content.ClipData
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -23,6 +26,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -68,10 +72,10 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun ScanResultRoot(
-    qr: String,
+    id: Long,
     navigateBack: () -> Unit,
     viewModel: ScanResultViewModel = koinViewModel {
-        parametersOf(qr)
+        parametersOf(id)
     }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -104,6 +108,14 @@ fun ScanResultRoot(
                 Intent.createChooser(sendIntent, null).also {
                     context.startActivity(it)
                 }
+            }
+
+            is ScanResultEvent.ShowSystemMessage -> {
+                Toast.makeText(
+                    context,
+                    event.message.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
@@ -154,159 +166,168 @@ private fun ScanResultScreen(
             )
         }
     ) { innerPadding ->
-        val qrSize = 160.dp
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .wrapContentSize()
+            )
+        } else {
+            val qrSize = 160.dp
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth()
-                .width(480.dp)
-                .padding(innerPadding)
-                .padding(top = 48.dp)
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            Card(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .offset(y = qrSize / 2)
-                    .padding(bottom = qrSize / 2),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                    .wrapContentWidth()
+                    .width(480.dp)
+                    .padding(innerPadding)
+                    .padding(top = 48.dp)
+                    .padding(horizontal = 16.dp)
+                    .verticalScroll(rememberScrollState()),
+                contentAlignment = Alignment.TopCenter
             ) {
-                Column(
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            top = qrSize / 2
-                        )
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Text(
-                        text = when (state.qr) {
-                            is QRCode.Contact -> stringResource(R.string.contact)
-                            is QRCode.Geolocation -> stringResource(R.string.geolocation)
-                            is QRCode.Link -> stringResource(R.string.link)
-                            is QRCode.PhoneNumber -> stringResource(R.string.phone_number)
-                            is QRCode.Text -> stringResource(R.string.text)
-                            is QRCode.Wifi -> stringResource(R.string.wifi)
-                        },
-                        style = MaterialTheme.typography.titleMedium
+                        .offset(y = qrSize / 2)
+                        .padding(bottom = qrSize / 2),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
                     )
-
-                    when (state.qr) {
-                        is QRCode.Contact,
-                        is QRCode.Geolocation,
-                        is QRCode.PhoneNumber,
-                        is QRCode.Wifi -> {
-                            Text(
-                                text = state.qr.toFormattedUiText().asString(),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-
-                        is QRCode.Link -> {
-                            val url = buildAnnotatedString {
-                                withLink(
-                                    link = LinkAnnotation.Url(
-                                        url = state.qr.url,
-                                        styles = TextLinkStyles(
-                                            style = SpanStyle(
-                                                background = MaterialTheme.colorScheme.linkBg,
-                                                color = MaterialTheme.colorScheme.link
-                                            )
-                                        )
-                                    )
-                                ) {
-                                    append(state.qr.url)
-                                }
-                            }
-
-                            Text(url)
-                        }
-
-                        is QRCode.Text -> {
-                            ExpandableText(
-                                text = state.qr.text,
-                                textAlign = TextAlign.Start,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            )
-                        }
-                    }
-
-                    Row(
+                ) {
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(
+                                top = qrSize / 2
+                            )
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        QRCraftButton(
-                            onClick = {
-                                onAction(ScanResultAction.OnShareClick)
+                        Text(
+                            text = when (state.qr) {
+                                is QRCode.Contact -> stringResource(R.string.contact)
+                                is QRCode.Geolocation -> stringResource(R.string.geolocation)
+                                is QRCode.Link -> stringResource(R.string.link)
+                                is QRCode.PhoneNumber -> stringResource(R.string.phone_number)
+                                is QRCode.Text -> stringResource(R.string.text)
+                                is QRCode.Wifi -> stringResource(R.string.wifi)
                             },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceHigher,
-                                contentColor = MaterialTheme.colorScheme.onSurface
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                        ) {
-                            Icon(
-                                imageVector = QRCraftIcons.Share,
-                                contentDescription = stringResource(R.string.share)
-                            )
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
-                            Text(
-                                text = stringResource(R.string.share)
-                            )
+                        when (state.qr) {
+                            is QRCode.Contact,
+                            is QRCode.Geolocation,
+                            is QRCode.PhoneNumber,
+                            is QRCode.Wifi -> {
+                                Text(
+                                    text = state.qr.toFormattedUiText().asString(),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+
+                            is QRCode.Link -> {
+                                val url = buildAnnotatedString {
+                                    withLink(
+                                        link = LinkAnnotation.Url(
+                                            url = state.qr.url,
+                                            styles = TextLinkStyles(
+                                                style = SpanStyle(
+                                                    background = MaterialTheme.colorScheme.linkBg,
+                                                    color = MaterialTheme.colorScheme.link
+                                                )
+                                            )
+                                        )
+                                    ) {
+                                        append(state.qr.url)
+                                    }
+                                }
+
+                                Text(url)
+                            }
+
+                            is QRCode.Text -> {
+                                ExpandableText(
+                                    text = state.qr.text,
+                                    textAlign = TextAlign.Start,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                )
+                            }
                         }
 
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        QRCraftButton(
-                            onClick = {
-                                onAction(ScanResultAction.OnCopyClick)
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.surfaceHigher,
-                                contentColor = MaterialTheme.colorScheme.onSurface
-                            ),
+                        Row(
                             modifier = Modifier
-                                .weight(1f)
+                                .fillMaxWidth()
                         ) {
-                            Icon(
-                                imageVector = QRCraftIcons.Copy,
-                                contentDescription = stringResource(R.string.copy)
-                            )
+                            QRCraftButton(
+                                onClick = {
+                                    onAction(ScanResultAction.OnShareClick)
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceHigher,
+                                    contentColor = MaterialTheme.colorScheme.onSurface
+                                ),
+                                modifier = Modifier
+                                    .weight(1f)
+                            ) {
+                                Icon(
+                                    imageVector = QRCraftIcons.Share,
+                                    contentDescription = stringResource(R.string.share)
+                                )
 
-                            Text(
-                                text = stringResource(R.string.copy)
-                            )
+                                Text(
+                                    text = stringResource(R.string.share)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            QRCraftButton(
+                                onClick = {
+                                    onAction(ScanResultAction.OnCopyClick)
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = MaterialTheme.colorScheme.surfaceHigher,
+                                    contentColor = MaterialTheme.colorScheme.onSurface
+                                ),
+                                modifier = Modifier
+                                    .weight(1f)
+                            ) {
+                                Icon(
+                                    imageVector = QRCraftIcons.Copy,
+                                    contentDescription = stringResource(R.string.copy)
+                                )
+
+                                Text(
+                                    text = stringResource(R.string.copy)
+                                )
+                            }
                         }
                     }
                 }
-            }
 
-            ElevatedCard(
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = 2.dp
-                )
-            ) {
-                if (isInPreviewMode) {
-                    Image(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = null,
-                        modifier = Modifier.size(qrSize)
+                ElevatedCard(
+                    elevation = CardDefaults.cardElevation(
+                        defaultElevation = 2.dp
                     )
-                } else if (state.qrImage != null) {
-                    Image(
-                        bitmap = state.qrImage,
-                        contentDescription = null,
-                        modifier = Modifier.size(qrSize)
-                    )
+                ) {
+                    if (isInPreviewMode) {
+                        Image(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = null,
+                            modifier = Modifier.size(qrSize)
+                        )
+                    } else if (state.qrImage != null) {
+                        Image(
+                            bitmap = state.qrImage,
+                            contentDescription = null,
+                            modifier = Modifier.size(qrSize)
+                        )
+                    }
                 }
             }
         }
@@ -319,7 +340,8 @@ private fun ScanResultScreenPreview() {
     QRCraftTheme {
         ScanResultScreen(
             state = ScanResultState(
-                qr = PreviewQr.link
+                qr = PreviewQr.link,
+                isLoading = true
             )
         )
     }

@@ -6,4 +6,5 @@ sealed interface ScanResultEvent {
     data object NavigateBack : ScanResultEvent
     data class ShareText(val text: UiText) : ScanResultEvent
     data class CopyToClipboard(val text: UiText) : ScanResultEvent
+    data class ShowSystemMessage(val message: UiText) : ScanResultEvent
 }

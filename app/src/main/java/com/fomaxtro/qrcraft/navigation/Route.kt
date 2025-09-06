@@ -9,7 +9,7 @@ sealed interface Route : NavKey {
     data object Scan : Route
 
     @Serializable
-    data class ScanResult(val qr: String) : Route
+    data class ScanResult(val id: Long) : Route
 
     @Serializable
     data object CreateQR : Route

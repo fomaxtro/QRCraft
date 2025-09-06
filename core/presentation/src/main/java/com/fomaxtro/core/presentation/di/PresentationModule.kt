@@ -17,8 +17,7 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val presentationModule = module {
-    viewModel<ScanViewModel> {
-        val context = androidContext()
+    viewModelOf(::ScanViewModel)
 
         val defaultTitles = mapOf(
             QRCode.Text::class to context.getString(R.string.text),

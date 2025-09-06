@@ -3,6 +3,7 @@ package com.fomaxtro.core.presentation.screen.scan
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,7 +61,7 @@ fun ScanRoot(
     onCloseApp: () -> Unit,
     onCameraPermissionDenied: () -> Unit,
     onAlwaysDeniedCameraPermission: () -> Unit,
-    navigateToScanResult: (qr: String) -> Unit,
+    navigateToScanResult: (id: Long) -> Unit,
     viewModel: ScanViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -147,14 +148,22 @@ fun ScanRoot(
                 launcher.launch(Manifest.permission.CAMERA)
             }
 
-            is ScanEvent.ShowSnackbar -> {
+            is ScanEvent.ShowMessage -> {
                 snackbarHostState.showSnackbar(
                     message = event.message.asString(context)
                 )
             }
 
             is ScanEvent.NavigateToScanResult -> {
-                navigateToScanResult(event.qr)
+                navigateToScanResult(event.id)
+            }
+
+            is ScanEvent.ShowSystemMessage -> {
+                Toast.makeText(
+                    context,
+                    event.message.asString(context),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
