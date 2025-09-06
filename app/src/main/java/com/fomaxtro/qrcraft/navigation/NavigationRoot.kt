@@ -106,7 +106,7 @@ fun NavigationRoot() {
 
             entry<Route.ScanResult> { scanResult ->
                 ScanResultRoot(
-                    qr = scanResult.qr,
+                    id = scanResult.id,
                     navigateBack = {
                         if (backStack.lastOrNull() is Route.ScanResult) {
                             backStack.removeLastOrNull()

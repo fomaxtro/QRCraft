@@ -4,7 +4,10 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.qr.QRParser
+import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.presentation.mapper.toFormattedUiText
+import com.fomaxtro.core.presentation.mapper.toUiText
 import com.fomaxtro.core.presentation.util.QRGenerator
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,16 +19,17 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ScanResultViewModel(
-    qr: String,
-    private val qrParser: QRParser
+    id: Long,
+    private val qrParser: QRParser,
+    private val qrCodeRepository: QRCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
 
-    private val _state = MutableStateFlow(initState(qr))
+    private val _state = MutableStateFlow(ScanResultState())
     val state = _state
         .onStart {
             if (!firstLaunch) {
-                loadImage(qr)
+                loadQR(id)
 
                 firstLaunch = true
             }
@@ -33,25 +37,33 @@ class ScanResultViewModel(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000L),
-            initState(qr)
+            ScanResultState()
         )
 
     private val eventChannel = Channel<ScanResultEvent>()
     val events = eventChannel.receiveAsFlow()
 
-    private fun initState(qr: String): ScanResultState {
-        return ScanResultState(
-            qr = qrParser.parseFromString(qr)
-        )
-    }
+    private suspend fun loadQR(id: Long) {
+        when (val entry = qrCodeRepository.findById(id)) {
+            is Result.Error -> {
+                eventChannel.send(
+                    ScanResultEvent.ShowSystemMessage(entry.error.toUiText())
+                )
+            }
 
-    private suspend fun loadImage(qr: String) {
-        val qrImage = QRGenerator.generate(qr)
+            is Result.Success -> {
+                val qrImage = QRGenerator.generate(
+                    qrParser.convertToString(entry.data.qrCode)
+                )
 
-        _state.update {
-            it.copy(
-                qrImage = qrImage.asImageBitmap()
-            )
+                _state.update {
+                    it.copy(
+                        qr = entry.data.qrCode,
+                        qrImage = qrImage.asImageBitmap(),
+                        isLoading = false
+                    )
+                }
+            }
         }
     }
 
