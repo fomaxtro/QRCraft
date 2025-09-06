@@ -52,6 +52,7 @@ import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
 import com.fomaxtro.core.presentation.screen.scan.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
+import com.fomaxtro.core.presentation.util.ScanResultNavigation
 import org.koin.androidx.compose.koinViewModel
 import kotlin.math.roundToInt
 
@@ -61,7 +62,7 @@ fun ScanRoot(
     onCloseApp: () -> Unit,
     onCameraPermissionDenied: () -> Unit,
     onAlwaysDeniedCameraPermission: () -> Unit,
-    navigateToScanResult: (id: Long) -> Unit,
+    navigateToScanResult: ScanResultNavigation,
     viewModel: ScanViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -155,7 +156,7 @@ fun ScanRoot(
             }
 
             is ScanEvent.NavigateToScanResult -> {
-                navigateToScanResult(event.id)
+                navigateToScanResult.navigate(event.id)
             }
 
             is ScanEvent.ShowSystemMessage -> {
