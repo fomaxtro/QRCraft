@@ -3,9 +3,13 @@ package com.fomaxtro.core.presentation.screen.create_qr_phone_number
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.model.QRCode
-import com.fomaxtro.core.domain.qr.QRParser
+import com.fomaxtro.core.domain.model.QRCodeEntry
+import com.fomaxtro.core.domain.model.QRCodeSource
+import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRPhoneNumberValidator
+import com.fomaxtro.core.presentation.mapper.toUiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRPhoneNumberViewModel(
     private val validator: CreateQRPhoneNumberValidator,
-    private val qrParser: QRParser
+    private val qrCodeRepository: QRCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
 
@@ -72,13 +76,42 @@ class CreateQRPhoneNumberViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qr = QRCode.PhoneNumber(state.value.phoneNumber)
+            _state.update {
+                it.copy(
+                    isSubmitting = true
+                )
+            }
 
-            eventChannel.send(
-                CreateQRPhoneNumberEvent.NavigateToScanResult(
-                    qrParser.convertToString(qr)
+            val qrCode = QRCode.PhoneNumber(state.value.phoneNumber)
+            val result = qrCodeRepository.save(
+                QRCodeEntry(
+                    title = null,
+                    qrCode = qrCode,
+                    source = QRCodeSource.GENERATED
                 )
             )
+
+            _state.update {
+                it.copy(
+                    isSubmitting = false
+                )
+            }
+
+            when (result) {
+                is Result.Error -> {
+                    eventChannel.send(
+                        CreateQRPhoneNumberEvent.ShowSystemMessage(
+                            result.error.toUiText()
+                        )
+                    )
+                }
+
+                is Result.Success -> {
+                    eventChannel.send(
+                        CreateQRPhoneNumberEvent.NavigateToScanResult(result.data)
+                    )
+                }
+            }
         }
     }
 
