@@ -5,14 +5,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.cards.QRCraftQRForm
+import com.fomaxtro.core.presentation.designsystem.scaffolds.QRCraftScaffold
 import com.fomaxtro.core.presentation.designsystem.text_fields.QRCraftOutlinedTextField
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
@@ -73,30 +67,11 @@ private fun CreateQRTextScreen(
 ) {
     val focusManager = LocalFocusManager.current
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.text),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            onAction(CreateQRTextAction.OnNavigateBackClick)
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = stringResource(R.string.navigate_back)
-                        )
-                    }
-                },
-            )
+    QRCraftScaffold(
+        title = stringResource(R.string.text),
+        onBackClick = {
+            onAction(CreateQRTextAction.OnNavigateBackClick)
         },
-        containerColor = MaterialTheme.colorScheme.surface,
         modifier = Modifier
             .pointerInput(Unit) {
                 detectTapGestures {
