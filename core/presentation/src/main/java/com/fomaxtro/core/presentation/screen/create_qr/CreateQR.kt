@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -17,21 +15,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
 import com.fomaxtro.core.presentation.R
+import com.fomaxtro.core.presentation.components.QRContactIcon
+import com.fomaxtro.core.presentation.components.QRGeolocationIcon
+import com.fomaxtro.core.presentation.components.QRLinkIcon
+import com.fomaxtro.core.presentation.components.QRPhoneNumberIcon
+import com.fomaxtro.core.presentation.components.QRTextIcon
+import com.fomaxtro.core.presentation.components.QRWifiIcon
 import com.fomaxtro.core.presentation.designsystem.scaffolds.QRCraftScaffold
-import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
-import com.fomaxtro.core.presentation.designsystem.theme.contact
-import com.fomaxtro.core.presentation.designsystem.theme.contactBg
-import com.fomaxtro.core.presentation.designsystem.theme.geo
-import com.fomaxtro.core.presentation.designsystem.theme.geoBg
-import com.fomaxtro.core.presentation.designsystem.theme.link
-import com.fomaxtro.core.presentation.designsystem.theme.linkBg
-import com.fomaxtro.core.presentation.designsystem.theme.phone
-import com.fomaxtro.core.presentation.designsystem.theme.phoneBg
-import com.fomaxtro.core.presentation.designsystem.theme.text
-import com.fomaxtro.core.presentation.designsystem.theme.textBg
-import com.fomaxtro.core.presentation.designsystem.theme.wifi
-import com.fomaxtro.core.presentation.designsystem.theme.wifiBg
 import com.fomaxtro.core.presentation.screen.create_qr.components.ClickableCard
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
 import org.koin.compose.viewmodel.koinViewModel
@@ -105,13 +96,8 @@ private fun CreateQRScreen(
                         onAction(CreateQRAction.OnTextClick)
                     },
                     icon = {
-                        Icon(
-                            imageVector = QRCraftIcons.Text,
-                            contentDescription = stringResource(R.string.text)
-                        )
+                        QRTextIcon()
                     },
-                    iconContainerColor = MaterialTheme.colorScheme.textBg,
-                    iconContentColor = MaterialTheme.colorScheme.text,
                     text = stringResource(R.string.text)
                 )
             }
@@ -122,13 +108,8 @@ private fun CreateQRScreen(
                         onAction(CreateQRAction.OnLinkClick)
                     },
                     icon = {
-                        Icon(
-                            imageVector = QRCraftIcons.Link,
-                            contentDescription = stringResource(R.string.link)
-                        )
+                        QRLinkIcon()
                     },
-                    iconContainerColor = MaterialTheme.colorScheme.linkBg,
-                    iconContentColor = MaterialTheme.colorScheme.link,
                     text = stringResource(R.string.link)
                 )
             }
@@ -139,13 +120,8 @@ private fun CreateQRScreen(
                         onAction(CreateQRAction.OnContactClick)
                     },
                     icon = {
-                        Icon(
-                            imageVector = QRCraftIcons.Contact,
-                            contentDescription = stringResource(R.string.contact)
-                        )
+                        QRContactIcon()
                     },
-                    iconContainerColor = MaterialTheme.colorScheme.contactBg,
-                    iconContentColor = MaterialTheme.colorScheme.contact,
                     text = stringResource(R.string.contact),
                 )
             }
@@ -156,13 +132,8 @@ private fun CreateQRScreen(
                         onAction(CreateQRAction.OnPhoneClick)
                     },
                     icon = {
-                        Icon(
-                            imageVector = QRCraftIcons.Phone,
-                            contentDescription = stringResource(R.string.phone_number)
-                        )
+                        QRPhoneNumberIcon()
                     },
-                    iconContainerColor = MaterialTheme.colorScheme.phoneBg,
-                    iconContentColor = MaterialTheme.colorScheme.phone,
                     text = stringResource(R.string.phone_number),
                 )
             }
@@ -173,13 +144,8 @@ private fun CreateQRScreen(
                         onAction(CreateQRAction.OnGeolocationClick)
                     },
                     icon = {
-                        Icon(
-                            imageVector = QRCraftIcons.Geolocation,
-                            contentDescription = stringResource(R.string.geolocation)
-                        )
+                        QRGeolocationIcon()
                     },
-                    iconContainerColor = MaterialTheme.colorScheme.geoBg,
-                    iconContentColor = MaterialTheme.colorScheme.geo,
                     text = stringResource(R.string.geolocation),
                 )
             }
@@ -190,13 +156,8 @@ private fun CreateQRScreen(
                         onAction(CreateQRAction.OnWifiClick)
                     },
                     icon = {
-                        Icon(
-                            imageVector = QRCraftIcons.Wifi,
-                            contentDescription = stringResource(R.string.wifi)
-                        )
+                        QRWifiIcon()
                     },
-                    iconContainerColor = MaterialTheme.colorScheme.wifiBg,
-                    iconContentColor = MaterialTheme.colorScheme.wifi,
                     text = stringResource(R.string.wifi),
                 )
             }
