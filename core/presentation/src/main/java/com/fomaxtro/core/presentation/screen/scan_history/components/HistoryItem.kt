@@ -1,5 +1,6 @@
 package com.fomaxtro.core.presentation.screen.scan_history.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,12 +41,15 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HistoryItem(
     item: QRCodeUi,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
             .width(IntrinsicSize.Max)
-            .height(IntrinsicSize.Max),
+            .height(IntrinsicSize.Max)
+            .clip(CardDefaults.shape)
+            .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceHigher
         )
@@ -105,6 +110,7 @@ private fun HistoryItemPreview() {
     QRCraftTheme {
         HistoryItem(
             item = PreviewModel.createQRCodeUi(PreviewQr.contact),
+            onClick = {},
             modifier = Modifier.fillMaxWidth()
         )
     }
