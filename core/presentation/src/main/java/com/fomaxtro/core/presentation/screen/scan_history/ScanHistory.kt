@@ -21,10 +21,6 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -33,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.scaffolds.QRCraftScaffold
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
@@ -41,11 +36,12 @@ import com.fomaxtro.core.presentation.designsystem.theme.onSurfaceAlt
 import com.fomaxtro.core.presentation.preview.PreviewModel
 import com.fomaxtro.core.presentation.preview.PreviewQr
 import com.fomaxtro.core.presentation.screen.scan_history.components.HistoryItem
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.random.Random
 
 @Composable
 fun ScanHistoryRoot(
-    viewModel: ScanHistoryViewModel = viewModel()
+    viewModel: ScanHistoryViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -55,90 +51,67 @@ fun ScanHistoryRoot(
     )
 }
 
-data class ScanHistoryTab(
-    val text: String,
-    val onClick: () -> Unit
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScanHistoryScreen(
     onAction: (ScanHistoryAction) -> Unit = {},
     state: ScanHistoryState
 ) {
-    var selectedTabIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
-    val scannedTabText = stringResource(R.string.scanned)
-    val generatedTabText = stringResource(R.string.generated)
-    val tabs = remember {
-        listOf(
-            ScanHistoryTab(
-                text = scannedTabText,
-                onClick = {}
-            ),
-            ScanHistoryTab(
-                text = generatedTabText,
-                onClick = {}
-            )
-        )
-    }
+    val tabs = listOf(
+        stringResource(R.string.scanned),
+        stringResource(R.string.generated)
+    )
 
     val lazyListState = rememberLazyListState()
 
     QRCraftScaffold(
         title = stringResource(R.string.scan_history)
     ) { innerPadding ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
+            SecondaryTabRow(
+                selectedTabIndex = state.selectedTabIndex,
+                indicator = {
+                    TabRowDefaults.SecondaryIndicator(
+                        modifier = Modifier
+                            .tabIndicatorOffset(
+                                selectedTabIndex = state.selectedTabIndex,
+                                matchContentSize = false
+                            ),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             ) {
-                SecondaryTabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    indicator = {
-                        TabRowDefaults.SecondaryIndicator(
+                tabs.forEachIndexed { index, tabText ->
+                    Tab(
+                        selected = index == state.selectedTabIndex,
+                        onClick = {
+                            onAction(ScanHistoryAction.OnTabSelected(index))
+                        },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurfaceAlt
+                    ) {
+                        Text(
+                            text = tabText,
                             modifier = Modifier
-                                .tabIndicatorOffset(
-                                    selectedTabIndex = selectedTabIndex,
-                                    matchContentSize = false
-                                ),
-                            color = MaterialTheme.colorScheme.onSurface
+                                .weight(1f)
+                                .padding(vertical = 16.dp)
                         )
                     }
-                ) {
-                    tabs.forEachIndexed { index, tab ->
-                        Tab(
-                            selected = index == selectedTabIndex,
-                            onClick = {
-                                selectedTabIndex = index
-
-                                tab.onClick()
-                            },
-                            unselectedContentColor = MaterialTheme.colorScheme.onSurfaceAlt
-                        ) {
-                            Text(
-                                text = tab.text,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(vertical = 16.dp)
-                            )
-                        }
-                    }
                 }
+            }
 
-                if (state.history.isEmpty()) {
-                    Text(
-                        text = stringResource(R.string.empty_history),
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .wrapContentSize()
-                    )
-                } else {
+            if (state.history.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.empty_history),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize()
+                )
+            } else {
+                Box {
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -155,27 +128,27 @@ private fun ScanHistoryScreen(
                             )
                         }
                     }
-                }
-            }
 
-            Crossfade(
-                targetState = lazyListState.canScrollForward,
-                modifier = Modifier.align(Alignment.BottomCenter)
-            ) { isVisible ->
-                if (isVisible) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(128.dp)
-                            .background(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        MaterialTheme.colorScheme.surface
+                    Crossfade(
+                        targetState = lazyListState.canScrollForward,
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    ) { isVisible ->
+                        if (isVisible) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(128.dp)
+                                    .background(
+                                        brush = Brush.verticalGradient(
+                                            colors = listOf(
+                                                Color.Transparent,
+                                                MaterialTheme.colorScheme.surface
+                                            )
+                                        )
                                     )
-                                )
                             )
-                    )
+                        }
+                    }
                 }
             }
         }

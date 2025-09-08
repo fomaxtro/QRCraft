@@ -8,6 +8,7 @@ import com.fomaxtro.core.presentation.screen.create_qr_phone_number.CreateQRPhon
 import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_wifi.CreateQRWifiViewModel
 import com.fomaxtro.core.presentation.screen.scan.ScanViewModel
+import com.fomaxtro.core.presentation.screen.scan_history.ScanHistoryViewModel
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -30,4 +31,5 @@ val presentationModule = module {
     viewModelOf(::CreateQRPhoneNumberViewModel)
     viewModelOf(::CreateQRGeolocationViewModel)
     viewModelOf(::CreateQRWifiViewModel)
+    viewModelOf(::ScanHistoryViewModel)
 }
