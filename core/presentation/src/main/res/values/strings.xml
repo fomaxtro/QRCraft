@@ -37,4 +37,8 @@
     <string name="wifi_encryption_type">Encryption type: %s</string>
     <string name="disk_full">Storage space is full. Please free up some space and try again.</string>
     <string name="error_unknown">Something went wrong. Please try again.</string>
+    <string name="scan_history">Scan History</string>
+    <string name="scanned">Scanned</string>
+    <string name="generated">Generated</string>
+    <string name="empty_history">History is empty</string>
 </resources>

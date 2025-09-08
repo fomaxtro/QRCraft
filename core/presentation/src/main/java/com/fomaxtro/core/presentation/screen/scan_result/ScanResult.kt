@@ -68,6 +68,7 @@ import com.fomaxtro.core.presentation.designsystem.theme.linkBg
 import com.fomaxtro.core.presentation.designsystem.theme.onOverlay
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.mapper.toFormattedUiText
+import com.fomaxtro.core.presentation.mapper.toTitle
 import com.fomaxtro.core.presentation.preview.PreviewQr
 import com.fomaxtro.core.presentation.screen.scan_result.components.EditableTitle
 import com.fomaxtro.core.presentation.screen.scan_result.components.ExpandableText
@@ -223,16 +224,7 @@ private fun ScanResultScreen(
                         EditableTitle(
                             state = titleState,
                             placeholder = {
-                                Text(
-                                    text = when (state.qr) {
-                                        is QRCode.Contact -> stringResource(R.string.contact)
-                                        is QRCode.Geolocation -> stringResource(R.string.geolocation)
-                                        is QRCode.Link -> stringResource(R.string.link)
-                                        is QRCode.PhoneNumber -> stringResource(R.string.phone_number)
-                                        is QRCode.Text -> stringResource(R.string.text)
-                                        is QRCode.Wifi -> stringResource(R.string.wifi)
-                                    }
-                                )
+                                Text(state.qr.toTitle())
                             }
                         )
 

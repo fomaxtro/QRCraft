@@ -1,5 +1,7 @@
 package com.fomaxtro.core.presentation.mapper
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.fomaxtro.core.domain.model.QRCode
 import com.fomaxtro.core.domain.model.WifiEncryptionType
 import com.fomaxtro.core.presentation.R
@@ -100,3 +102,14 @@ fun QRCode.toFormattedUiText(): UiText {
     }
 }
 
+@Composable
+fun QRCode.toTitle(): String {
+    return when (this) {
+        is QRCode.Contact -> stringResource(R.string.contact)
+        is QRCode.Geolocation -> stringResource(R.string.geolocation)
+        is QRCode.Link -> stringResource(R.string.link)
+        is QRCode.PhoneNumber -> stringResource(R.string.phone_number)
+        is QRCode.Text -> stringResource(R.string.text)
+        is QRCode.Wifi -> stringResource(R.string.wifi)
+    }
+}
