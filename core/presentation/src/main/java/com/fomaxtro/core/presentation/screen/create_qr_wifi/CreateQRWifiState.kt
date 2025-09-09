@@ -6,6 +6,5 @@ data class CreateQRWifiState(
     val ssid: String = "",
     val password: String = "",
     val encryptionType: WifiEncryptionType? = null,
-    val canSubmit: Boolean = false,
-    val isSubmitting: Boolean = false
+    val canSubmit: Boolean = false
 )

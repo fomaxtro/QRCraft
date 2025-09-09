@@ -87,8 +87,7 @@ private fun CreateQRGeolocationScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .imePadding(),
-            canSubmit = state.canSubmit,
-            loading = state.isSubmitting
+            canSubmit = state.canSubmit
         ) {
             QRCraftOutlinedTextField(
                 value = state.latitude,

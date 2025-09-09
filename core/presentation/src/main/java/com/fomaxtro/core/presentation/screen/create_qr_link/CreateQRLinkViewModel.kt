@@ -79,28 +79,13 @@ class CreateQRLinkViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isSubmitting = true
-                )
-            }
-
-            val qrCode = QRCode.Link(state.value.url)
-            val result = qrCodeRepository.save(
-                QRCodeEntry(
-                    title = null,
-                    qrCode = qrCode,
-                    source = QRCodeSource.GENERATED
-                )
+            val qrEntry = QRCodeEntry(
+                title = null,
+                qrCode = QRCode.Link(state.value.url),
+                source = QRCodeSource.GENERATED
             )
 
-            _state.update {
-                it.copy(
-                    isSubmitting = false
-                )
-            }
-
-            when (result) {
+            when (val result = qrCodeRepository.save(qrEntry)) {
                 is Result.Error -> {
                     eventChannel.send(
                         CreateQRLinkEvent.ShowSystemMessage(

@@ -87,8 +87,7 @@ private fun CreateQRTextScreen(
             canSubmit = state.canSubmit,
             modifier = Modifier
                 .padding(innerPadding)
-                .imePadding(),
-            loading = state.isSubmitting
+                .imePadding()
         ) {
             QRCraftOutlinedTextField(
                 value = state.text,

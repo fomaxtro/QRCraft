@@ -77,27 +77,13 @@ class CreateQRTextViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    isSubmitting = true
-                )
-            }
-
             val qrCode = QRCodeEntry(
                 title = null,
                 qrCode = QRCode.Text(state.value.text),
                 source = QRCodeSource.GENERATED
             )
 
-            val result = qrCodeRepository.save(qrCode)
-
-            _state.update {
-                it.copy(
-                    isSubmitting = false
-                )
-            }
-
-            when (result) {
+            when (val result = qrCodeRepository.save(qrCode)) {
                 is Result.Error -> {
                     eventChannel.send(
                         CreateQRTextEvent.ShowSystemMessage(result.error.toUiText())
