@@ -21,6 +21,7 @@ import com.fomaxtro.core.presentation.screen.create_qr_phone_number.CreateQRPhon
 import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextRoot
 import com.fomaxtro.core.presentation.screen.create_qr_wifi.CreateQRWifiRoot
 import com.fomaxtro.core.presentation.screen.scan.ScanRoot
+import com.fomaxtro.core.presentation.screen.scan_history.ScanHistoryRoot
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultRoot
 import com.fomaxtro.qrcraft.R
 
@@ -49,7 +50,12 @@ fun NavigationRoot() {
                 QRCraftBottomAppBar(
                     onClick = { navDestination ->
                         when (navDestination) {
-                            NavDestination.HISTORY -> {}
+                            NavDestination.HISTORY -> {
+                                if (backStack.lastOrNull() !is Route.ScanHistory) {
+                                    backStack.add(Route.ScanHistory)
+                                }
+                            }
+
                             NavDestination.SCAN -> {
                                 if (backStack.lastOrNull() !is Route.Scan) {
                                     backStack.add(Route.Scan)
@@ -240,6 +246,12 @@ fun NavigationRoot() {
                         }
                     }
                 )
+            }
+
+            entry<Route.ScanHistory>(
+                metadata = SinglePaneNavigationScene.withNavigation()
+            ) {
+                ScanHistoryRoot()
             }
         }
     )

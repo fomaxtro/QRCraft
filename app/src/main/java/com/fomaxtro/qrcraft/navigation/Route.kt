@@ -31,4 +31,7 @@ sealed interface Route : NavKey {
 
     @Serializable
     data object CreateQRWifi : Route
+
+    @Serializable
+    data object ScanHistory : Route
 }
