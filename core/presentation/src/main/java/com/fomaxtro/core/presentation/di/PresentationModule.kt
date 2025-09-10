@@ -21,7 +21,8 @@ val presentationModule = module {
         ScanResultViewModel(
             id = id,
             qrParser = get(),
-            qrCodeRepository = get()
+            qrCodeRepository = get(),
+            shareManager = get()
         )
     }
     viewModelOf(::CreateQRViewModel)

@@ -1,7 +1,5 @@
 package com.fomaxtro.core.presentation.screen.scan_result
 
-import android.content.ClipData
-import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -43,8 +41,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.ClipEntry
-import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -85,36 +81,11 @@ fun ScanResultRoot(
     }
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val clipboard = LocalClipboard.current
     val context = LocalContext.current
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             ScanResultEvent.NavigateBack -> navigateBack()
-
-            is ScanResultEvent.CopyToClipboard -> {
-                clipboard.setClipEntry(
-                    ClipEntry(
-                        clipData = ClipData.newPlainText(
-                            "QR",
-                            event.text.asString(context)
-                        )
-                    )
-                )
-            }
-
-            is ScanResultEvent.ShareText -> {
-                val sendIntent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    type = "text/plain"
-
-                    putExtra(Intent.EXTRA_TEXT, event.text.asString(context))
-                }
-
-                Intent.createChooser(sendIntent, null).also {
-                    context.startActivity(it)
-                }
-            }
 
             is ScanResultEvent.ShowSystemMessage -> {
                 Toast.makeText(
@@ -142,6 +113,7 @@ private fun ScanResultScreen(
 ) {
     val isInPreviewMode = LocalInspectionMode.current
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.onSurface,
@@ -275,7 +247,11 @@ private fun ScanResultScreen(
                         ) {
                             QRCraftButton(
                                 onClick = {
-                                    onAction(ScanResultAction.OnShareClick)
+                                    val formattedText = state.qr
+                                        .toFormattedUiText()
+                                        .asString(context)
+
+                                    onAction(ScanResultAction.OnShareClick(formattedText))
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.surfaceHigher,
@@ -298,7 +274,11 @@ private fun ScanResultScreen(
 
                             QRCraftButton(
                                 onClick = {
-                                    onAction(ScanResultAction.OnCopyClick)
+                                    val formattedText = state.qr
+                                        .toFormattedUiText()
+                                        .asString(context)
+
+                                    onAction(ScanResultAction.OnCopyClick(formattedText))
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.surfaceHigher,
