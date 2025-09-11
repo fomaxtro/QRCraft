@@ -69,7 +69,9 @@ import com.fomaxtro.core.presentation.preview.PreviewQr
 import com.fomaxtro.core.presentation.screen.scan_result.components.EditableTitle
 import com.fomaxtro.core.presentation.screen.scan_result.components.ExpandableText
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
+import com.fomaxtro.core.presentation.util.ShareManager
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -82,10 +84,19 @@ fun ScanResultRoot(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val shareManager = koinInject<ShareManager>()
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             ScanResultEvent.NavigateBack -> navigateBack()
+
+            is ScanResultEvent.CopyToClipboard -> {
+                shareManager.copyToClipboard(event.text.asString(context))
+            }
+
+            is ScanResultEvent.ShareTo -> {
+                shareManager.shareTo(event.text.asString(context))
+            }
 
             is ScanResultEvent.ShowSystemMessage -> {
                 Toast.makeText(
@@ -113,7 +124,6 @@ private fun ScanResultScreen(
 ) {
     val isInPreviewMode = LocalInspectionMode.current
     val focusManager = LocalFocusManager.current
-    val context = LocalContext.current
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.onSurface,
@@ -247,11 +257,7 @@ private fun ScanResultScreen(
                         ) {
                             QRCraftButton(
                                 onClick = {
-                                    val formattedText = state.qr
-                                        .toFormattedUiText()
-                                        .asString(context)
-
-                                    onAction(ScanResultAction.OnShareClick(formattedText))
+                                    onAction(ScanResultAction.OnShareClick)
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.surfaceHigher,
@@ -274,11 +280,7 @@ private fun ScanResultScreen(
 
                             QRCraftButton(
                                 onClick = {
-                                    val formattedText = state.qr
-                                        .toFormattedUiText()
-                                        .asString(context)
-
-                                    onAction(ScanResultAction.OnCopyClick(formattedText))
+                                    onAction(ScanResultAction.OnCopyClick)
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.surfaceHigher,

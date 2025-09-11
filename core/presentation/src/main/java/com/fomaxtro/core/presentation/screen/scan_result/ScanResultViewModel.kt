@@ -5,11 +5,11 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.ShareManager
 import com.fomaxtro.core.domain.model.QRCodeEntry
 import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.repository.QRCodeRepository
 import com.fomaxtro.core.domain.util.Result
+import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.mapper.toUiText
 import com.fomaxtro.core.presentation.util.QRGenerator
 import kotlinx.coroutines.FlowPreview
@@ -30,8 +30,7 @@ import timber.log.Timber
 class ScanResultViewModel(
     id: Long,
     private val qrParser: QRParser,
-    private val qrCodeRepository: QRCodeRepository,
-    private val shareManager: ShareManager
+    private val qrCodeRepository: QRCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
     private var qrEntry: QRCodeEntry? = null
@@ -104,17 +103,29 @@ class ScanResultViewModel(
     fun onAction(action: ScanResultAction) {
         when (action) {
             ScanResultAction.OnNavigateBackClick -> onNavigateBackClick()
-            is ScanResultAction.OnShareClick -> onShareClick(action.text)
-            is ScanResultAction.OnCopyClick -> onCopyClick(action.text)
+            ScanResultAction.OnShareClick -> onShareClick()
+            ScanResultAction.OnCopyClick -> onCopyClick()
         }
     }
 
-    private fun onCopyClick(text: String) {
-        shareManager.copyToClipboard(text)
+    private fun onCopyClick() {
+        viewModelScope.launch {
+            eventChannel.send(
+                ScanResultEvent.CopyToClipboard(
+                    text = state.value.qr.toFormattedUiText()
+                )
+            )
+        }
     }
 
-    private fun onShareClick(text: String) {
-        shareManager.shareTo(text)
+    private fun onShareClick() {
+        viewModelScope.launch {
+            eventChannel.send(
+                ScanResultEvent.ShareTo(
+                    text = state.value.qr.toFormattedUiText()
+                )
+            )
+        }
     }
 
     private fun onNavigateBackClick() {

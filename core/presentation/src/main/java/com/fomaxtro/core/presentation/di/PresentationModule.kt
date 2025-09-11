@@ -10,6 +10,8 @@ import com.fomaxtro.core.presentation.screen.create_qr_wifi.CreateQRWifiViewMode
 import com.fomaxtro.core.presentation.screen.scan.ScanViewModel
 import com.fomaxtro.core.presentation.screen.scan_history.ScanHistoryViewModel
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultViewModel
+import com.fomaxtro.core.presentation.util.ShareManager
+import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -33,4 +35,5 @@ val presentationModule = module {
     viewModelOf(::CreateQRGeolocationViewModel)
     viewModelOf(::CreateQRWifiViewModel)
     viewModelOf(::ScanHistoryViewModel)
+    singleOf(::ShareManager)
 }
