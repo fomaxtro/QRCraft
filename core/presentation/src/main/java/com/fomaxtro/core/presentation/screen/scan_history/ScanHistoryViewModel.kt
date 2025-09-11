@@ -5,8 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.model.QRCodeSource
 import com.fomaxtro.core.domain.repository.QRCodeRepository
 import com.fomaxtro.core.domain.util.Result
+import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.mapper.toQRCodeUi
 import com.fomaxtro.core.presentation.mapper.toUiText
+import com.fomaxtro.core.presentation.model.QRCodeUi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,11 +20,13 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ScanHistoryViewModel(
     private val qrCodeRepository: QRCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
+    private var selectedQrHistoryItem: QRCodeUi? = null
 
     private val _state = MutableStateFlow(ScanHistoryState())
     val state = _state
@@ -79,6 +83,48 @@ class ScanHistoryViewModel(
     fun onAction(action: ScanHistoryAction) {
         when (action) {
             is ScanHistoryAction.OnTabSelected -> onTabSelected(action.tabIndex)
+            ScanHistoryAction.OnBottomSheetDismiss -> onBottomSheetDismiss()
+            is ScanHistoryAction.OnHistoryLongClick -> onHistoryLongClick(action.qrCode)
+            ScanHistoryAction.OnDeleteClick -> onDeleteClick()
+            ScanHistoryAction.OnShareClick -> onShareClick()
+        }
+    }
+
+    private fun onShareClick() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isShareSheetVisible = false
+                )
+            }
+
+            val formattedQr = selectedQrHistoryItem?.qrCode?.toFormattedUiText() ?: return@launch
+
+            eventChannel.send(ScanHistoryEvent.ShareTo(formattedQr))
+
+            selectedQrHistoryItem = null
+        }
+    }
+
+    private fun onDeleteClick() {
+
+    }
+
+    private fun onHistoryLongClick(qrCode: QRCodeUi) {
+        selectedQrHistoryItem = qrCode
+
+        _state.update {
+            it.copy(
+                isShareSheetVisible = true
+            )
+        }
+    }
+
+    private fun onBottomSheetDismiss() {
+        _state.update {
+            it.copy(
+                isShareSheetVisible = false
+            )
         }
     }
 

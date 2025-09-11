@@ -30,4 +30,6 @@ object QRCraftIcons {
         @Composable get() = ImageVector.vectorResource(R.drawable.user)
     val Wifi: ImageVector
         @Composable get() = ImageVector.vectorResource(R.drawable.wifi)
+    val Trash: ImageVector
+        @Composable get() = ImageVector.vectorResource(R.drawable.trash)
 }

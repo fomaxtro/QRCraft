@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class ScanResultViewModel(
     id: Long,
@@ -88,8 +87,6 @@ class ScanResultViewModel(
             .distinctUntilChanged()
             .onEach { title ->
                 qrEntry?.let { entry ->
-                    Timber.d("Updating entry: $entry")
-
                     qrCodeRepository.save(
                         entry.copy(
                             title = title.ifEmpty { null }
