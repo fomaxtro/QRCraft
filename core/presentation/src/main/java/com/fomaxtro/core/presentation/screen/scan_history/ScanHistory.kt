@@ -232,7 +232,7 @@ private fun ScanHistoryScreen(
                     TextButton(
                         onClick = {
                             scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
-
+                                onAction(ScanHistoryAction.OnDeleteClick)
                             }
                         },
                         colors = ButtonDefaults.textButtonColors(

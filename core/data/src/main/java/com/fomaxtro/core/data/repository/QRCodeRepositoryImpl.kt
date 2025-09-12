@@ -10,7 +10,10 @@ import com.fomaxtro.core.domain.model.QRCodeEntry
 import com.fomaxtro.core.domain.model.QRCodeSource
 import com.fomaxtro.core.domain.qr.QRParser
 import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.util.EmptyResult
 import com.fomaxtro.core.domain.util.Result
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class QRCodeRepositoryImpl(
     private val qrCodeDao: QRCodeDao,
@@ -29,12 +32,16 @@ class QRCodeRepositoryImpl(
         }
     }
 
-    override suspend fun findAllRecentBySource(
-        source: QRCodeSource
-    ): Result<List<QRCodeEntry>, DataError> {
+    override fun findAllRecentBySource(source: QRCodeSource): Flow<List<QRCodeEntry>> {
+        return qrCodeDao.findAllRecentBySource(source.toQRCodeEntitySource())
+            .map { entries ->
+                entries.map { it.toQRCodeEntry(qrParser) }
+            }
+    }
+
+    override suspend fun deleteById(id: Long): EmptyResult<DataError> {
         return safeDatabaseCall {
-            qrCodeDao.findAllRecentBySource(source.toQRCodeEntitySource())
-                .map { it.toQRCodeEntry(qrParser) }
+            qrCodeDao.deleteById(id)
         }
     }
 }

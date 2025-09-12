@@ -9,10 +9,13 @@ import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.mapper.toQRCodeUi
 import com.fomaxtro.core.presentation.mapper.toUiText
 import com.fomaxtro.core.presentation.model.QRCodeUi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ScanHistoryViewModel(
     private val qrCodeRepository: QRCodeRepository
 ) : ViewModel() {
@@ -46,38 +50,28 @@ class ScanHistoryViewModel(
     private val eventChannel = Channel<ScanHistoryEvent>()
     val events = eventChannel.receiveAsFlow()
 
+    @Suppress("UnusedFlow")
     private fun observeTabIndex() {
         state
             .map { it.selectedTabIndex }
             .distinctUntilChanged()
-            .onEach { loadHistoryForTab(it) }
-            .launchIn(viewModelScope)
-    }
+            .flatMapLatest { tabIndex ->
+                val source = when (tabIndex) {
+                    0 -> QRCodeSource.SCANNED
+                    1 -> QRCodeSource.GENERATED
+                    else -> return@flatMapLatest emptyFlow()
+                }
 
-    private suspend fun loadHistoryForTab(tabIndex: Int) {
-        val source = when (tabIndex) {
-            0 -> QRCodeSource.SCANNED
-            1 -> QRCodeSource.GENERATED
-            else -> throw IllegalArgumentException("Invalid tab index: $tabIndex")
-        }
-
-        when (val result = qrCodeRepository.findAllRecentBySource(source)) {
-            is Result.Error -> {
-                eventChannel.send(
-                    ScanHistoryEvent.ShowSystemError(
-                        result.error.toUiText()
-                    )
-                )
+                qrCodeRepository.findAllRecentBySource(source)
             }
-
-            is Result.Success -> {
+            .onEach { entries ->
                 _state.update { state ->
                     state.copy(
-                        history = result.data.map { it.toQRCodeUi() }
+                        history = entries.map { it.toQRCodeUi() }
                     )
                 }
             }
-        }
+            .launchIn(viewModelScope)
     }
 
     fun onAction(action: ScanHistoryAction) {
@@ -107,7 +101,29 @@ class ScanHistoryViewModel(
     }
 
     private fun onDeleteClick() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isShareSheetVisible = false
+                )
+            }
 
+            selectedQrHistoryItem?.let {
+                when (val result = qrCodeRepository.deleteById(it.id)) {
+                    is Result.Error -> {
+                        eventChannel.send(
+                            ScanHistoryEvent.ShowSystemError(
+                                result.error.toUiText()
+                            )
+                        )
+                    }
+
+                    else -> Unit
+                }
+            }
+
+            selectedQrHistoryItem = null
+        }
     }
 
     private fun onHistoryLongClick(qrCode: QRCodeUi) {
