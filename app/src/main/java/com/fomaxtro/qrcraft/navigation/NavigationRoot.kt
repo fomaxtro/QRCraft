@@ -44,6 +44,7 @@ fun NavigationRoot() {
                 val currentDestination = when (backStack.lastOrNull()) {
                     Route.Scan -> NavDestination.SCAN
                     Route.CreateQR -> NavDestination.CREATE_QR
+                    Route.ScanHistory -> NavDestination.HISTORY
                     else -> NavDestination.SCAN
                 }
 
@@ -160,9 +161,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRText> {
                 CreateQRTextRoot(
-                    navigateToScanResult = { qr ->
+                    navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(qr))
+                            backStack.add(Route.ScanResult(id))
                         }
                     },
                     navigateBack = {
@@ -175,9 +176,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRLink> {
                 CreateQRLinkRoot(
-                    navigateToScanResult = { qr ->
+                    navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(qr))
+                            backStack.add(Route.ScanResult(id))
                         }
                     },
                     navigateBack = {
@@ -190,9 +191,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRContact> {
                 CreateQRContactRoot(
-                    navigateToScanResult = { qr ->
+                    navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(qr))
+                            backStack.add(Route.ScanResult(id))
                         }
                     },
                     navigateBack = {
@@ -205,9 +206,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRPhoneNumber> {
                 CreateQRPhoneNumberRoot(
-                    navigateToScanResult = { qr ->
+                    navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(qr))
+                            backStack.add(Route.ScanResult(id))
                         }
                     },
                     navigateBack = {
@@ -220,9 +221,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRGeolocation> {
                 CreateQRGeolocationRoot(
-                    navigateToScanResult = { qr ->
+                    navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(qr))
+                            backStack.add(Route.ScanResult(id))
                         }
                     },
                     navigateBack = {
@@ -235,9 +236,9 @@ fun NavigationRoot() {
 
             entry<Route.CreateQRWifi> {
                 CreateQRWifiRoot(
-                    navigateToScanResult = { qr ->
+                    navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(qr))
+                            backStack.add(Route.ScanResult(id))
                         }
                     },
                     navigateBack = {
@@ -251,7 +252,13 @@ fun NavigationRoot() {
             entry<Route.ScanHistory>(
                 metadata = SinglePaneNavigationScene.withNavigation()
             ) {
-                ScanHistoryRoot()
+                ScanHistoryRoot(
+                    navigateToScanResult = { id ->
+                        if (backStack.lastOrNull() !is Route.ScanResult) {
+                            backStack.add(Route.ScanResult(id))
+                        }
+                    }
+                )
             }
         }
     )

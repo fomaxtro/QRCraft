@@ -81,6 +81,13 @@ class ScanHistoryViewModel(
             is ScanHistoryAction.OnHistoryLongClick -> onHistoryLongClick(action.qrCode)
             ScanHistoryAction.OnDeleteClick -> onDeleteClick()
             ScanHistoryAction.OnShareClick -> onShareClick()
+            is ScanHistoryAction.OnHistoryClick -> onHistoryClick(action.qrCode)
+        }
+    }
+
+    private fun onHistoryClick(qrCode: QRCodeUi) {
+        viewModelScope.launch {
+            eventChannel.send(ScanHistoryEvent.NavigateToScanResult(qrCode.id))
         }
     }
 

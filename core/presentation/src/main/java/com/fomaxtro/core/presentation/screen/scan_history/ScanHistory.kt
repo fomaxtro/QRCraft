@@ -34,9 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,6 +49,7 @@ import com.fomaxtro.core.presentation.preview.PreviewModel
 import com.fomaxtro.core.presentation.preview.PreviewQr
 import com.fomaxtro.core.presentation.screen.scan_history.components.HistoryItem
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
+import com.fomaxtro.core.presentation.util.ScanResultNavigation
 import com.fomaxtro.core.presentation.util.ShareManager
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -59,6 +58,7 @@ import kotlin.random.Random
 
 @Composable
 fun ScanHistoryRoot(
+    navigateToScanResult: ScanResultNavigation,
     viewModel: ScanHistoryViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -77,6 +77,10 @@ fun ScanHistoryRoot(
                     event.message.asString(context),
                     Toast.LENGTH_LONG
                 ).show()
+            }
+
+            is ScanHistoryEvent.NavigateToScanResult -> {
+                navigateToScanResult.navigate(event.id)
             }
         }
     }
@@ -100,7 +104,6 @@ private fun ScanHistoryScreen(
 
     val lazyListState = rememberLazyListState()
     val bottomSheetState = rememberModalBottomSheetState()
-    val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
 
     QRCraftScaffold(
@@ -162,8 +165,10 @@ private fun ScanHistoryScreen(
                         items(state.history) { history ->
                             HistoryItem(
                                 item = history,
+                                onClick = {
+                                    onAction(ScanHistoryAction.OnHistoryClick(history))
+                                },
                                 onLongClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                     onAction(ScanHistoryAction.OnHistoryLongClick(history))
                                 },
                                 modifier = Modifier.fillMaxWidth()

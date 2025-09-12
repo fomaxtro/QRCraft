@@ -106,7 +106,7 @@ private fun QRCraftBottomAppBarPreview() {
     QRCraftTheme {
         QRCraftBottomAppBar(
             onClick = {},
-            currentDestination = NavDestination.CREATE_QR
+            currentDestination = NavDestination.HISTORY
         )
     }
 }

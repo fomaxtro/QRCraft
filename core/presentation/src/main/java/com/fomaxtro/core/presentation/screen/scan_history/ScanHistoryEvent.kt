@@ -5,4 +5,5 @@ import com.fomaxtro.core.presentation.ui.UiText
 sealed interface ScanHistoryEvent {
     data class ShowSystemError(val message: UiText) : ScanHistoryEvent
     data class ShareTo(val text: UiText) : ScanHistoryEvent
+    data class NavigateToScanResult(val id: Long) : ScanHistoryEvent
 }
