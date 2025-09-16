@@ -69,6 +69,8 @@ import com.fomaxtro.core.presentation.preview.PreviewQr
 import com.fomaxtro.core.presentation.screen.scan_result.components.EditableTitle
 import com.fomaxtro.core.presentation.screen.scan_result.components.ExpandableText
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
+import com.fomaxtro.core.presentation.ui.ScreenType
+import com.fomaxtro.core.presentation.ui.currentScreenType
 import com.fomaxtro.core.presentation.util.ShareManager
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -78,6 +80,7 @@ import org.koin.core.parameter.parametersOf
 fun ScanResultRoot(
     id: Long,
     navigateBack: () -> Unit,
+    viewType: QRViewType,
     viewModel: ScanResultViewModel = koinViewModel {
         parametersOf(id)
     }
@@ -111,7 +114,8 @@ fun ScanResultRoot(
     ScanResultScreen(
         onAction = viewModel::onAction,
         state = state,
-        titleState = viewModel.titleState
+        titleState = viewModel.titleState,
+        viewType = viewType
     )
 }
 
@@ -120,10 +124,12 @@ fun ScanResultRoot(
 private fun ScanResultScreen(
     onAction: (ScanResultAction) -> Unit = {},
     state: ScanResultState,
-    titleState: TextFieldState = TextFieldState()
+    titleState: TextFieldState = TextFieldState(),
+    viewType: QRViewType
 ) {
     val isInPreviewMode = LocalInspectionMode.current
     val focusManager = LocalFocusManager.current
+    val screenType = currentScreenType()
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.onSurface,
@@ -131,7 +137,10 @@ private fun ScanResultScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.scan_result),
+                        text = when (viewType) {
+                            QRViewType.SCAN_RESULT -> stringResource(R.string.scan_result)
+                            QRViewType.PREVIEW -> stringResource(R.string.preview)
+                        },
                         color = MaterialTheme.colorScheme.onOverlay,
                         style = MaterialTheme.typography.titleMedium,
                     )
@@ -178,7 +187,12 @@ private fun ScanResultScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth()
-                    .width(480.dp)
+                    .then(
+                        when (screenType) {
+                            ScreenType.WIDE -> Modifier.width(480.dp)
+                            ScreenType.STANDARD -> Modifier.fillMaxWidth()
+                        }
+                    )
                     .padding(innerPadding)
                     .padding(top = 48.dp)
                     .padding(horizontal = 16.dp)
@@ -335,7 +349,8 @@ private fun ScanResultScreenPreview() {
             state = ScanResultState(
                 qr = PreviewQr.link,
                 isLoading = false
-            )
+            ),
+            viewType = QRViewType.SCAN_RESULT
         )
     }
 }

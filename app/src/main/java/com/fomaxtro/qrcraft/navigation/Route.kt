@@ -1,6 +1,7 @@
 package com.fomaxtro.qrcraft.navigation
 
 import androidx.navigation3.runtime.NavKey
+import com.fomaxtro.core.presentation.screen.scan_result.QRViewType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,7 +10,7 @@ sealed interface Route : NavKey {
     data object Scan : Route
 
     @Serializable
-    data class ScanResult(val id: Long) : Route
+    data class ScanResult(val id: Long, val viewType: QRViewType) : Route
 
     @Serializable
     data object CreateQR : Route

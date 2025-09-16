@@ -22,6 +22,7 @@ import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextRoot
 import com.fomaxtro.core.presentation.screen.create_qr_wifi.CreateQRWifiRoot
 import com.fomaxtro.core.presentation.screen.scan.ScanRoot
 import com.fomaxtro.core.presentation.screen.scan_history.ScanHistoryRoot
+import com.fomaxtro.core.presentation.screen.scan_result.QRViewType
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultRoot
 import com.fomaxtro.qrcraft.R
 
@@ -105,7 +106,12 @@ fun NavigationRoot() {
                     },
                     navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(id))
+                            backStack.add(
+                                Route.ScanResult(
+                                    id = id,
+                                    viewType = QRViewType.SCAN_RESULT
+                                )
+                            )
                         }
                     }
                 )
@@ -118,7 +124,8 @@ fun NavigationRoot() {
                         if (backStack.lastOrNull() is Route.ScanResult) {
                             backStack.removeLastOrNull()
                         }
-                    }
+                    },
+                    viewType = scanResult.viewType
                 )
             }
 
@@ -163,7 +170,12 @@ fun NavigationRoot() {
                 CreateQRTextRoot(
                     navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(id))
+                            backStack.add(
+                                Route.ScanResult(
+                                    id = id,
+                                    viewType = QRViewType.PREVIEW
+                                )
+                            )
                         }
                     },
                     navigateBack = {
@@ -178,7 +190,12 @@ fun NavigationRoot() {
                 CreateQRLinkRoot(
                     navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(id))
+                            backStack.add(
+                                Route.ScanResult(
+                                    id = id,
+                                    viewType = QRViewType.PREVIEW
+                                )
+                            )
                         }
                     },
                     navigateBack = {
@@ -193,7 +210,12 @@ fun NavigationRoot() {
                 CreateQRContactRoot(
                     navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(id))
+                            backStack.add(
+                                Route.ScanResult(
+                                    id = id,
+                                    viewType = QRViewType.PREVIEW
+                                )
+                            )
                         }
                     },
                     navigateBack = {
@@ -208,7 +230,12 @@ fun NavigationRoot() {
                 CreateQRPhoneNumberRoot(
                     navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(id))
+                            backStack.add(
+                                Route.ScanResult(
+                                    id = id,
+                                    viewType = QRViewType.PREVIEW
+                                )
+                            )
                         }
                     },
                     navigateBack = {
@@ -223,7 +250,12 @@ fun NavigationRoot() {
                 CreateQRGeolocationRoot(
                     navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(id))
+                            backStack.add(
+                                Route.ScanResult(
+                                    id = id,
+                                    viewType = QRViewType.PREVIEW
+                                )
+                            )
                         }
                     },
                     navigateBack = {
@@ -238,7 +270,12 @@ fun NavigationRoot() {
                 CreateQRWifiRoot(
                     navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(id))
+                            backStack.add(
+                                Route.ScanResult(
+                                    id = id,
+                                    viewType = QRViewType.PREVIEW
+                                )
+                            )
                         }
                     },
                     navigateBack = {
@@ -255,7 +292,12 @@ fun NavigationRoot() {
                 ScanHistoryRoot(
                     navigateToScanResult = { id ->
                         if (backStack.lastOrNull() !is Route.ScanResult) {
-                            backStack.add(Route.ScanResult(id))
+                            backStack.add(
+                                Route.ScanResult(
+                                    id = id,
+                                    viewType = QRViewType.PREVIEW
+                                )
+                            )
                         }
                     }
                 )
