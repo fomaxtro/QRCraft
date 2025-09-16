@@ -26,6 +26,8 @@ import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButton
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
+import com.fomaxtro.core.presentation.ui.ScreenType
+import com.fomaxtro.core.presentation.ui.currentScreenType
 
 @Composable
 fun QRCraftQRForm(
@@ -35,11 +37,18 @@ fun QRCraftQRForm(
     loading: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val screenType = currentScreenType()
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentWidth()
-            .width(480.dp)
+            .then(
+                when (screenType) {
+                    ScreenType.WIDE -> Modifier.width(480.dp)
+                    ScreenType.STANDARD -> Modifier.fillMaxWidth()
+                }
+            )
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState()),
         colors = CardDefaults.cardColors(
