@@ -49,6 +49,8 @@ import com.fomaxtro.core.presentation.preview.PreviewModel
 import com.fomaxtro.core.presentation.preview.PreviewQr
 import com.fomaxtro.core.presentation.screen.scan_history.components.HistoryItem
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
+import com.fomaxtro.core.presentation.ui.ScreenType
+import com.fomaxtro.core.presentation.ui.currentScreenType
 import com.fomaxtro.core.presentation.util.ScanResultNavigation
 import com.fomaxtro.core.presentation.util.ShareManager
 import kotlinx.coroutines.launch
@@ -105,6 +107,7 @@ private fun ScanHistoryScreen(
     val lazyListState = rememberLazyListState()
     val bottomSheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+    val screenType = currentScreenType()
 
     QRCraftScaffold(
         title = stringResource(R.string.scan_history)
@@ -158,11 +161,16 @@ private fun ScanHistoryScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(top = 12.dp)
-                            .padding(horizontal = 16.dp),
+                            .padding(
+                                horizontal = when (screenType) {
+                                    ScreenType.WIDE -> 24.dp
+                                    ScreenType.STANDARD -> 16.dp
+                                }
+                            ),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         state = lazyListState
                     ) {
-                        items(state.history) { history ->
+                        items(state.history, key = { it.id }) { history ->
                             HistoryItem(
                                 item = history,
                                 onClick = {
@@ -171,7 +179,9 @@ private fun ScanHistoryScreen(
                                 onLongClick = {
                                     onAction(ScanHistoryAction.OnHistoryLongClick(history))
                                 },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .animateItem()
                             )
                         }
                     }
@@ -207,7 +217,8 @@ private fun ScanHistoryScreen(
                 },
                 scrimColor = Color.Transparent,
                 containerColor = MaterialTheme.colorScheme.surfaceHigher,
-                sheetState = bottomSheetState
+                sheetState = bottomSheetState,
+                modifier = Modifier.width(412.dp)
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -277,7 +288,7 @@ private fun ScanHistoryScreenPreview() {
 
                     PreviewModel.createQRCodeUi(
                         qrCodeRand[Random.nextInt(0, qrCodeRand.size)]
-                    )
+                    ).copy(id = id.toLong())
                 }
             )
         )
