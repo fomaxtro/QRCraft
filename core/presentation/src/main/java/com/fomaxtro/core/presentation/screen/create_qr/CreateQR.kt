@@ -7,13 +7,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.window.core.layout.WindowSizeClass
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.components.QRContactIcon
 import com.fomaxtro.core.presentation.components.QRGeolocationIcon
@@ -25,6 +23,8 @@ import com.fomaxtro.core.presentation.designsystem.scaffolds.QRCraftScaffold
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.screen.create_qr.components.ClickableCard
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
+import com.fomaxtro.core.presentation.ui.ScreenType
+import com.fomaxtro.core.presentation.ui.currentScreenType
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -58,22 +58,15 @@ fun CreateQRRoot(
 private fun CreateQRScreen(
     onAction: (CreateQRAction) -> Unit = {}
 ) {
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    val paddingAmount = if (
-        windowSizeClass
-            .isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
-    ) {
-        24.dp
-    } else {
-        16.dp
+    val screenType = currentScreenType()
+
+    val paddingAmount = when (screenType) {
+        ScreenType.WIDE -> 24.dp
+        ScreenType.STANDARD -> 16.dp
     }
-    val columnCount = if (
-        windowSizeClass
-            .isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND)
-    ) {
-        3
-    } else {
-        2
+    val columnCount = when (screenType) {
+        ScreenType.WIDE -> 3
+        ScreenType.STANDARD -> 2
     }
 
     QRCraftScaffold(
