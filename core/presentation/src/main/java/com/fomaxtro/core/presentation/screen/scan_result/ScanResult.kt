@@ -139,6 +139,7 @@ private fun ScanResultScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
+                            focusManager.clearFocus()
                             onAction(ScanResultAction.OnNavigateBackClick)
                         },
                         colors = IconButtonDefaults.iconButtonColors(

@@ -80,7 +80,7 @@ fun HistoryItem(
                     .fillMaxHeight()
             ) {
                 Text(
-                    text = item.qrCode.toTitle(),
+                    text = item.title ?: item.qrCode.toTitle(),
                     style = MaterialTheme.typography.titleSmall
                 )
 

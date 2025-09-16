@@ -7,6 +7,7 @@ import com.fomaxtro.core.domain.validator.CreateQRLinkValidator
 import com.fomaxtro.core.domain.validator.CreateQRPhoneNumberValidator
 import com.fomaxtro.core.domain.validator.CreateQRTextValidator
 import com.fomaxtro.core.domain.validator.CreateQRWifiValidator
+import com.fomaxtro.core.domain.validator.ScanResultValidator
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
@@ -19,4 +20,5 @@ val domainModule = module {
     singleOf(::CreateQRWifiValidator)
 
     singleOf(::QRParser)
+    singleOf(::ScanResultValidator)
 }
