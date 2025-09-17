@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -161,12 +162,7 @@ private fun ScanHistoryScreen(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(top = 12.dp)
-                            .padding(
-                                horizontal = when (screenType) {
-                                    ScreenType.WIDE -> 24.dp
-                                    ScreenType.STANDARD -> 16.dp
-                                }
-                            ),
+                            .padding(horizontal = 16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         state = lazyListState
                     ) {
@@ -180,7 +176,18 @@ private fun ScanHistoryScreen(
                                     onAction(ScanHistoryAction.OnHistoryLongClick(history))
                                 },
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .then(
+                                        when (screenType) {
+                                            ScreenType.WIDE -> {
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .wrapContentWidth()
+                                                    .width(552.dp)
+                                            }
+
+                                            ScreenType.STANDARD -> Modifier.fillMaxWidth()
+                                        }
+                                    )
                                     .animateItem()
                             )
                         }
@@ -218,7 +225,10 @@ private fun ScanHistoryScreen(
                 scrimColor = Color.Transparent,
                 containerColor = MaterialTheme.colorScheme.surfaceHigher,
                 sheetState = bottomSheetState,
-                modifier = Modifier.width(412.dp)
+                modifier = when (screenType) {
+                    ScreenType.WIDE -> Modifier.width(412.dp)
+                    ScreenType.STANDARD -> Modifier
+                }
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
