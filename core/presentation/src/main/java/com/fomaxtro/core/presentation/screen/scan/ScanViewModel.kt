@@ -41,6 +41,19 @@ class ScanViewModel(
             ScanAction.OnCloseAppClick -> onCloseAppClick()
             ScanAction.OnGrantAccessClick -> onGrantAccessClick()
             is ScanAction.OnQrScanned -> onQrScanned(action.barcode)
+            is ScanAction.OnFlashToggle -> onFlashToggle(action.isFlashActive)
+        }
+    }
+
+    private fun onFlashToggle(flashActive: Boolean) {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    isFlashActive = flashActive
+                )
+            }
+
+            eventChannel.send(ScanEvent.ToggleFlash(flashActive))
         }
     }
 

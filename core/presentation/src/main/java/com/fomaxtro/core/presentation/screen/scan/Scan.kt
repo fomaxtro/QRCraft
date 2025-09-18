@@ -11,12 +11,21 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.FilledIconToggleButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -26,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +57,7 @@ import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.camera.CameraPreview
 import com.fomaxtro.core.presentation.camera.QRAnalyzer
 import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
+import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
@@ -109,6 +120,7 @@ fun ScanRoot(
 
         onDispose {
             if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+                viewModel.onAction(ScanAction.OnFlashToggle(false))
                 activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                 cameraController.unbind()
             }
@@ -166,6 +178,20 @@ fun ScanRoot(
                     Toast.LENGTH_LONG
                 ).show()
             }
+
+            is ScanEvent.ToggleFlash -> {
+                cameraController.enableTorch(event.isFlashActive)
+            }
+        }
+    }
+
+    val isFlashSupported by produceState(false) {
+        cameraController.initializationFuture.addListener({
+            value = cameraController.cameraInfo?.hasFlashUnit() ?: false
+        }, ContextCompat.getMainExecutor(context))
+
+        awaitDispose {
+            cameraController.initializationFuture.cancel(true)
         }
     }
 
@@ -180,7 +206,8 @@ fun ScanRoot(
                     .fillMaxSize()
             )
         },
-        frameSize = frameSize
+        frameSize = frameSize,
+        isFlashSupported = isFlashSupported
     )
 }
 
@@ -191,7 +218,8 @@ private fun ScanScreen(
     frameSize: Dp,
     cameraPreview: @Composable () -> Unit = {},
     onAction: (ScanAction) -> Unit = {},
-    snackbarHostState: SnackbarHostState = SnackbarHostState()
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
+    isFlashSupported: Boolean = false
 ) {
     if (!state.hasCameraPermission) {
         AlertDialog(
@@ -270,6 +298,57 @@ private fun ScanScreen(
                 placeHolder = stringResource(R.string.qr_scan_placeholder)
             )
 
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 19.dp)
+                    .statusBarsPadding(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                FilledIconToggleButton(
+                    checked = state.isFlashActive,
+                    onCheckedChange = {
+                        onAction(ScanAction.OnFlashToggle(it))
+                    },
+                    colors = IconButtonDefaults.iconToggleButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceHigher,
+                        checkedContainerColor = MaterialTheme.colorScheme.primary,
+                        checkedContentColor = MaterialTheme.colorScheme.onSurface,
+                        disabledContainerColor = MaterialTheme.colorScheme.surfaceHigher
+                    ),
+                    enabled = isFlashSupported
+                ) {
+                    Icon(
+                        imageVector = if (state.isFlashActive) {
+                            QRCraftIcons.ZapOff
+                        } else {
+                            QRCraftIcons.Zap
+                        },
+                        contentDescription = if (state.isFlashActive) {
+                            stringResource(R.string.flash_off)
+                        } else {
+                            stringResource(R.string.flash_on)
+                        },
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+
+                FilledIconButton(
+                    onClick = {},
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceHigher
+                    )
+                ) {
+                    Icon(
+                        imageVector = QRCraftIcons.Image,
+                        contentDescription = stringResource(R.string.open_gallery),
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+
             if (state.isProcessingQr) {
                 OverlayLoading()
             }
@@ -294,7 +373,8 @@ private fun ScanScreenPreview() {
         ScanScreen(
             state = ScanState(
                 hasCameraPermission = true,
-                isProcessingQr = false
+                isProcessingQr = false,
+                isFlashActive = true
             ),
             snackbarHostState = snackbarHostState,
             frameSize = 324.dp

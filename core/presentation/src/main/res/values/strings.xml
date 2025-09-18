@@ -43,4 +43,7 @@
     <string name="empty_history">History is empty</string>
     <string name="delete">Delete</string>
     <string name="preview">Preview</string>
+    <string name="flash_off">Flash Off</string>
+    <string name="flash_on">Flash On</string>
+    <string name="open_gallery">Open gallery</string>
 </resources>

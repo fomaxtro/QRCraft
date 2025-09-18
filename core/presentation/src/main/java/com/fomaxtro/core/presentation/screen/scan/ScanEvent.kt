@@ -8,4 +8,5 @@ sealed interface ScanEvent {
     data class ShowMessage(val message: UiText) : ScanEvent
     data class NavigateToScanResult(val id: Long) : ScanEvent
     data class ShowSystemMessage(val message: UiText) : ScanEvent
+    data class ToggleFlash(val isFlashActive: Boolean) : ScanEvent
 }
