@@ -1,4 +1,4 @@
-package com.fomaxtro.core.presentation.util
+package com.fomaxtro.core.presentation.qr
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,7 +10,7 @@ import qrcode.color.Colors
 object QRGenerator {
     suspend fun generate(qr: String): Bitmap {
         return withContext(Dispatchers.Default) {
-            val generator = QRCode.ofSquares()
+            val generator = QRCode.Companion.ofSquares()
                 .withColor(Colors.BLACK)
                 .withMargin(64)
                 .build(qr)
