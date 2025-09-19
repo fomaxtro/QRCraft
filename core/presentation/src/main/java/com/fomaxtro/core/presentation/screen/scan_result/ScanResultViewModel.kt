@@ -13,7 +13,7 @@ import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.validator.ScanResultValidator
 import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.mapper.toUiText
-import com.fomaxtro.core.presentation.util.QRGenerator
+import com.fomaxtro.core.presentation.qr.QRGenerator
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel

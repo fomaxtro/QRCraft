@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import android.widget.Toast
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -54,12 +55,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fomaxtro.core.presentation.R
-import com.fomaxtro.core.presentation.camera.CameraPreview
-import com.fomaxtro.core.presentation.camera.QRAnalyzer
 import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
+import com.fomaxtro.core.presentation.qr.QRAnalyzer
+import com.fomaxtro.core.presentation.screen.scan.components.CameraPreview
 import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
 import com.fomaxtro.core.presentation.screen.scan.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
@@ -133,7 +134,7 @@ fun ScanRoot(
         }
     }
 
-    val launcher = rememberLauncherForActivityResult(
+    val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         when {
@@ -154,11 +155,20 @@ fun ScanRoot(
         }
     }
 
+    val pickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        uri?.let {
+            viewModel.onAction(ScanAction.OnImagePicked(it))
+        }
+    }
+
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             ScanEvent.CloseApp -> onCloseApp()
+
             ScanEvent.RequestCameraPermission -> {
-                launcher.launch(Manifest.permission.CAMERA)
+                permissionLauncher.launch(Manifest.permission.CAMERA)
             }
 
             is ScanEvent.ShowMessage -> {
@@ -181,6 +191,12 @@ fun ScanRoot(
 
             is ScanEvent.ToggleFlash -> {
                 cameraController.enableTorch(event.isFlashActive)
+            }
+
+            ScanEvent.OpenGallery -> {
+                pickerLauncher.launch(
+                    PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                )
             }
         }
     }
@@ -336,7 +352,9 @@ private fun ScanScreen(
                 }
 
                 FilledIconButton(
-                    onClick = {},
+                    onClick = {
+                        onAction(ScanAction.OnOpenGalleryClick)
+                    },
                     colors = IconButtonDefaults.iconButtonColors(
                         containerColor = MaterialTheme.colorScheme.surfaceHigher
                     )

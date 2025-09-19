@@ -1,6 +1,7 @@
 package com.fomaxtro.core.presentation.screen.scan
 
 import android.Manifest
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.PermissionChecker
@@ -11,6 +12,7 @@ import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.mapper.toQRCode
 import com.fomaxtro.core.presentation.mapper.toUiText
+import com.fomaxtro.core.presentation.qr.QRDetector
 import com.fomaxtro.core.presentation.ui.UiText
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.channels.Channel
@@ -22,7 +24,8 @@ import kotlinx.coroutines.launch
 
 class ScanViewModel(
     permissionChecker: PermissionChecker,
-    private val qrCodeRepository: QRCodeRepository
+    private val qrCodeRepository: QRCodeRepository,
+    private val qrDetector: QRDetector
 ) : ViewModel() {
     private val _state = MutableStateFlow(
         ScanState(
@@ -42,6 +45,22 @@ class ScanViewModel(
             ScanAction.OnGrantAccessClick -> onGrantAccessClick()
             is ScanAction.OnQrScanned -> onQrScanned(action.barcode)
             is ScanAction.OnFlashToggle -> onFlashToggle(action.isFlashActive)
+            ScanAction.OnOpenGalleryClick -> onOpenGalleryClick()
+            is ScanAction.OnImagePicked -> onImagePicked(action.image)
+        }
+    }
+
+    private fun onImagePicked(image: Uri) {
+        viewModelScope.launch {
+            qrDetector.detect(image)?.let { barcode ->
+                onQrScanned(barcode)
+            }
+        }
+    }
+
+    private fun onOpenGalleryClick() {
+        viewModelScope.launch {
+            eventChannel.send(ScanEvent.OpenGallery)
         }
     }
 

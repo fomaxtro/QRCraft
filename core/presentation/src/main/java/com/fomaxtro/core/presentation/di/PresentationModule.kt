@@ -1,5 +1,6 @@
 package com.fomaxtro.core.presentation.di
 
+import com.fomaxtro.core.presentation.qr.QRDetector
 import com.fomaxtro.core.presentation.screen.create_qr.CreateQRViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_contact.CreateQRContactViewModel
 import com.fomaxtro.core.presentation.screen.create_qr_geolocation.CreateQRGeolocationViewModel
@@ -36,4 +37,5 @@ val presentationModule = module {
     viewModelOf(::CreateQRWifiViewModel)
     viewModelOf(::ScanHistoryViewModel)
     singleOf(::ShareManager)
+    singleOf(::QRDetector)
 }
