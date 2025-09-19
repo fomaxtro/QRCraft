@@ -11,4 +11,5 @@ sealed interface ScanAction {
     data class OnFlashToggle(val isFlashActive: Boolean) : ScanAction
     data object OnOpenGalleryClick : ScanAction
     data class OnImagePicked(val image: Uri) : ScanAction
+    data object OnQrNotFoundDialogDismiss : ScanAction
 }

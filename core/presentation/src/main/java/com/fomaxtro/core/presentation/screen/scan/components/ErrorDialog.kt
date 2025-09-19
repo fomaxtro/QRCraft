@@ -21,22 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DisplayDialog(
+fun ErrorDialog(
     onDismissRequest: () -> Unit,
-    icon: @Composable () -> Unit,
-    text: String,
-    properties: DialogProperties = DialogProperties()
+    text: String
 ) {
     BasicAlertDialog(
-        onDismissRequest = onDismissRequest,
-        properties = properties
+        onDismissRequest = onDismissRequest
     ) {
         Card(
             modifier = Modifier
@@ -56,7 +52,10 @@ fun DisplayDialog(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    icon()
+                    Icon(
+                        imageVector = QRCraftIcons.Alert,
+                        contentDescription = stringResource(R.string.alert)
+                    )
 
                     Text(
                         text = text,
@@ -70,16 +69,10 @@ fun DisplayDialog(
 
 @Preview
 @Composable
-private fun DisplayDialogPreview() {
+private fun ErrorDialogPreview() {
     QRCraftTheme {
-        DisplayDialog(
+        ErrorDialog(
             onDismissRequest = {},
-            icon = {
-                Icon(
-                    imageVector = QRCraftIcons.Alert,
-                    contentDescription = null
-                )
-            },
             text = stringResource(R.string.qr_not_found)
         )
     }

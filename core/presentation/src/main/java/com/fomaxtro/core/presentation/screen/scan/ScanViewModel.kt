@@ -47,13 +47,42 @@ class ScanViewModel(
             is ScanAction.OnFlashToggle -> onFlashToggle(action.isFlashActive)
             ScanAction.OnOpenGalleryClick -> onOpenGalleryClick()
             is ScanAction.OnImagePicked -> onImagePicked(action.image)
+            ScanAction.OnQrNotFoundDialogDismiss -> onQrNotFoundDialogDismiss()
+        }
+    }
+
+    private fun onQrNotFoundDialogDismiss() {
+        _state.update {
+            it.copy(
+                showQrNotFoundDialog = false
+            )
         }
     }
 
     private fun onImagePicked(image: Uri) {
         viewModelScope.launch {
-            qrDetector.detect(image)?.let { barcode ->
+            _state.update {
+                it.copy(
+                    isProcessingQr = true
+                )
+            }
+
+            val barcode = qrDetector.detect(image)
+
+            _state.update {
+                it.copy(
+                    isProcessingQr = false
+                )
+            }
+
+            if (barcode != null) {
                 onQrScanned(barcode)
+            } else {
+                _state.update {
+                    it.copy(
+                        showQrNotFoundDialog = true
+                    )
+                }
             }
         }
     }

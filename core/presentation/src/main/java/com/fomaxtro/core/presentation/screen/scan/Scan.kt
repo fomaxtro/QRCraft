@@ -61,6 +61,7 @@ import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.qr.QRAnalyzer
 import com.fomaxtro.core.presentation.screen.scan.components.CameraPreview
+import com.fomaxtro.core.presentation.screen.scan.components.ErrorDialog
 import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
 import com.fomaxtro.core.presentation.screen.scan.components.QRScanOverlay
 import com.fomaxtro.core.presentation.ui.ObserveAsEvents
@@ -291,6 +292,15 @@ private fun ScanScreen(
                 }
             },
             containerColor = MaterialTheme.colorScheme.surface
+        )
+    }
+
+    if (state.showQrNotFoundDialog) {
+        ErrorDialog(
+            onDismissRequest = {
+                onAction(ScanAction.OnQrNotFoundDialogDismiss)
+            },
+            text = stringResource(R.string.qr_not_found)
         )
     }
 
