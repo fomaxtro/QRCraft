@@ -2,15 +2,15 @@ package com.fomaxtro.core.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.fomaxtro.core.data.database.dao.QRCodeDao
-import com.fomaxtro.core.data.database.entity.QRCodeEntity
+import com.fomaxtro.core.data.database.dao.QrCodeDao
+import com.fomaxtro.core.data.database.entity.QrCodeEntity
 
 @Database(
     entities = [
-        QRCodeEntity::class
+        QrCodeEntity::class
     ],
     version = 1
 )
 abstract class QRCraftDatabase : RoomDatabase() {
-    abstract fun qrCodeDao(): QRCodeDao
+    abstract fun qrCodeDao(): QrCodeDao
 }

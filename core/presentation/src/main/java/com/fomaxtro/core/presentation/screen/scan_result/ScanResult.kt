@@ -54,7 +54,7 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.fomaxtro.core.domain.model.QRCode
+import com.fomaxtro.core.domain.model.QrCode
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButton
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
@@ -80,7 +80,7 @@ import org.koin.core.parameter.parametersOf
 fun ScanResultRoot(
     id: Long,
     navigateBack: () -> Unit,
-    viewType: QRViewType,
+    viewType: QrViewType,
     viewModel: ScanResultViewModel = koinViewModel {
         parametersOf(id)
     }
@@ -125,7 +125,7 @@ private fun ScanResultScreen(
     onAction: (ScanResultAction) -> Unit = {},
     state: ScanResultState,
     titleState: TextFieldState = TextFieldState(),
-    viewType: QRViewType
+    viewType: QrViewType
 ) {
     val isInPreviewMode = LocalInspectionMode.current
     val focusManager = LocalFocusManager.current
@@ -138,8 +138,8 @@ private fun ScanResultScreen(
                 title = {
                     Text(
                         text = when (viewType) {
-                            QRViewType.SCAN_RESULT -> stringResource(R.string.scan_result)
-                            QRViewType.PREVIEW -> stringResource(R.string.preview)
+                            QrViewType.SCAN_RESULT -> stringResource(R.string.scan_result)
+                            QrViewType.PREVIEW -> stringResource(R.string.preview)
                         },
                         color = MaterialTheme.colorScheme.onOverlay,
                         style = MaterialTheme.typography.titleMedium,
@@ -226,17 +226,17 @@ private fun ScanResultScreen(
                         )
 
                         when (state.qr) {
-                            is QRCode.Contact,
-                            is QRCode.Geolocation,
-                            is QRCode.PhoneNumber,
-                            is QRCode.Wifi -> {
+                            is QrCode.Contact,
+                            is QrCode.Geolocation,
+                            is QrCode.PhoneNumber,
+                            is QrCode.Wifi -> {
                                 Text(
                                     text = state.qr.toFormattedUiText().asString(),
                                     textAlign = TextAlign.Center
                                 )
                             }
 
-                            is QRCode.Link -> {
+                            is QrCode.Link -> {
                                 val url = buildAnnotatedString {
                                     withLink(
                                         link = LinkAnnotation.Url(
@@ -256,7 +256,7 @@ private fun ScanResultScreen(
                                 Text(url)
                             }
 
-                            is QRCode.Text -> {
+                            is QrCode.Text -> {
                                 ExpandableText(
                                     text = state.qr.text,
                                     textAlign = TextAlign.Start,
@@ -350,7 +350,7 @@ private fun ScanResultScreenPreview() {
                 qr = PreviewQr.link,
                 isLoading = false
             ),
-            viewType = QRViewType.SCAN_RESULT
+            viewType = QrViewType.SCAN_RESULT
         )
     }
 }

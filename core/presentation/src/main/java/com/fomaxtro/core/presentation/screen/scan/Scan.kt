@@ -59,7 +59,7 @@ import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
-import com.fomaxtro.core.presentation.qr.QRAnalyzer
+import com.fomaxtro.core.presentation.qr.QrAnalyzer
 import com.fomaxtro.core.presentation.screen.scan.components.CameraPreview
 import com.fomaxtro.core.presentation.screen.scan.components.ErrorDialog
 import com.fomaxtro.core.presentation.screen.scan.components.OverlayLoading
@@ -102,7 +102,7 @@ fun ScanRoot(
 
             setImageAnalysisAnalyzer(
                 ContextCompat.getMainExecutor(context),
-                QRAnalyzer(
+                QrAnalyzer(
                     frameSize = frameSizePx.roundToInt(),
                     windowWidth = windowWidth,
                     windowHeight = windowHeight,

@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 import qrcode.QRCode
 import qrcode.color.Colors
 
-object QRGenerator {
+object QrGenerator {
     suspend fun generate(qr: String): Bitmap {
         return withContext(Dispatchers.Default) {
             val generator = QRCode.Companion.ofSquares()

@@ -1,42 +1,42 @@
 package com.fomaxtro.core.data.mapper
 
-import com.fomaxtro.core.data.database.entity.QRCodeEntity
-import com.fomaxtro.core.data.database.entity.QRCodeEntitySource
-import com.fomaxtro.core.domain.model.QRCodeEntry
-import com.fomaxtro.core.domain.model.QRCodeSource
-import com.fomaxtro.core.domain.qr.QRParser
+import com.fomaxtro.core.data.database.entity.QrCodeEntity
+import com.fomaxtro.core.data.database.entity.QrCodeEntitySource
+import com.fomaxtro.core.domain.model.QrCodeEntry
+import com.fomaxtro.core.domain.model.QrCodeSource
+import com.fomaxtro.core.domain.qr.QrParser
 import java.time.Instant
 
-fun QRCodeSource.toQRCodeEntitySource(): QRCodeEntitySource {
+fun QrCodeSource.toQrCodeEntitySource(): QrCodeEntitySource {
     return when (this) {
-        QRCodeSource.GENERATED -> QRCodeEntitySource.GENERATED
-        QRCodeSource.SCANNED -> QRCodeEntitySource.SCANNED
+        QrCodeSource.GENERATED -> QrCodeEntitySource.GENERATED
+        QrCodeSource.SCANNED -> QrCodeEntitySource.SCANNED
     }
 }
 
-fun QRCodeEntitySource.toQRCodeSource(): QRCodeSource {
+fun QrCodeEntitySource.toQrCodeSource(): QrCodeSource {
     return when (this) {
-        QRCodeEntitySource.GENERATED -> QRCodeSource.GENERATED
-        QRCodeEntitySource.SCANNED -> QRCodeSource.SCANNED
+        QrCodeEntitySource.GENERATED -> QrCodeSource.GENERATED
+        QrCodeEntitySource.SCANNED -> QrCodeSource.SCANNED
     }
 }
 
-fun QRCodeEntity.toQRCodeEntry(
-    qrParser: QRParser
-) = QRCodeEntry(
+fun QrCodeEntity.toQrCodeEntry(
+    qrParser: QrParser
+) = QrCodeEntry(
     id = id,
     title = title,
     qrCode = qrParser.parseFromString(data),
-    source = source.toQRCodeSource(),
+    source = source.toQrCodeSource(),
     createdAt = Instant.ofEpochMilli(createdAt)
 )
 
-fun QRCodeEntry.toQRCodeEntity(
-    qrParser: QRParser
-) = QRCodeEntity(
+fun QrCodeEntry.toQrCodeEntity(
+    qrParser: QrParser
+) = QrCodeEntity(
     id = id,
     title = title,
     data = qrParser.convertToString(qrCode),
-    source = source.toQRCodeEntitySource(),
+    source = source.toQrCodeEntitySource(),
     createdAt = createdAt.toEpochMilli()
 )

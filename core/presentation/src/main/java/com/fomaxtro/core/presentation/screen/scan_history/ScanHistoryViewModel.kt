@@ -2,13 +2,13 @@ package com.fomaxtro.core.presentation.screen.scan_history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QRCodeSource
-import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.model.QrCodeSource
+import com.fomaxtro.core.domain.repository.QrCodeRepository
 import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.presentation.mapper.toFormattedUiText
-import com.fomaxtro.core.presentation.mapper.toQRCodeUi
+import com.fomaxtro.core.presentation.mapper.toQrCodeUi
 import com.fomaxtro.core.presentation.mapper.toUiText
-import com.fomaxtro.core.presentation.model.QRCodeUi
+import com.fomaxtro.core.presentation.model.QrCodeUi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,10 +27,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ScanHistoryViewModel(
-    private val qrCodeRepository: QRCodeRepository
+    private val qrCodeRepository: QrCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
-    private var selectedQrHistoryItem: QRCodeUi? = null
+    private var selectedQrHistoryItem: QrCodeUi? = null
 
     private val _state = MutableStateFlow(ScanHistoryState())
     val state = _state
@@ -57,8 +57,8 @@ class ScanHistoryViewModel(
             .distinctUntilChanged()
             .flatMapLatest { tabIndex ->
                 val source = when (tabIndex) {
-                    0 -> QRCodeSource.SCANNED
-                    1 -> QRCodeSource.GENERATED
+                    0 -> QrCodeSource.SCANNED
+                    1 -> QrCodeSource.GENERATED
                     else -> return@flatMapLatest emptyFlow()
                 }
 
@@ -67,7 +67,7 @@ class ScanHistoryViewModel(
             .onEach { entries ->
                 _state.update { state ->
                     state.copy(
-                        history = entries.map { it.toQRCodeUi() }
+                        history = entries.map { it.toQrCodeUi() }
                     )
                 }
             }
@@ -85,7 +85,7 @@ class ScanHistoryViewModel(
         }
     }
 
-    private fun onHistoryClick(qrCode: QRCodeUi) {
+    private fun onHistoryClick(qrCode: QrCodeUi) {
         viewModelScope.launch {
             eventChannel.send(ScanHistoryEvent.NavigateToScanResult(qrCode.id))
         }
@@ -133,7 +133,7 @@ class ScanHistoryViewModel(
         }
     }
 
-    private fun onHistoryLongClick(qrCode: QRCodeUi) {
+    private fun onHistoryLongClick(qrCode: QrCodeUi) {
         selectedQrHistoryItem = qrCode
 
         _state.update {

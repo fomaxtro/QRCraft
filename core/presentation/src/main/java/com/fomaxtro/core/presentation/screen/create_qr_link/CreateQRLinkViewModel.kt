@@ -2,10 +2,10 @@ package com.fomaxtro.core.presentation.screen.create_qr_link
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QRCode
-import com.fomaxtro.core.domain.model.QRCodeEntry
-import com.fomaxtro.core.domain.model.QRCodeSource
-import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.model.QrCode
+import com.fomaxtro.core.domain.model.QrCodeEntry
+import com.fomaxtro.core.domain.model.QrCodeSource
+import com.fomaxtro.core.domain.repository.QrCodeRepository
 import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRLinkValidator
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRLinkViewModel(
     private val validator: CreateQRLinkValidator,
-    private val qrCodeRepository: QRCodeRepository
+    private val qrCodeRepository: QrCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
 
@@ -79,10 +79,10 @@ class CreateQRLinkViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qrEntry = QRCodeEntry(
+            val qrEntry = QrCodeEntry(
                 title = null,
-                qrCode = QRCode.Link(state.value.url),
-                source = QRCodeSource.GENERATED
+                qrCode = QrCode.Link(state.value.url),
+                source = QrCodeSource.GENERATED
             )
 
             when (val result = qrCodeRepository.save(qrEntry)) {

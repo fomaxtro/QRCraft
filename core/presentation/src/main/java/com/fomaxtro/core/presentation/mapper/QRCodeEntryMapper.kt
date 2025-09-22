@@ -1,10 +1,10 @@
 package com.fomaxtro.core.presentation.mapper
 
-import com.fomaxtro.core.domain.model.QRCodeEntry
-import com.fomaxtro.core.presentation.model.QRCodeUi
+import com.fomaxtro.core.domain.model.QrCodeEntry
+import com.fomaxtro.core.presentation.model.QrCodeUi
 import java.time.ZoneId
 
-fun QRCodeEntry.toQRCodeUi() = QRCodeUi(
+fun QrCodeEntry.toQrCodeUi() = QrCodeUi(
     id = id,
     title = title,
     qrCode = qrCode,

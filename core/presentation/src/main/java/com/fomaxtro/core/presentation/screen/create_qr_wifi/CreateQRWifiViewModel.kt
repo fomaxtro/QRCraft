@@ -2,11 +2,11 @@ package com.fomaxtro.core.presentation.screen.create_qr_wifi
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QRCode
-import com.fomaxtro.core.domain.model.QRCodeEntry
-import com.fomaxtro.core.domain.model.QRCodeSource
+import com.fomaxtro.core.domain.model.QrCode
+import com.fomaxtro.core.domain.model.QrCodeEntry
+import com.fomaxtro.core.domain.model.QrCodeSource
 import com.fomaxtro.core.domain.model.WifiEncryptionType
-import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.repository.QrCodeRepository
 import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRWifiValidator
@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRWifiViewModel(
     private val validator: CreateQRWifiValidator,
-    private val qrCodeRepository: QRCodeRepository
+    private val qrCodeRepository: QrCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
 
@@ -107,16 +107,16 @@ class CreateQRWifiViewModel(
     private fun onSubmitClick() {
         viewModelScope.launch {
             val qrCode = with(state.value) {
-                QRCode.Wifi(
+                QrCode.Wifi(
                     ssid = ssid,
                     password = if (encryptionType == WifiEncryptionType.OPEN) "" else password,
                     encryptionType = encryptionType!!
                 )
             }
-            val qrEntry = QRCodeEntry(
+            val qrEntry = QrCodeEntry(
                 title = null,
                 qrCode = qrCode,
-                source = QRCodeSource.GENERATED
+                source = QrCodeSource.GENERATED
             )
 
             when (val result = qrCodeRepository.save(qrEntry)) {

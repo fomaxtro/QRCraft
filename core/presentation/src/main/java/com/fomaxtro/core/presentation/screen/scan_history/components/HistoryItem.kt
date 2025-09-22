@@ -20,7 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.fomaxtro.core.domain.model.QRCode
+import com.fomaxtro.core.domain.model.QrCode
 import com.fomaxtro.core.presentation.components.QRContactIcon
 import com.fomaxtro.core.presentation.components.QRGeolocationIcon
 import com.fomaxtro.core.presentation.components.QRLinkIcon
@@ -33,14 +33,14 @@ import com.fomaxtro.core.presentation.designsystem.theme.onSurfaceDisabled
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.mapper.toTitle
-import com.fomaxtro.core.presentation.model.QRCodeUi
+import com.fomaxtro.core.presentation.model.QrCodeUi
 import com.fomaxtro.core.presentation.preview.PreviewModel
 import com.fomaxtro.core.presentation.preview.PreviewQr
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun HistoryItem(
-    item: QRCodeUi,
+    item: QrCodeUi,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -64,12 +64,12 @@ fun HistoryItem(
                 .padding(12.dp)
         ) {
             when (item.qrCode) {
-                is QRCode.Contact -> QRContactIcon()
-                is QRCode.Geolocation -> QRGeolocationIcon()
-                is QRCode.Link -> QRLinkIcon()
-                is QRCode.PhoneNumber -> QRPhoneNumberIcon()
-                is QRCode.Text -> QRTextIcon()
-                is QRCode.Wifi -> QRWifiIcon()
+                is QrCode.Contact -> QRContactIcon()
+                is QrCode.Geolocation -> QRGeolocationIcon()
+                is QrCode.Link -> QRLinkIcon()
+                is QrCode.PhoneNumber -> QRPhoneNumberIcon()
+                is QrCode.Text -> QRTextIcon()
+                is QrCode.Wifi -> QRWifiIcon()
             }
 
             Spacer(modifier = Modifier.width(12.dp))
@@ -113,7 +113,7 @@ fun HistoryItem(
 private fun HistoryItemPreview() {
     QRCraftTheme {
         HistoryItem(
-            item = PreviewModel.createQRCodeUi(PreviewQr.contact),
+            item = PreviewModel.createQrCodeUi(PreviewQr.contact),
             onLongClick = {},
             onClick = {},
             modifier = Modifier.fillMaxWidth()

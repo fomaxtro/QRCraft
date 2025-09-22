@@ -2,10 +2,10 @@ package com.fomaxtro.core.presentation.screen.create_qr_text
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QRCode
-import com.fomaxtro.core.domain.model.QRCodeEntry
-import com.fomaxtro.core.domain.model.QRCodeSource
-import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.model.QrCode
+import com.fomaxtro.core.domain.model.QrCodeEntry
+import com.fomaxtro.core.domain.model.QrCodeSource
+import com.fomaxtro.core.domain.repository.QrCodeRepository
 import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRTextValidator
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRTextViewModel(
     private val validator: CreateQRTextValidator,
-    private val qrCodeRepository: QRCodeRepository
+    private val qrCodeRepository: QrCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
 
@@ -77,10 +77,10 @@ class CreateQRTextViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qrCode = QRCodeEntry(
+            val qrCode = QrCodeEntry(
                 title = null,
-                qrCode = QRCode.Text(state.value.text),
-                source = QRCodeSource.GENERATED
+                qrCode = QrCode.Text(state.value.text),
+                source = QrCodeSource.GENERATED
             )
 
             when (val result = qrCodeRepository.save(qrCode)) {

@@ -5,14 +5,14 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fomaxtro.core.domain.PermissionChecker
-import com.fomaxtro.core.domain.model.QRCodeEntry
-import com.fomaxtro.core.domain.model.QRCodeSource
-import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.model.QrCodeEntry
+import com.fomaxtro.core.domain.model.QrCodeSource
+import com.fomaxtro.core.domain.repository.QrCodeRepository
 import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.presentation.R
-import com.fomaxtro.core.presentation.mapper.toQRCode
+import com.fomaxtro.core.presentation.mapper.toQrCode
 import com.fomaxtro.core.presentation.mapper.toUiText
-import com.fomaxtro.core.presentation.qr.QRDetector
+import com.fomaxtro.core.presentation.qr.QrDetector
 import com.fomaxtro.core.presentation.ui.UiText
 import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.channels.Channel
@@ -24,8 +24,8 @@ import kotlinx.coroutines.launch
 
 class ScanViewModel(
     permissionChecker: PermissionChecker,
-    private val qrCodeRepository: QRCodeRepository,
-    private val qrDetector: QRDetector
+    private val qrCodeRepository: QrCodeRepository,
+    private val qrDetector: QrDetector
 ) : ViewModel() {
     private val _state = MutableStateFlow(
         ScanState(
@@ -113,13 +113,13 @@ class ScanViewModel(
                 )
             }
 
-            val qrCode = barcode.toQRCode()
+            val qrCode = barcode.toQrCode()
 
             val result = qrCodeRepository.save(
-                QRCodeEntry(
+                QrCodeEntry(
                     title = null,
                     qrCode = qrCode,
-                    source = QRCodeSource.SCANNED
+                    source = QrCodeSource.SCANNED
                 )
             )
 

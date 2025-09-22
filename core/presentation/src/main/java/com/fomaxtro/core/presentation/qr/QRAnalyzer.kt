@@ -12,7 +12,7 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import kotlin.math.roundToInt
 
-class QRAnalyzer(
+class QrAnalyzer(
     private val frameSize: Int,
     private val windowWidth: Int,
     private val windowHeight: Int,

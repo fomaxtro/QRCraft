@@ -2,7 +2,7 @@ package com.fomaxtro.core.domain.qr
 
 import com.fomaxtro.core.domain.PatternMatching
 
-internal class QRPatterns(
+internal class QrPatterns(
     private val patternMatching: PatternMatching
 ) {
     fun isContact(content: String): Boolean {

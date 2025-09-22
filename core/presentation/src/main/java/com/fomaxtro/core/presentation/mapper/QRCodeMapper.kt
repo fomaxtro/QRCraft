@@ -2,18 +2,18 @@ package com.fomaxtro.core.presentation.mapper
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import com.fomaxtro.core.domain.model.QRCode
+import com.fomaxtro.core.domain.model.QrCode
 import com.fomaxtro.core.domain.model.WifiEncryptionType
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.ui.UiText
 import com.google.mlkit.vision.barcode.common.Barcode
 
-fun Barcode.toQRCode(): QRCode {
+fun Barcode.toQrCode(): QrCode {
     return when (valueType) {
         Barcode.TYPE_WIFI -> {
             val wifi = requireNotNull(wifi)
 
-            QRCode.Wifi(
+            QrCode.Wifi(
                 ssid = wifi.ssid!!,
                 password = wifi.password,
                 encryptionType = when (wifi.encryptionType) {
@@ -28,14 +28,14 @@ fun Barcode.toQRCode(): QRCode {
         Barcode.TYPE_GEO -> {
             val geolocation = requireNotNull(geoPoint)
 
-            QRCode.Geolocation(
+            QrCode.Geolocation(
                 latitude = geolocation.lat,
                 longitude = geolocation.lng
             )
         }
 
         Barcode.TYPE_PHONE -> {
-            QRCode.PhoneNumber(
+            QrCode.PhoneNumber(
                 phoneNumber = requireNotNull(phone?.number)
             )
         }
@@ -47,7 +47,7 @@ fun Barcode.toQRCode(): QRCode {
             val phoneNumber = contact.phones.firstOrNull()
             val email = contact.emails.firstOrNull()
 
-            QRCode.Contact(
+            QrCode.Contact(
                 name = name?.formattedName,
                 phoneNumber = phoneNumber?.number,
                 email = email?.address
@@ -55,18 +55,18 @@ fun Barcode.toQRCode(): QRCode {
         }
 
         Barcode.TYPE_URL -> {
-            QRCode.Link(
+            QrCode.Link(
                 url = requireNotNull(url?.url)
             )
         }
 
-        else -> QRCode.Text(rawValue ?: "")
+        else -> QrCode.Text(rawValue ?: "")
     }
 }
 
-fun QRCode.toFormattedUiText(): UiText {
+fun QrCode.toFormattedUiText(): UiText {
     return when (this) {
-        is QRCode.Contact -> {
+        is QrCode.Contact -> {
             val contact = buildString {
                 if (name != null) {
                     appendLine(name)
@@ -84,13 +84,13 @@ fun QRCode.toFormattedUiText(): UiText {
             UiText.DynamicString(contact)
         }
 
-        is QRCode.Geolocation -> UiText.DynamicString("$latitude, $longitude")
+        is QrCode.Geolocation -> UiText.DynamicString("$latitude, $longitude")
 
-        is QRCode.Link -> UiText.DynamicString(url)
-        is QRCode.PhoneNumber -> UiText.DynamicString(phoneNumber)
-        is QRCode.Text -> UiText.DynamicString(text)
+        is QrCode.Link -> UiText.DynamicString(url)
+        is QrCode.PhoneNumber -> UiText.DynamicString(phoneNumber)
+        is QrCode.Text -> UiText.DynamicString(text)
 
-        is QRCode.Wifi -> {
+        is QrCode.Wifi -> {
             UiText.Chained(
                 listOf(
                     UiText.DynamicString("SSID: $ssid"),
@@ -103,13 +103,13 @@ fun QRCode.toFormattedUiText(): UiText {
 }
 
 @Composable
-fun QRCode.toTitle(): String {
+fun QrCode.toTitle(): String {
     return when (this) {
-        is QRCode.Contact -> stringResource(R.string.contact)
-        is QRCode.Geolocation -> stringResource(R.string.geolocation)
-        is QRCode.Link -> stringResource(R.string.link)
-        is QRCode.PhoneNumber -> stringResource(R.string.phone_number)
-        is QRCode.Text -> stringResource(R.string.text)
-        is QRCode.Wifi -> stringResource(R.string.wifi)
+        is QrCode.Contact -> stringResource(R.string.contact)
+        is QrCode.Geolocation -> stringResource(R.string.geolocation)
+        is QrCode.Link -> stringResource(R.string.link)
+        is QrCode.PhoneNumber -> stringResource(R.string.phone_number)
+        is QrCode.Text -> stringResource(R.string.text)
+        is QrCode.Wifi -> stringResource(R.string.wifi)
     }
 }

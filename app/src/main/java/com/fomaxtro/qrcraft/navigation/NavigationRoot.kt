@@ -22,7 +22,7 @@ import com.fomaxtro.core.presentation.screen.create_qr_text.CreateQRTextRoot
 import com.fomaxtro.core.presentation.screen.create_qr_wifi.CreateQRWifiRoot
 import com.fomaxtro.core.presentation.screen.scan.ScanRoot
 import com.fomaxtro.core.presentation.screen.scan_history.ScanHistoryRoot
-import com.fomaxtro.core.presentation.screen.scan_result.QRViewType
+import com.fomaxtro.core.presentation.screen.scan_result.QrViewType
 import com.fomaxtro.core.presentation.screen.scan_result.ScanResultRoot
 import com.fomaxtro.qrcraft.R
 
@@ -109,7 +109,7 @@ fun NavigationRoot() {
                             backStack.add(
                                 Route.ScanResult(
                                     id = id,
-                                    viewType = QRViewType.SCAN_RESULT
+                                    viewType = QrViewType.SCAN_RESULT
                                 )
                             )
                         }
@@ -173,7 +173,7 @@ fun NavigationRoot() {
                             backStack.add(
                                 Route.ScanResult(
                                     id = id,
-                                    viewType = QRViewType.PREVIEW
+                                    viewType = QrViewType.PREVIEW
                                 )
                             )
                         }
@@ -193,7 +193,7 @@ fun NavigationRoot() {
                             backStack.add(
                                 Route.ScanResult(
                                     id = id,
-                                    viewType = QRViewType.PREVIEW
+                                    viewType = QrViewType.PREVIEW
                                 )
                             )
                         }
@@ -213,7 +213,7 @@ fun NavigationRoot() {
                             backStack.add(
                                 Route.ScanResult(
                                     id = id,
-                                    viewType = QRViewType.PREVIEW
+                                    viewType = QrViewType.PREVIEW
                                 )
                             )
                         }
@@ -233,7 +233,7 @@ fun NavigationRoot() {
                             backStack.add(
                                 Route.ScanResult(
                                     id = id,
-                                    viewType = QRViewType.PREVIEW
+                                    viewType = QrViewType.PREVIEW
                                 )
                             )
                         }
@@ -253,7 +253,7 @@ fun NavigationRoot() {
                             backStack.add(
                                 Route.ScanResult(
                                     id = id,
-                                    viewType = QRViewType.PREVIEW
+                                    viewType = QrViewType.PREVIEW
                                 )
                             )
                         }
@@ -273,7 +273,7 @@ fun NavigationRoot() {
                             backStack.add(
                                 Route.ScanResult(
                                     id = id,
-                                    viewType = QRViewType.PREVIEW
+                                    viewType = QrViewType.PREVIEW
                                 )
                             )
                         }
@@ -295,7 +295,7 @@ fun NavigationRoot() {
                             backStack.add(
                                 Route.ScanResult(
                                     id = id,
-                                    viewType = QRViewType.PREVIEW
+                                    viewType = QrViewType.PREVIEW
                                 )
                             )
                         }

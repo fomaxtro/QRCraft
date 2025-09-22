@@ -296,7 +296,7 @@ private fun ScanHistoryScreenPreview() {
                         PreviewQr.phoneNumber
                     )
 
-                    PreviewModel.createQRCodeUi(
+                    PreviewModel.createQrCodeUi(
                         qrCodeRand[Random.nextInt(0, qrCodeRand.size)]
                     ).copy(id = id.toLong())
                 }

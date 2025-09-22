@@ -2,10 +2,10 @@ package com.fomaxtro.core.presentation.screen.create_qr_phone_number
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fomaxtro.core.domain.model.QRCode
-import com.fomaxtro.core.domain.model.QRCodeEntry
-import com.fomaxtro.core.domain.model.QRCodeSource
-import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.model.QrCode
+import com.fomaxtro.core.domain.model.QrCodeEntry
+import com.fomaxtro.core.domain.model.QrCodeSource
+import com.fomaxtro.core.domain.repository.QrCodeRepository
 import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.util.ValidationResult
 import com.fomaxtro.core.domain.validator.CreateQRPhoneNumberValidator
@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class CreateQRPhoneNumberViewModel(
     private val validator: CreateQRPhoneNumberValidator,
-    private val qrCodeRepository: QRCodeRepository
+    private val qrCodeRepository: QrCodeRepository
 ) : ViewModel() {
     private var firstLaunch = false
 
@@ -76,10 +76,10 @@ class CreateQRPhoneNumberViewModel(
 
     private fun onSubmitClick() {
         viewModelScope.launch {
-            val qrEntry = QRCodeEntry(
+            val qrEntry = QrCodeEntry(
                 title = null,
-                qrCode = QRCode.PhoneNumber(state.value.phoneNumber),
-                source = QRCodeSource.GENERATED
+                qrCode = QrCode.PhoneNumber(state.value.phoneNumber),
+                source = QrCodeSource.GENERATED
             )
 
             when (val result = qrCodeRepository.save(qrEntry)) {

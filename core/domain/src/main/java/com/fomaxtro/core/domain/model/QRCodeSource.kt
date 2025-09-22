@@ -1,6 +1,6 @@
 package com.fomaxtro.core.domain.model
 
-enum class QRCodeSource {
+enum class QrCodeSource {
     SCANNED,
     GENERATED
 }

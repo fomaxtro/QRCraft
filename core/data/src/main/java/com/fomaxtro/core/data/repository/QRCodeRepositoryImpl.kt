@@ -1,41 +1,41 @@
 package com.fomaxtro.core.data.repository
 
-import com.fomaxtro.core.data.database.dao.QRCodeDao
-import com.fomaxtro.core.data.mapper.toQRCodeEntity
-import com.fomaxtro.core.data.mapper.toQRCodeEntitySource
-import com.fomaxtro.core.data.mapper.toQRCodeEntry
+import com.fomaxtro.core.data.database.dao.QrCodeDao
+import com.fomaxtro.core.data.mapper.toQrCodeEntity
+import com.fomaxtro.core.data.mapper.toQrCodeEntitySource
+import com.fomaxtro.core.data.mapper.toQrCodeEntry
 import com.fomaxtro.core.data.util.safeDatabaseCall
 import com.fomaxtro.core.domain.error.DataError
-import com.fomaxtro.core.domain.model.QRCodeEntry
-import com.fomaxtro.core.domain.model.QRCodeSource
-import com.fomaxtro.core.domain.qr.QRParser
-import com.fomaxtro.core.domain.repository.QRCodeRepository
+import com.fomaxtro.core.domain.model.QrCodeEntry
+import com.fomaxtro.core.domain.model.QrCodeSource
+import com.fomaxtro.core.domain.qr.QrParser
+import com.fomaxtro.core.domain.repository.QrCodeRepository
 import com.fomaxtro.core.domain.util.EmptyResult
 import com.fomaxtro.core.domain.util.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class QRCodeRepositoryImpl(
-    private val qrCodeDao: QRCodeDao,
-    private val qrParser: QRParser
-) : QRCodeRepository {
-    override suspend fun save(entry: QRCodeEntry): Result<Long, DataError> {
+class QrCodeRepositoryImpl(
+    private val qrCodeDao: QrCodeDao,
+    private val qrParser: QrParser
+) : QrCodeRepository {
+    override suspend fun save(entry: QrCodeEntry): Result<Long, DataError> {
         return safeDatabaseCall {
-            qrCodeDao.upsert(entry.toQRCodeEntity(qrParser))
+            qrCodeDao.upsert(entry.toQrCodeEntity(qrParser))
         }
     }
 
-    override suspend fun findById(id: Long): Result<QRCodeEntry, DataError> {
+    override suspend fun findById(id: Long): Result<QrCodeEntry, DataError> {
         return safeDatabaseCall {
             qrCodeDao.findById(id)
-                .toQRCodeEntry(qrParser)
+                .toQrCodeEntry(qrParser)
         }
     }
 
-    override fun findAllRecentBySource(source: QRCodeSource): Flow<List<QRCodeEntry>> {
-        return qrCodeDao.findAllRecentBySource(source.toQRCodeEntitySource())
+    override fun findAllRecentBySource(source: QrCodeSource): Flow<List<QrCodeEntry>> {
+        return qrCodeDao.findAllRecentBySource(source.toQrCodeEntitySource())
             .map { entries ->
-                entries.map { it.toQRCodeEntry(qrParser) }
+                entries.map { it.toQrCodeEntry(qrParser) }
             }
     }
 

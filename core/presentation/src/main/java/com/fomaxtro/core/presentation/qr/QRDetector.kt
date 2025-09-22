@@ -9,7 +9,7 @@ import com.google.mlkit.vision.common.InputImage
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class QRDetector(
+class QrDetector(
     private val context: Context
 ) {
     private val scanner = BarcodeScanning.getClient(

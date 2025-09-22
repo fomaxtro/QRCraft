@@ -1,19 +1,19 @@
 package com.fomaxtro.core.domain.qr
 
 import com.fomaxtro.core.domain.fake.FakePatternMatching
-import com.fomaxtro.core.domain.model.QRCode
+import com.fomaxtro.core.domain.model.QrCode
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertIs
 
-class QRParserTest {
+class QrParserTest {
     private lateinit var patternMatching: FakePatternMatching
-    private lateinit var qrParser: QRParser
+    private lateinit var qrParser: QrParser
 
     @BeforeTest
     fun setUp() {
         patternMatching = FakePatternMatching()
-        qrParser = QRParser(patternMatching)
+        qrParser = QrParser(patternMatching)
     }
 
     @Test
@@ -28,7 +28,7 @@ class QRParserTest {
         """.trimIndent()
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QRCode.Contact>(qrResult)
+        assertIs<QrCode.Contact>(qrResult)
     }
 
     @Test
@@ -36,7 +36,7 @@ class QRParserTest {
         val content = "geo:50.4501,30.5234"
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QRCode.Geolocation>(qrResult)
+        assertIs<QrCode.Geolocation>(qrResult)
     }
 
     @Test
@@ -46,7 +46,7 @@ class QRParserTest {
         val content = "http://https://pl-coding.mymemberspot.io"
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QRCode.Link>(qrResult)
+        assertIs<QrCode.Link>(qrResult)
     }
 
     @Test
@@ -56,7 +56,7 @@ class QRParserTest {
         val content = "tel:+49 170 1234567"
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QRCode.PhoneNumber>(qrResult)
+        assertIs<QrCode.PhoneNumber>(qrResult)
     }
 
     @Test
@@ -64,7 +64,7 @@ class QRParserTest {
         val content = "WIFI:S:DevHub_WiFi;T:WPA;P:QrCraft2025;H:false;;"
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QRCode.Wifi>(qrResult)
+        assertIs<QrCode.Wifi>(qrResult)
     }
 
     @Test
@@ -77,6 +77,6 @@ class QRParserTest {
         """.trimIndent()
         val qrResult = qrParser.parseFromString(content)
 
-        assertIs<QRCode.Text>(qrResult)
+        assertIs<QrCode.Text>(qrResult)
     }
 }
