@@ -58,7 +58,7 @@ fun QRCraftBottomAppBar(
                     }
                 ) {
                     Icon(
-                        imageVector = QRCraftIcons.History,
+                        imageVector = QRCraftIcons.Default.History,
                         contentDescription = stringResource(R.string.history),
                         modifier = Modifier
                             .size(16.dp)
@@ -74,7 +74,7 @@ fun QRCraftBottomAppBar(
                     }
                 ) {
                     Icon(
-                        imageVector = QRCraftIcons.Create,
+                        imageVector = QRCraftIcons.Default.Create,
                         contentDescription = stringResource(R.string.create_qr),
                         modifier = Modifier
                             .size(16.dp)
@@ -91,7 +91,7 @@ fun QRCraftBottomAppBar(
                 .size(64.dp),
         ) {
             Icon(
-                imageVector = QRCraftIcons.Scan,
+                imageVector = QRCraftIcons.Default.Scan,
                 contentDescription = stringResource(R.string.scan_qr),
                 modifier = Modifier
                     .size(28.dp)

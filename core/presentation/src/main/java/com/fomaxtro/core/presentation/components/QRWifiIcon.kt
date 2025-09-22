@@ -22,7 +22,7 @@ fun QRWifiIcon(
         modifier = modifier
     ) {
         Icon(
-            imageVector = QRCraftIcons.Wifi,
+            imageVector = QRCraftIcons.Default.Wifi,
             contentDescription = stringResource(R.string.wifi)
         )
     }

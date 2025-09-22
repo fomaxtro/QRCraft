@@ -28,6 +28,7 @@ fun QrCodeEntity.toQrCodeEntry(
     title = title,
     qrCode = qrParser.parseFromString(data),
     source = source.toQrCodeSource(),
+    favourite = favourite,
     createdAt = Instant.ofEpochMilli(createdAt)
 )
 
@@ -38,5 +39,6 @@ fun QrCodeEntry.toQrCodeEntity(
     title = title,
     data = qrParser.convertToString(qrCode),
     source = source.toQrCodeEntitySource(),
+    favourite = favourite,
     createdAt = createdAt.toEpochMilli()
 )

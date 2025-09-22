@@ -246,7 +246,7 @@ private fun ScanHistoryScreen(
                         )
                     ) {
                         Icon(
-                            imageVector = QRCraftIcons.Share,
+                            imageVector = QRCraftIcons.Default.Share,
                             contentDescription = stringResource(R.string.share)
                         )
 
@@ -266,7 +266,7 @@ private fun ScanHistoryScreen(
                         )
                     ) {
                         Icon(
-                            imageVector = QRCraftIcons.Trash,
+                            imageVector = QRCraftIcons.Default.Trash,
                             contentDescription = stringResource(R.string.share)
                         )
 

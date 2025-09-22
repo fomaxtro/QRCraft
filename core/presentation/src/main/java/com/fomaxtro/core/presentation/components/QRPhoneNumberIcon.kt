@@ -22,7 +22,7 @@ fun QRPhoneNumberIcon(
         modifier = modifier
     ) {
         Icon(
-            imageVector = QRCraftIcons.Phone,
+            imageVector = QRCraftIcons.Default.Phone,
             contentDescription = stringResource(R.string.phone_number)
         )
     }

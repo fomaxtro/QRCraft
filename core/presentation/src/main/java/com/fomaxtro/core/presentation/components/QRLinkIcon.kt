@@ -22,7 +22,7 @@ fun QRLinkIcon(
         modifier = modifier
     ) {
         Icon(
-            imageVector = QRCraftIcons.Link,
+            imageVector = QRCraftIcons.Default.Link,
             contentDescription = stringResource(R.string.link)
         )
     }

@@ -22,7 +22,7 @@ fun QRTextIcon(
         modifier = modifier
     ) {
         Icon(
-            imageVector = QRCraftIcons.Text,
+            imageVector = QRCraftIcons.Default.Text,
             contentDescription = stringResource(R.string.text)
         )
     }

@@ -52,7 +52,7 @@ private fun QRCraftFilledIconButtonPreview() {
             onClick = {}
         ) {
             Icon(
-                imageVector = QRCraftIcons.History,
+                imageVector = QRCraftIcons.Default.History,
                 contentDescription = stringResource(R.string.history)
             )
         }

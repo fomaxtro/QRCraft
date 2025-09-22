@@ -61,7 +61,7 @@ private fun QRCraftSelectableIconButtonPreview() {
             onClick = {}
         ) {
             Icon(
-                imageVector = QRCraftIcons.History,
+                imageVector = QRCraftIcons.Default.History,
                 contentDescription = stringResource(R.string.history)
             )
         }

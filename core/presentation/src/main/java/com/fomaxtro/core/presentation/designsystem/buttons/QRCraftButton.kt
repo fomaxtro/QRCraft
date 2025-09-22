@@ -75,7 +75,7 @@ private fun QRCraftButtonPreview() {
             loading = true
         ) {
             Icon(
-                imageVector = QRCraftIcons.Share,
+                imageVector = QRCraftIcons.Default.Share,
                 contentDescription = stringResource(R.string.share)
             )
 

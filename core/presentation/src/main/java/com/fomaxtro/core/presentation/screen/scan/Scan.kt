@@ -348,9 +348,9 @@ private fun ScanScreen(
                 ) {
                     Icon(
                         imageVector = if (state.isFlashActive) {
-                            QRCraftIcons.ZapOff
+                            QRCraftIcons.Default.ZapOff
                         } else {
-                            QRCraftIcons.Zap
+                            QRCraftIcons.Default.Zap
                         },
                         contentDescription = if (state.isFlashActive) {
                             stringResource(R.string.flash_off)
@@ -370,7 +370,7 @@ private fun ScanScreen(
                     )
                 ) {
                     Icon(
-                        imageVector = QRCraftIcons.Image,
+                        imageVector = QRCraftIcons.Default.Image,
                         contentDescription = stringResource(R.string.open_gallery),
                         modifier = Modifier.size(16.dp)
                     )

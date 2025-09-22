@@ -22,7 +22,7 @@ fun QRContactIcon(
         modifier = modifier
     ) {
         Icon(
-            imageVector = QRCraftIcons.Contact,
+            imageVector = QRCraftIcons.Default.Contact,
             contentDescription = stringResource(R.string.contact)
         )
     }

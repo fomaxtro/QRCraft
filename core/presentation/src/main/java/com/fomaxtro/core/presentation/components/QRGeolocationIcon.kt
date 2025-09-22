@@ -22,7 +22,7 @@ fun QRGeolocationIcon(
         modifier = modifier
     ) {
         Icon(
-            imageVector = QRCraftIcons.Geolocation,
+            imageVector = QRCraftIcons.Default.Geolocation,
             contentDescription = stringResource(R.string.geolocation)
         )
     }

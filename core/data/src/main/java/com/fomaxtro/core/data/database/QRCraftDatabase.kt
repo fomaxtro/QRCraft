@@ -9,7 +9,7 @@ import com.fomaxtro.core.data.database.entity.QrCodeEntity
     entities = [
         QrCodeEntity::class
     ],
-    version = 1
+    version = 2
 )
 abstract class QRCraftDatabase : RoomDatabase() {
     abstract fun qrCodeDao(): QrCodeDao

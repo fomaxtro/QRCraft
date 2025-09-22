@@ -19,9 +19,13 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -44,7 +48,7 @@ class ScanResultViewModel(
         .onStart {
             if (!firstLaunch) {
                 loadQR(id)
-                observeTitle()
+                observeQrCodeEntry()
 
                 firstLaunch = true
             }
@@ -79,16 +83,17 @@ class ScanResultViewModel(
                     it.copy(
                         qr = entry.data.qrCode,
                         qrImage = qrImage.asImageBitmap(),
-                        isLoading = false
+                        isLoading = false,
+                        isFavourite = entry.data.favourite
                     )
                 }
             }
         }
     }
 
-    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    private fun observeTitle() {
-        snapshotFlow { titleState.text.toString() }
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    private fun observeQrCodeEntry() {
+        val titleFlow = snapshotFlow { titleState.text.toString() }
             .transformLatest { title ->
                 if (validator.isValidTitleLength(title)) {
                     emit(title)
@@ -98,18 +103,25 @@ class ScanResultViewModel(
             }
             .debounce(500L)
             .distinctUntilChanged()
-            .onEach { title -> updateQRTitle(title) }
-            .launchIn(viewModelScope)
-    }
 
-    private suspend fun updateQRTitle(title: String) {
-        qrEntry?.let { entry ->
-            qrCodeRepository.save(
+        val favouriteFlow = state
+            .map { it.isFavourite }
+            .distinctUntilChanged()
+
+        combine(titleFlow, favouriteFlow) { title, favourite ->
+            qrEntry?.let { entry ->
                 entry.copy(
-                    title = title.ifEmpty { null }
+                    title = title.ifEmpty { null },
+                    favourite = favourite
                 )
-            )
+            }
         }
+            .filterNotNull()
+            .drop(1)
+            .onEach { entry ->
+                qrCodeRepository.save(entry)
+            }
+            .launchIn(viewModelScope)
     }
 
     fun onAction(action: ScanResultAction) {
@@ -117,6 +129,15 @@ class ScanResultViewModel(
             ScanResultAction.OnNavigateBackClick -> onNavigateBackClick()
             ScanResultAction.OnShareClick -> onShareClick()
             ScanResultAction.OnCopyClick -> onCopyClick()
+            ScanResultAction.OnFavouriteToggle -> onFavoriteToggle()
+        }
+    }
+
+    private fun onFavoriteToggle() {
+        _state.update {
+            it.copy(
+                isFavourite = !it.isFavourite
+            )
         }
     }
 
@@ -142,7 +163,6 @@ class ScanResultViewModel(
 
     private fun onNavigateBackClick() {
         viewModelScope.launch {
-            updateQRTitle(titleState.text.toString())
             eventChannel.send(ScanResultEvent.NavigateBack)
         }
     }

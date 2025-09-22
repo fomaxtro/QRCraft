@@ -46,4 +46,6 @@
     <string name="flash_off">Flash Off</string>
     <string name="flash_on">Flash On</string>
     <string name="open_gallery">Open gallery</string>
+    <string name="favourite">Favourite</string>
+    <string name="unfavourite">Unfavourite</string>
 </resources>

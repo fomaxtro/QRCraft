@@ -53,7 +53,7 @@ fun ErrorDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Icon(
-                        imageVector = QRCraftIcons.Alert,
+                        imageVector = QRCraftIcons.Default.Alert,
                         contentDescription = stringResource(R.string.alert)
                     )
 

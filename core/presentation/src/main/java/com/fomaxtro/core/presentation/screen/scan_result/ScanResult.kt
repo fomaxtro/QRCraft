@@ -62,6 +62,7 @@ import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.link
 import com.fomaxtro.core.presentation.designsystem.theme.linkBg
 import com.fomaxtro.core.presentation.designsystem.theme.onOverlay
+import com.fomaxtro.core.presentation.designsystem.theme.onSurfaceDisabled
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.mapper.toTitle
@@ -163,7 +164,34 @@ private fun ScanResultScreen(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.onSurface
-                )
+                ),
+                actions = {
+                    IconButton(
+                        onClick = {
+                            onAction(ScanResultAction.OnFavouriteToggle)
+                        },
+                        colors = IconButtonDefaults.iconButtonColors(
+                            contentColor = if (state.isFavourite) {
+                                MaterialTheme.colorScheme.onOverlay
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceDisabled
+                            }
+                        )
+                    ) {
+                        Icon(
+                            imageVector = if (state.isFavourite) {
+                                QRCraftIcons.Filled.Star
+                            } else {
+                                QRCraftIcons.Outlined.Star
+                            },
+                            contentDescription = if (state.isFavourite) {
+                                stringResource(R.string.favourite)
+                            } else {
+                                stringResource(R.string.unfavourite)
+                            }
+                        )
+                    }
+                }
             )
         },
         modifier = Modifier
@@ -282,7 +310,7 @@ private fun ScanResultScreen(
                                     .weight(1f)
                             ) {
                                 Icon(
-                                    imageVector = QRCraftIcons.Share,
+                                    imageVector = QRCraftIcons.Default.Share,
                                     contentDescription = stringResource(R.string.share)
                                 )
 
@@ -305,7 +333,7 @@ private fun ScanResultScreen(
                                     .weight(1f)
                             ) {
                                 Icon(
-                                    imageVector = QRCraftIcons.Copy,
+                                    imageVector = QRCraftIcons.Default.Copy,
                                     contentDescription = stringResource(R.string.copy)
                                 )
 
@@ -348,7 +376,8 @@ private fun ScanResultScreenPreview() {
         ScanResultScreen(
             state = ScanResultState(
                 qr = PreviewQr.link,
-                isLoading = false
+                isLoading = false,
+                isFavourite = false
             ),
             viewType = QrViewType.SCAN_RESULT
         )

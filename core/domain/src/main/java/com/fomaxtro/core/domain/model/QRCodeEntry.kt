@@ -7,5 +7,6 @@ data class QrCodeEntry(
     val title: String?,
     val qrCode: QrCode,
     val source: QrCodeSource,
+    val favourite: Boolean = false,
     val createdAt: Instant = Instant.now()
 )

@@ -10,5 +10,6 @@ data class QrCodeEntity(
     val title: String?,
     val data: String,
     val source: QrCodeEntitySource,
+    val favourite: Boolean = false,
     @ColumnInfo(name = "created_at") val createdAt: Long = System.currentTimeMillis()
 )

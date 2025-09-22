@@ -6,6 +6,7 @@ import com.fomaxtro.core.data.AndroidPermissionChecker
 import com.fomaxtro.core.data.AndroidShareManager
 import com.fomaxtro.core.data.database.QRCraftDatabase
 import com.fomaxtro.core.data.database.dao.QrCodeDao
+import com.fomaxtro.core.data.database.migrations.MIGRATION_1_2
 import com.fomaxtro.core.data.repository.QrCodeRepositoryImpl
 import com.fomaxtro.core.domain.PatternMatching
 import com.fomaxtro.core.domain.PermissionChecker
@@ -25,7 +26,9 @@ val dataModule = module {
             androidContext(),
             QRCraftDatabase::class.java,
             "qrcraft"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
     single<QrCodeDao> { get<QRCraftDatabase>().qrCodeDao() }
     singleOf(::QrCodeRepositoryImpl).bind<QrCodeRepository>()
