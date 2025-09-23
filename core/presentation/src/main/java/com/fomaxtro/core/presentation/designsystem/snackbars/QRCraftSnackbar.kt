@@ -55,13 +55,12 @@ private fun QRCraftSnackbar(
 
 @Composable
 fun QRCraftSnackbar(
-    snackbarData: SnackbarData
+    snackbarData: SnackbarData,
+    modifier: Modifier = Modifier
 ) {
     QRCraftSnackbar(
         text = snackbarData.visuals.message,
-        modifier = Modifier
-            .padding(bottom = 128.dp)
-            .padding(horizontal = 12.dp)
+        modifier = modifier
     )
 }
 

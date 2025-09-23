@@ -3,6 +3,7 @@ package com.fomaxtro.core.presentation.designsystem.buttons
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -42,7 +43,7 @@ fun QRCraftButton(
             }
         },
         colors = colors,
-        modifier = modifier,
+        modifier = modifier.defaultMinSize(minHeight = 44.dp),
         enabled = enabled
     ) {
         Row(

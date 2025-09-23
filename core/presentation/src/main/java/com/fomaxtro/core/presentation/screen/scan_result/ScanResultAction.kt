@@ -5,4 +5,5 @@ sealed interface ScanResultAction {
     data object OnShareClick : ScanResultAction
     data object OnCopyClick : ScanResultAction
     data object OnFavouriteToggle : ScanResultAction
+    data object OnSaveClick : ScanResultAction
 }

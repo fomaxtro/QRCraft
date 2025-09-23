@@ -25,7 +25,8 @@ val presentationModule = module {
             id = id,
             qrParser = get(),
             qrCodeRepository = get(),
-            validator = get()
+            validator = get(),
+            fileRepository = get()
         )
     }
     viewModelOf(::CreateQRViewModel)

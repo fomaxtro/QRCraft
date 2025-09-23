@@ -39,6 +39,8 @@ object QRCraftIcons {
             @Composable get() = ImageVector.vectorResource(R.drawable.zap_off)
         val Image: ImageVector
             @Composable get() = ImageVector.vectorResource(R.drawable.image)
+        val Download: ImageVector
+            @Composable get() = ImageVector.vectorResource(R.drawable.download)
     }
 
     object Outlined {

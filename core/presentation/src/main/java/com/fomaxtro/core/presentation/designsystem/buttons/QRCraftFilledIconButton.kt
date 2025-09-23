@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,6 +22,7 @@ import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 fun QRCraftFilledIconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary,
     content: @Composable () -> Unit
 ) {
     Box(
@@ -30,7 +32,7 @@ fun QRCraftFilledIconButton(
                 minHeight = 44.dp
             )
             .background(
-                color = MaterialTheme.colorScheme.primary,
+                color = color,
                 shape = CircleShape
             )
             .clickable(

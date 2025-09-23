@@ -1,19 +1,26 @@
 package com.fomaxtro.core.presentation.screen.scan_result
 
+import android.graphics.Bitmap
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fomaxtro.core.domain.model.ImageType
 import com.fomaxtro.core.domain.model.QrCodeEntry
 import com.fomaxtro.core.domain.qr.QrParser
+import com.fomaxtro.core.domain.repository.FileRepository
 import com.fomaxtro.core.domain.repository.QrCodeRepository
 import com.fomaxtro.core.domain.util.Result
 import com.fomaxtro.core.domain.validator.ScanResultValidator
+import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.mapper.toUiText
 import com.fomaxtro.core.presentation.qr.QrGenerator
+import com.fomaxtro.core.presentation.ui.UiText
+import com.fomaxtro.core.presentation.util.compressToByteArray
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
@@ -23,7 +30,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -38,10 +44,11 @@ class ScanResultViewModel(
     id: Long,
     private val qrParser: QrParser,
     private val qrCodeRepository: QrCodeRepository,
-    private val validator: ScanResultValidator
+    private val validator: ScanResultValidator,
+    private val fileRepository: FileRepository
 ) : ViewModel() {
     private var firstLaunch = false
-    private var qrEntry: QrCodeEntry? = null
+    private lateinit var qrEntry: QrCodeEntry
 
     private val _state = MutableStateFlow(ScanResultState())
     val state = _state
@@ -75,16 +82,16 @@ class ScanResultViewModel(
                 qrEntry = entry.data
 
                 val qrImage = QrGenerator.generate(
-                    qrParser.convertToString(entry.data.qrCode)
+                    qrParser.convertToString(qrEntry.qrCode)
                 )
 
-                titleState.setTextAndPlaceCursorAtEnd(entry.data.title ?: "")
+                titleState.setTextAndPlaceCursorAtEnd(qrEntry.title ?: "")
                 _state.update {
                     it.copy(
-                        qr = entry.data.qrCode,
+                        qr = qrEntry.qrCode,
                         qrImage = qrImage.asImageBitmap(),
                         isLoading = false,
-                        isFavourite = entry.data.favourite
+                        isFavourite = qrEntry.favourite
                     )
                 }
             }
@@ -109,14 +116,11 @@ class ScanResultViewModel(
             .distinctUntilChanged()
 
         combine(titleFlow, favouriteFlow) { title, favourite ->
-            qrEntry?.let { entry ->
-                entry.copy(
-                    title = title.ifEmpty { null },
-                    favourite = favourite
-                )
-            }
+            qrEntry.copy(
+                title = title.ifEmpty { null },
+                favourite = favourite
+            )
         }
-            .filterNotNull()
             .drop(1)
             .onEach { entry ->
                 qrCodeRepository.save(entry)
@@ -130,6 +134,34 @@ class ScanResultViewModel(
             ScanResultAction.OnShareClick -> onShareClick()
             ScanResultAction.OnCopyClick -> onCopyClick()
             ScanResultAction.OnFavouriteToggle -> onFavoriteToggle()
+            ScanResultAction.OnSaveClick -> onSaveClick()
+        }
+    }
+
+    private fun onSaveClick() {
+        viewModelScope.launch {
+            state.value.qrImage?.let { qrImage ->
+                val isDownloaded = fileRepository.saveImageToDownloads(
+                    imageBytes = qrImage
+                        .asAndroidBitmap()
+                        .compressToByteArray(Bitmap.CompressFormat.PNG),
+                    type = ImageType.PNG
+                )
+
+                if (isDownloaded) {
+                    eventChannel.send(
+                        ScanResultEvent.ShowMessage(
+                            UiText.StringResource(R.string.image_downloaded)
+                        )
+                    )
+                } else {
+                    eventChannel.send(
+                        ScanResultEvent.ShowSystemMessage(
+                            UiText.StringResource(R.string.image_download_error)
+                        )
+                    )
+                }
+            }
         }
     }
 

@@ -47,5 +47,8 @@
     <string name="flash_on">Flash On</string>
     <string name="open_gallery">Open gallery</string>
     <string name="favourite">Favourite</string>
-    <string name="unfavourite">Unfavourite</string>
+    <string name="unfavorite">Unfavorite</string>
+    <string name="save">Save</string>
+    <string name="image_downloaded">Image saved to Downloads</string>
+    <string name="image_download_error">Cannot download image</string>
 </resources>

@@ -307,7 +307,10 @@ private fun ScanScreen(
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackbarHostState) {
-                QRCraftSnackbar(it)
+                QRCraftSnackbar(
+                    snackbarData = it,
+                    modifier = Modifier.padding(bottom = 128.dp)
+                )
             }
         }
     ) {

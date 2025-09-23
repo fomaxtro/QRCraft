@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -34,10 +33,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -57,6 +59,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fomaxtro.core.domain.model.QrCode
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButton
+import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftFilledIconButton
+import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.link
@@ -89,6 +93,9 @@ fun ScanResultRoot(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val shareManager = koinInject<ShareManager>()
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
 
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
@@ -109,6 +116,10 @@ fun ScanResultRoot(
                     Toast.LENGTH_LONG
                 ).show()
             }
+
+            is ScanResultEvent.ShowMessage -> {
+                snackbarHostState.showSnackbar(event.message.asString(context))
+            }
         }
     }
 
@@ -116,7 +127,8 @@ fun ScanResultRoot(
         onAction = viewModel::onAction,
         state = state,
         titleState = viewModel.titleState,
-        viewType = viewType
+        viewType = viewType,
+        snackbarHostState = snackbarHostState
     )
 }
 
@@ -126,7 +138,8 @@ private fun ScanResultScreen(
     onAction: (ScanResultAction) -> Unit = {},
     state: ScanResultState,
     titleState: TextFieldState = TextFieldState(),
-    viewType: QrViewType
+    viewType: QrViewType,
+    snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
     val isInPreviewMode = LocalInspectionMode.current
     val focusManager = LocalFocusManager.current
@@ -187,12 +200,17 @@ private fun ScanResultScreen(
                             contentDescription = if (state.isFavourite) {
                                 stringResource(R.string.favourite)
                             } else {
-                                stringResource(R.string.unfavourite)
+                                stringResource(R.string.unfavorite)
                             }
                         )
                     }
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) {
+                QRCraftSnackbar(it)
+            }
         },
         modifier = Modifier
             .pointerInput(Unit) {
@@ -295,50 +313,52 @@ private fun ScanResultScreen(
                         }
 
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            QRCraftButton(
+                            QRCraftFilledIconButton(
                                 onClick = {
                                     onAction(ScanResultAction.OnShareClick)
                                 },
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceHigher,
-                                    contentColor = MaterialTheme.colorScheme.onSurface
-                                ),
-                                modifier = Modifier
-                                    .weight(1f)
+                                color = MaterialTheme.colorScheme.surfaceHigher
                             ) {
                                 Icon(
                                     imageVector = QRCraftIcons.Default.Share,
-                                    contentDescription = stringResource(R.string.share)
-                                )
-
-                                Text(
-                                    text = stringResource(R.string.share)
+                                    contentDescription = stringResource(R.string.share),
+                                    modifier = Modifier.size(16.dp)
                                 )
                             }
 
-                            Spacer(modifier = Modifier.width(8.dp))
+                            QRCraftFilledIconButton(
+                                onClick = {
+                                    onAction(ScanResultAction.OnCopyClick)
+                                },
+                                color = MaterialTheme.colorScheme.surfaceHigher
+                            ) {
+                                Icon(
+                                    imageVector = QRCraftIcons.Default.Copy,
+                                    contentDescription = stringResource(R.string.copy),
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
 
                             QRCraftButton(
                                 onClick = {
-                                    onAction(ScanResultAction.OnCopyClick)
+                                    onAction(ScanResultAction.OnSaveClick)
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = MaterialTheme.colorScheme.surfaceHigher,
                                     contentColor = MaterialTheme.colorScheme.onSurface
                                 ),
-                                modifier = Modifier
-                                    .weight(1f)
+                                modifier = Modifier.weight(1f)
                             ) {
                                 Icon(
-                                    imageVector = QRCraftIcons.Default.Copy,
-                                    contentDescription = stringResource(R.string.copy)
+                                    imageVector = QRCraftIcons.Default.Download,
+                                    contentDescription = stringResource(R.string.save)
                                 )
 
                                 Text(
-                                    text = stringResource(R.string.copy)
+                                    text = stringResource(R.string.save)
                                 )
                             }
                         }
