@@ -7,5 +7,6 @@ data class QrCodeUi(
     val id: Long,
     val title: String?,
     val qrCode: QrCode,
+    val favourite: Boolean,
     val createdAt: ZonedDateTime
 )

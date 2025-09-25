@@ -1,6 +1,7 @@
 package com.fomaxtro.core.presentation.screen.scan_history.components
 
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,6 +29,7 @@ import com.fomaxtro.core.presentation.components.QRLinkIcon
 import com.fomaxtro.core.presentation.components.QRPhoneNumberIcon
 import com.fomaxtro.core.presentation.components.QRTextIcon
 import com.fomaxtro.core.presentation.components.QRWifiIcon
+import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftFavouriteIconButton
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.onSurfaceAlt
 import com.fomaxtro.core.presentation.designsystem.theme.onSurfaceDisabled
@@ -43,6 +46,7 @@ fun HistoryItem(
     item: QrCodeUi,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
+    onFavouriteChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -79,10 +83,21 @@ fun HistoryItem(
                     .weight(1f)
                     .fillMaxHeight()
             ) {
-                Text(
-                    text = item.title ?: item.qrCode.toTitle(),
-                    style = MaterialTheme.typography.titleSmall
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = item.title ?: item.qrCode.toTitle(),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+
+                    QRCraftFavouriteIconButton(
+                        favourite = item.favourite,
+                        onFavouriteChange = onFavouriteChange,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -116,6 +131,7 @@ private fun HistoryItemPreview() {
             item = PreviewModel.createQrCodeUi(PreviewQr.contact),
             onLongClick = {},
             onClick = {},
+            onFavouriteChange = {},
             modifier = Modifier.fillMaxWidth()
         )
     }

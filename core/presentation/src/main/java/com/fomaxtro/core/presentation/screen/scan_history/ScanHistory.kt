@@ -175,6 +175,14 @@ private fun ScanHistoryScreen(
                                 onLongClick = {
                                     onAction(ScanHistoryAction.OnHistoryLongClick(history))
                                 },
+                                onFavouriteChange = {
+                                    onAction(
+                                        ScanHistoryAction.OnFavouriteChange(
+                                            id = history.id,
+                                            favourite = it
+                                        )
+                                    )
+                                },
                                 modifier = Modifier
                                     .then(
                                         when (screenType) {

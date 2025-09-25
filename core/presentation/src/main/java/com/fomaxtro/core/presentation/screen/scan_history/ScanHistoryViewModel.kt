@@ -2,6 +2,7 @@ package com.fomaxtro.core.presentation.screen.scan_history
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fomaxtro.core.domain.model.QrCodeEntry
 import com.fomaxtro.core.domain.model.QrCodeSource
 import com.fomaxtro.core.domain.repository.QrCodeRepository
 import com.fomaxtro.core.domain.util.Result
@@ -31,6 +32,7 @@ class ScanHistoryViewModel(
 ) : ViewModel() {
     private var firstLaunch = false
     private var selectedQrHistoryItem: QrCodeUi? = null
+    private var qrCodeEntries = emptyList<QrCodeEntry>()
 
     private val _state = MutableStateFlow(ScanHistoryState())
     val state = _state
@@ -65,6 +67,8 @@ class ScanHistoryViewModel(
                 qrCodeRepository.findAllRecentBySource(source)
             }
             .onEach { entries ->
+                qrCodeEntries = entries
+
                 _state.update { state ->
                     state.copy(
                         history = entries.map { it.toQrCodeUi() }
@@ -82,6 +86,15 @@ class ScanHistoryViewModel(
             ScanHistoryAction.OnDeleteClick -> onDeleteClick()
             ScanHistoryAction.OnShareClick -> onShareClick()
             is ScanHistoryAction.OnHistoryClick -> onHistoryClick(action.qrCode)
+            is ScanHistoryAction.OnFavouriteChange -> onFavouriteChange(action.id, action.favourite)
+        }
+    }
+
+    private fun onFavouriteChange(id: Long, favourite: Boolean) {
+        val entry = qrCodeEntries.find { it.id == id } ?: return
+
+        viewModelScope.launch {
+            qrCodeRepository.save(entry.copy(favourite = favourite))
         }
     }
 

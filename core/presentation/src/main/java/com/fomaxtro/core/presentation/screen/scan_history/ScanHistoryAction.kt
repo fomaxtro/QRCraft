@@ -9,4 +9,5 @@ sealed interface ScanHistoryAction {
     data object OnBottomSheetDismiss : ScanHistoryAction
     data object OnShareClick : ScanHistoryAction
     data object OnDeleteClick : ScanHistoryAction
+    data class OnFavouriteChange(val id: Long, val favourite: Boolean) : ScanHistoryAction
 }

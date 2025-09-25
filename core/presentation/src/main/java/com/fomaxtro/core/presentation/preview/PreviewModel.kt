@@ -9,6 +9,7 @@ object PreviewModel {
         id = 1,
         title = "Foo",
         qrCode = qrCode,
+        favourite = false,
         createdAt = ZonedDateTime.now()
     )
 }

@@ -8,5 +8,6 @@ fun QrCodeEntry.toQrCodeUi() = QrCodeUi(
     id = id,
     title = title,
     qrCode = qrCode,
+    favourite = favourite,
     createdAt = createdAt.atZone(ZoneId.systemDefault())
 )
