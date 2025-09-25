@@ -15,7 +15,7 @@ interface QrCodeDao {
     @Query("SELECT * FROM qr_codes WHERE id = :id")
     suspend fun findById(id: Long): QrCodeEntity
 
-    @Query("SELECT * FROM qr_codes WHERE source = :source ORDER BY created_at DESC")
+    @Query("SELECT * FROM qr_codes WHERE source = :source ORDER BY created_at, favourite DESC")
     fun findAllRecentBySource(source: QrCodeEntitySource): Flow<List<QrCodeEntity>>
 
     @Query("DELETE FROM qr_codes WHERE id = :id")
