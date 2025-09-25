@@ -133,7 +133,7 @@ class ScanResultViewModel(
             ScanResultAction.OnNavigateBackClick -> onNavigateBackClick()
             ScanResultAction.OnShareClick -> onShareClick()
             ScanResultAction.OnCopyClick -> onCopyClick()
-            ScanResultAction.OnFavouriteToggle -> onFavoriteToggle()
+            is ScanResultAction.OnFavouriteToggle -> onFavoriteToggle(action.favourite)
             ScanResultAction.OnSaveClick -> onSaveClick()
         }
     }
@@ -165,10 +165,10 @@ class ScanResultViewModel(
         }
     }
 
-    private fun onFavoriteToggle() {
+    private fun onFavoriteToggle(favourite: Boolean) {
         _state.update {
             it.copy(
-                isFavourite = !it.isFavourite
+                isFavourite = favourite
             )
         }
     }

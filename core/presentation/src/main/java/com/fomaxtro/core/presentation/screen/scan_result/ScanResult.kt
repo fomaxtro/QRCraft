@@ -59,6 +59,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fomaxtro.core.domain.model.QrCode
 import com.fomaxtro.core.presentation.R
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButton
+import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftButtonDefaults
+import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftFavouriteIconButton
 import com.fomaxtro.core.presentation.designsystem.buttons.QRCraftFilledIconButton
 import com.fomaxtro.core.presentation.designsystem.snackbars.QRCraftSnackbar
 import com.fomaxtro.core.presentation.designsystem.theme.QRCraftIcons
@@ -66,7 +68,6 @@ import com.fomaxtro.core.presentation.designsystem.theme.QRCraftTheme
 import com.fomaxtro.core.presentation.designsystem.theme.link
 import com.fomaxtro.core.presentation.designsystem.theme.linkBg
 import com.fomaxtro.core.presentation.designsystem.theme.onOverlay
-import com.fomaxtro.core.presentation.designsystem.theme.onSurfaceDisabled
 import com.fomaxtro.core.presentation.designsystem.theme.surfaceHigher
 import com.fomaxtro.core.presentation.mapper.toFormattedUiText
 import com.fomaxtro.core.presentation.mapper.toTitle
@@ -179,31 +180,15 @@ private fun ScanResultScreen(
                     containerColor = MaterialTheme.colorScheme.onSurface
                 ),
                 actions = {
-                    IconButton(
-                        onClick = {
-                            onAction(ScanResultAction.OnFavouriteToggle)
+                    QRCraftFavouriteIconButton(
+                        favourite = state.isFavourite,
+                        onFavouriteChange = {
+                            onAction(ScanResultAction.OnFavouriteToggle(it))
                         },
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = if (state.isFavourite) {
-                                MaterialTheme.colorScheme.onOverlay
-                            } else {
-                                MaterialTheme.colorScheme.onSurfaceDisabled
-                            }
+                        colors = QRCraftButtonDefaults.favouriteIconButtonColors(
+                            checked = MaterialTheme.colorScheme.onOverlay
                         )
-                    ) {
-                        Icon(
-                            imageVector = if (state.isFavourite) {
-                                QRCraftIcons.Filled.Star
-                            } else {
-                                QRCraftIcons.Outlined.Star
-                            },
-                            contentDescription = if (state.isFavourite) {
-                                stringResource(R.string.favourite)
-                            } else {
-                                stringResource(R.string.unfavorite)
-                            }
-                        )
-                    }
+                    )
                 }
             )
         },
@@ -397,7 +382,7 @@ private fun ScanResultScreenPreview() {
             state = ScanResultState(
                 qr = PreviewQr.link,
                 isLoading = false,
-                isFavourite = false
+                isFavourite = true
             ),
             viewType = QrViewType.SCAN_RESULT
         )
