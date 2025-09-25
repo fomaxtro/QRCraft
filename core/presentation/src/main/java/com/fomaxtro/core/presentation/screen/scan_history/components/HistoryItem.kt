@@ -89,7 +89,10 @@ fun HistoryItem(
                 ) {
                     Text(
                         text = item.title ?: item.qrCode.toTitle(),
-                        style = MaterialTheme.typography.titleSmall
+                        style = MaterialTheme.typography.titleSmall,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                        modifier = Modifier.weight(1f)
                     )
 
                     QRCraftFavouriteIconButton(
@@ -128,7 +131,9 @@ fun HistoryItem(
 private fun HistoryItemPreview() {
     QRCraftTheme {
         HistoryItem(
-            item = PreviewModel.createQrCodeUi(PreviewQr.contact),
+            item = PreviewModel.createQrCodeUi(PreviewQr.contact).copy(
+                title = "Lorem ipsum dollo Lorem ipsum dollo Lorem ipsum dollo"
+            ),
             onLongClick = {},
             onClick = {},
             onFavouriteChange = {},
