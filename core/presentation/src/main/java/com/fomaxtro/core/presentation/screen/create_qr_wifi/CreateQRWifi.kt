@@ -80,7 +80,7 @@ private fun CreateQRWifiScreen(
     }
 
     QRCraftScaffold(
-        title = stringResource(R.string.text),
+        title = stringResource(R.string.wifi),
         onBackClick = {
             onAction(CreateQRWifiAction.OnNavigateBackClick)
         },
